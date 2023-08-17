@@ -3,58 +3,76 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/05/25 10:48:24 by pgouasmi          #+#    #+#              #
-#    Updated: 2023/08/09 18:04:19 by pgouasmi         ###   ########.fr        #
+#    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
+#    Updated: 2023/08/17 16:41:31 by chonorat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+#COLOR
+_GREEN = \033[92m
+_YELLOW = \033[33m
+_RED = \033[31m
+
+#POLICE
+_END = \033[0m
+_BOLD = \033[1m
+
 NAME = minishell
+CFLAGS = -Wall -Wextra -Werror
+RM = @rm -rf
+AR = @ar -rcs
+CC = @cc
+DIR = @mkdir -p
+PRINT = @echo
+HEADER = Includes/minishell.h
+LIBFT = Libft/libft.a
+MAKE_LIBFT = @make -C Libft
+CLEAN_LIBFT = @make clean -C Libft
+FCLEAN_LIBFT = @make fclean -C Libft
+FILES = minishell\
+		Commands/env_cmd\
+		Utils/free\
+		Utils/get_paths\
+		Utils/resources\
+		Utils/tokenizer
+SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
+OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 
-LIBFT_PATH	=	./includes/
+$(NAME): $(OBJS)
+	$(PRINT) "\n${_YELLOW}Checking Libft...${_END}"
+	$(MAKE_LIBFT)
+	$(PRINT) "\n${_YELLOW}Making $(NAME)...${_END}"
+	$(CC) $(OBJS) -o $(NAME) $(LIBFT)
+	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.${_END}"
 
-LIBFT_FILE	=	libft.a
+Objects/%.o: Sources/%.c Makefile $(HEADER)
+	$(DIR) Objects
+	$(DIR) Objects/Commands Objects/Utils
+	$(PRINT) "Compiling ${_BOLD}$<$(_END)..."
+	$(CC) -c $(CFLAGS) $< -o $@
 
-LIBFT_LIB	=	$(addprefix $(LIBFT_PATH), $(LIBFT_FILE))
-
-HEADER = minishell.h
-
-CC = cc
-
-FLAG = -Wall -Wextra -Werror -ggdb3
-
-C_FILE		=	minishell.c					\
-				./utils/get_paths.c 		\
-				./utils/resources.c 		\
-				./utils/free.c 				\
-				./utils/sig_handler.c 		\
-				./utils/tokenizer.c         \
-				./commands/env_cmd.c 		\
-
-SRC			=	$(addprefix $(SRC_DIR),$(C_FILE))
-
-OBJ			=	$(SRC:.c=.o)
-
-all:	$(NAME)
-
-lib:	
-	@make -C $(LIBFT_PATH)
-
-%.o:	%.c $(HEADER) 
-			$(CC) $(FLAG) -I . -c $< -o $@
-
-$(NAME): lib $(OBJ)
-	$(CC) $(OBJ) $(OBJS) $(LIBFT_LIB) -lreadline -o $(NAME)
+all: $(NAME)
 
 clean:
-	@make clean -C $(LIBFT_PATH)
-	@rm -f $(OBJ) $(OBJS)
+	$(CLEAN_LIBFT)
+	$(PRINT) "\n${_BOLD}Cleaning Objects...${_END}"
+	$(RM) $(OBJS)
+	$(PRINT) "${_BOLD}${_GREEN}Objects cleaned.${_END}"
 
-fclean: clean
-	@rm -f $(NAME)
-	@make fclean -C $(LIBFT_PATH)
+fclean:
+	$(FCLEAN_LIBFT)
+	$(PRINT) "\n${_BOLD}Cleaning Objects...${_END}"
+	$(RM) $(OBJS)
+	$(PRINT) "${_RED}Deleting $(NAME)...${_END}"
+	$(RM) $(NAME)
+	$(PRINT) "${_RED}Deleting Objects directory...${_END}"
+	$(RM) Objects
+	$(PRINT) "${_GREEN}Objects cleaned.${_END}"
+	$(PRINT) "${_GREEN}$(NAME) deleted.${_END}"
+	$(PRINT) "${_GREEN}Objects directory deleted.\n${_END}"
 
-re :
-	make fclean
-	make
+re: fclean all
+
+.PHONY: all clean fclean re
