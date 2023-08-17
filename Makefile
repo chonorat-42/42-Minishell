@@ -22,7 +22,6 @@ _BOLD = \033[1m
 NAME = minishell
 CFLAGS = -Wall -Wextra -Werror
 RM = @rm -rf
-AR = @ar -rcs
 CC = @cc
 DIR = @mkdir -p
 PRINT = @echo
