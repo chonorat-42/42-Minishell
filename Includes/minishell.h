@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:52:08 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 13:17:38 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/18 15:30:23 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int		tokenizer(t_mshell *shell);
 void 	execution(t_mshell *shell, char **envp);
 void	free_arr(char **arr);
 void	ft_free_tokens(t_tokens	**head);
-int		find_index(char **envp, const char *str);
+int		find_envvar_index(char **envp, const char *str);
+int		is_ws(char c);
 
 #endif

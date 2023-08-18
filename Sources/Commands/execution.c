@@ -1,41 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_cmd.c                                          :+:      :+:    :+:   */
+/*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 13:18:12 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/18 15:07:58 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../Includes/minishell.h"
-
-char *get_cmd_arguments(char *prompt)
-{
-	char *result;
-	size_t i = 0;
-	size_t total_len = ft_strlen(prompt);
-	size_t res_len;
-	size_t j;
-
-	while (prompt[i] && prompt[i] != ' ')
-		i++;
-	i++;
-	res_len = total_len - i;
-	result = malloc(sizeof(char) * (res_len) + 2);
-	j = 0;
-	while (prompt[i])
-	{
-		result[j] = prompt[i];
-		i++;
-		j++;
-	}
-	result[j] = '\n';
-	result[j + 1] = '\0';
-	return (result);
-}
 
 int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 {
@@ -116,7 +91,8 @@ void execution(t_mshell *shell, char **envp)
 			shell->cmd_count++;
 			if (!ft_strncmp((const char *)temp->content, "echo", 4))
 			{
-				echo_case(temp->content, fd);
+				if (!echo_case(temp->content, fd))
+					return(free_struct(shell), exit(6));
 				if (fd != 1)
 				{
 					while (temp && temp->type != CMD)

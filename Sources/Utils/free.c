@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:40:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/17 16:50:30 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/08/18 15:36:20 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	free_arr(char **arr)
 	int j;
 
 	j = 0;
+	if (!arr)
+		return ;
 	while (arr[j])
 	{
 		free(arr[j]);

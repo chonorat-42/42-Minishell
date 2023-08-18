@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 10:35:22 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 13:07:59 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/18 15:43:38 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ size_t get_arr_size(char **arr)
 	i = 0;
 	while (arr[i])
 		i++;
-	return (i);
+	return (i + 1);
 }
 
 char **copy_tab(char **envp, size_t size)
@@ -29,18 +29,18 @@ char **copy_tab(char **envp, size_t size)
 	char **arr;
 	size_t j;
 
-	arr = malloc(sizeof(char *) * size + 1);
+	arr = malloc(sizeof(char *) * (size + 1));
 	if (!arr)
 		return (NULL);
-	arr[size] = NULL;
 	j = 0;
-	while (j < size - 1)
+	while (j < size)
 	{
 		arr[j] = ft_strdup(envp[j]);
 		if (!arr[j])
 			return (NULL);
 		j++;
 	}
+	arr[j] = NULL;
 	return (arr);
 }
 
@@ -49,7 +49,7 @@ void get_envp(t_mshell *shell, char **envp)
 	shell->envp_size = get_arr_size(envp);
 	if (shell->envp_size == 0)
 		return (free_struct(shell), exit(1));
-	shell->menvp = copy_tab(envp, shell->envp_size + 1);
+	shell->menvp = copy_tab(envp, shell->envp_size);
 	if (!shell->menvp)
 		return (free_struct(shell), exit(2));
 }

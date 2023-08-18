@@ -6,13 +6,13 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:19:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 11:13:48 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/18 13:27:53 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../Includes/minishell.h"
 
- int	find_index(char **envp, const char *str)
+ int	find_envvar_index(char **envp, const char *str)
 {
 	int	j;
 	size_t len;
@@ -46,7 +46,7 @@ int get_current_location(t_mshell *shell, char **envp)
 {
 	int index;
 
-	index = find_index(envp, "PWD=");
+	index = find_envvar_index(envp, "PWD=");
 	shell->current_loc = get_zero(envp[index], ft_strlen("PWD="));
 	if (!shell->current_loc)
 		return (2);
@@ -75,7 +75,7 @@ int get_session(t_mshell *shell, char **envp)
 {
 	int index;
 
-	index = find_index(envp, "DESKTOP_SESSION=");
+	index = find_envvar_index(envp, "DESKTOP_SESSION=");
 	shell->session = get_zero(envp[index], ft_strlen("DESKTOP_SESSION="));
 	if (!shell->session)
 		return (1);
@@ -86,7 +86,7 @@ int get_user_info(t_mshell *shell, char **envp)
 {
 	int index;
 
-	index = find_index(envp, "USER=");
+	index = find_envvar_index(envp, "USER=");
 	shell->user = get_zero(envp[index], ft_strlen("USER="));
 	if (!shell->user)
 		return (2);
@@ -147,7 +147,7 @@ int get_paths(t_mshell *shell, char **envp)
 	int path_index;
 
 	shell->cmd_count = 0;
-	path_index = find_index(envp, "PATH=");
+	path_index = find_envvar_index(envp, "PATH=");
 	shell->tok_lst = NULL;
 	shell->cmd = NULL;
 	if (path_index == -1)
