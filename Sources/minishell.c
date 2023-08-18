@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 10:35:22 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 15:43:38 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/18 16:38:42 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ size_t get_arr_size(char **arr)
 	i = 0;
 	while (arr[i])
 		i++;
-	return (i + 1);
+	return (i);
 }
 
 char **copy_tab(char **envp, size_t size)

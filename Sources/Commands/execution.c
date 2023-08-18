@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 15:07:58 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/18 17:49:22 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void execution(t_mshell *shell, char **envp)
 			shell->cmd_count++;
 			if (!ft_strncmp((const char *)temp->content, "echo", 4))
 			{
-				if (!echo_case(temp->content, fd))
+				if (echo_case(temp->content, fd))
 					return(free_struct(shell), exit(6));
 				if (fd != 1)
 				{

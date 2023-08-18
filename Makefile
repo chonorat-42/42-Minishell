@@ -6,7 +6,7 @@
 #    By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/08/18 13:19:53 by pgouasmi         ###   ########.fr        #
+#    Updated: 2023/08/18 17:43:18 by pgouasmi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,4 +77,7 @@ fclean:
 
 re: fclean all
 
-.PHONY: all clean fclean re
+exec : all
+	./minishell
+
+.PHONY: all clean fclean re exec
