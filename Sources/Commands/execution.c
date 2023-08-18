@@ -3,34 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/17 16:53:16 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/08/18 13:18:12 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../Includes/minishell.h"
-
-int are_quotes_closed(char *str)
-{
-	size_t len = ft_strlen(str);
-	size_t i = 0;
-	size_t j = len;
-
-	while (str[i] && i != j)
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			while (str[j] != '\'' && str[j] != '\"' && j > 0)
-				j--;
-			if (str[i] != str[j] || j == i)
-				return (0);
-		}
-		i++;
-	}
-	return (1);
-}
 
 char *get_cmd_arguments(char *prompt)
 {
@@ -57,66 +37,7 @@ char *get_cmd_arguments(char *prompt)
 	return (result);
 }
 
-int cd_case(t_mshell *shell)
-{
-	char *str;
-	int result;
-	char *temp;
-
-	shell->cmd_count++;
-	str = get_cmd_arguments(shell->prompt);
-	if (!str)
-		return (1);
-	temp = ft_strtrim(str, "\n");
-	if (!temp)
-		return (free(str), 1);
-	result = chdir(temp);
-	if (result != 0)
-	{
-		ft_printf("minishell: %d: can't cd to %s\n", shell->cmd_count, temp);
-		return (free(str), free(temp), 1);
-	}
-
-	return (free(str), free(temp), 0);
-}
-
-int echo_case(char *prompt, int fd)
-{
-	char *str;
-	char *temp;
-
-	str = get_cmd_arguments(prompt);
-	if (!str)
-		return (1);
-	are_quotes_closed(str);
-
-	size_t i = 0;
-	while (!are_quotes_closed(str))
-	{
-		i++;
-		ft_putstr_fd("> ", fd);
-		char *line = get_next_line(1);
-		if (!line)
-			return (free(str), 1);
-		temp = ft_strjoin(str, line);
-		if (!temp)
-			return (free(line), free(str), 2);
-		free(str);
-		str = ft_strdup(temp);
-		free(line);
-		free(temp);
-	}
-	char *result;
-	result = ft_strtrim(str, "\"\n\'");
-	if (!result)
-		return (3);
-	ft_dprintf(fd, "%s\n", result);
-	free(str);
-	free(result);
-	return (0);
-}
-
-int env_case(t_mshell shell, char **cmd_arr, char **envp, int fd)
+int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 {
 	size_t j;
 	char *temp;
@@ -134,15 +55,6 @@ int env_case(t_mshell shell, char **cmd_arr, char **envp, int fd)
 	}
 	close(fd);
 	return (ft_printf("sh: %d: %s: not found\n", shell.cmd_count, cmd_arr[0]), 1);
-}
-
-char *get_file(char *str, size_t i)
-{
-
-	(void)str;
-	(void)i;
-
-	return (NULL);
 }
 
 char *get_cmd(char *str, size_t *i)
@@ -171,17 +83,6 @@ char *get_cmd(char *str, size_t *i)
 	}
 	return (result);
 }
-
-void	real_env_case(t_mshell *shell)
-{
-	size_t j;
-
-	ft_printf("\n\n\n\nGot into real env\n\n");
-	j = -1;
-	while (++j < shell->envp_size)
-		ft_printf("%s\n", shell->menvp[j]);
-}
-
 
 /*to do :
 - ENVP dans structure
@@ -227,19 +128,22 @@ void execution(t_mshell *shell, char **envp)
 			else if (!ft_strncmp((const char *)temp->content, "exit", 4))
 				return (free_struct(shell), exit(0));
 			else if (!ft_strncmp((const char *)temp->content, "env", 3))
-				real_env_case(shell);
+				env_case(shell);
 			else
 			{
 				temp->cmd_arr = ft_split(temp->content, ' ');
 				if (!temp->cmd_arr)
 					return (free_struct(shell), exit(1));
 				child = fork();
-				if (!child)
+				if (child == -1)
+					return (free_struct(shell), exit(2));
+				if (child == 0)
 				{
-					if (env_case(*shell, temp->cmd_arr, envp, fd))
+					if (bin_exec(*shell, temp->cmd_arr, envp, fd))
 						return (free_struct(shell), exit(4));
 				}
-				waitpid(child, NULL, 0);
+				else
+					waitpid(child, NULL, 0);
 				if (temp->cmd_arr)
 					free_arr(temp->cmd_arr);
 				temp->cmd_arr = NULL;
@@ -247,4 +151,5 @@ void execution(t_mshell *shell, char **envp)
 		}
 		temp = temp->next;
 	}
+	ft_free_tokens(&shell->tok_lst);
 }

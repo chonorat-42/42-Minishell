@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:52:08 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/17 16:58:42 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/08/18 13:17:38 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ void	print_arr(char **arr);
 void	print_lst(t_list *lst);
 void	free_struct(t_mshell *shell);
 void	free_arr(char **arr);
-int 	env_case(t_mshell shell, char **cmd_arr, char **envp, int fd);
+int 	bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd);
 int		echo_case(char *prompt, int fd);
+void	env_case(t_mshell *shell);
+char	*get_cmd_arguments(char *prompt);
 int 	cd_case(t_mshell *shell);
 int 	redirect(t_mshell *shell);
 void 	struct_init(t_mshell *shell);
