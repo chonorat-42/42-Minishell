@@ -6,7 +6,7 @@
 #    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/08/17 16:41:31 by chonorat         ###   ########.fr        #
+#    Updated: 2023/08/18 14:04:35 by chonorat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,8 @@ FILES = minishell\
 		Utils/free\
 		Utils/get_paths\
 		Utils/resources\
-		Utils/tokenizer
+		Utils/tokenizer\
+		Utils/sig_handler
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 

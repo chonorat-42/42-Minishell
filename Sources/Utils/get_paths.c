@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:19:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/17 16:49:43 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/08/18 14:02:47 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*get_zero(char *str, unsigned int start)
 	size_t	len;
 
 	len = ft_strlen((const char *)str);
-	if (!str || (len - start) < 0 || len == 0)
+	if (!str || (int)(len - start) < 0 || len == 0)
 		return (NULL);
 	result = ft_substr((const char *)str, start, len - start);
 	if (!result)
