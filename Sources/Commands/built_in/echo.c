@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 11:35:26 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 14:58:01 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 16:43:55 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ char *get_between_quotes(char *str, int c, size_t *i)
 	int j;
 
 	j = *i;
+	if (str[j] == c)
+	{
+		result = ft_strdup("");
+		return (result);
+	}
 	while (str[(*i)] && str[(*i)] != c)
 		(*i)++;
 	result = ft_substr(str, j, *i - j);
@@ -103,6 +108,7 @@ int echo_case(char *prompt, int fd)
 			free(option);
 		return (ft_printf("Error\nUnclosed Quotes\n"), 0);
 	}
+	to_display = NULL;
 	while (prompt[i])
 	{
 		if (prompt[i] == '\'' || prompt[i] == '\"')
@@ -112,21 +118,19 @@ int echo_case(char *prompt, int fd)
 		}
 		else
 			temp = get_other(prompt, &i);
-		if (!temp)
-		{
-			if (option)
-				free(option);
-			return (1);
-		}
 		if (!to_display)
 			to_display = ft_strdup(temp);
 		else
 			to_display = ft_strjoin(to_display, temp);
 		free(temp);
 		if (!to_display)
-			return (free(option), 1);
+		{
+			if (option)
+				free(option);
+			return (1);
+		}
 	}
-	if (to_display[0] && ft_strlen(to_display) == 0)
+	if (to_display[0] && ft_strlen(to_display) != 0)
 	{
 		ft_putstr_fd(to_display, fd);
 		if (option)
