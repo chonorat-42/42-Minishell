@@ -6,13 +6,33 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:19:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 13:27:53 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 19:04:55 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../Includes/minishell.h"
 
- int	find_envvar_index(char **envp, const char *str)
+size_t find_char_index(char *str, int c)
+{
+	size_t i;
+
+	i = 0;
+	while (str[i] && str[i] != c)
+		i++;
+	return (i);
+}
+
+int compare_strings(char *str, char *envs)
+{
+	size_t i;
+
+	i = find_char_index(envs, '=');
+	if (ft_strlen(str) == i)
+		return (1);
+	return (0);
+}
+
+int	find_envvar_index(char **envp, const char *str)
 {
 	int	j;
 	size_t len;
@@ -22,7 +42,10 @@
 	while (envp[j])
 	{
 		if (!ft_strncmp((const char *)envp[j], str, len))
-			return (j);
+		{
+			if (compare_strings((char *)str, envp[j]))
+				return (j);
+		}
 		j++;
 	}
 	return (-1);
@@ -46,7 +69,9 @@ int get_current_location(t_mshell *shell, char **envp)
 {
 	int index;
 
-	index = find_envvar_index(envp, "PWD=");
+	index = find_envvar_index(envp, "PWD");
+	if (index < 0)
+		return (shell->current_loc = NULL, ft_printf("Could not find current location\n"), 1);
 	shell->current_loc = get_zero(envp[index], ft_strlen("PWD="));
 	if (!shell->current_loc)
 		return (2);
@@ -75,7 +100,7 @@ int get_session(t_mshell *shell, char **envp)
 {
 	int index;
 
-	index = find_envvar_index(envp, "DESKTOP_SESSION=");
+	index = find_envvar_index(envp, "DESKTOP_SESSION");
 	shell->session = get_zero(envp[index], ft_strlen("DESKTOP_SESSION="));
 	if (!shell->session)
 		return (1);
@@ -86,7 +111,7 @@ int get_user_info(t_mshell *shell, char **envp)
 {
 	int index;
 
-	index = find_envvar_index(envp, "USER=");
+	index = find_envvar_index(envp, "USER");
 	shell->user = get_zero(envp[index], ft_strlen("USER="));
 	if (!shell->user)
 		return (2);
@@ -147,7 +172,7 @@ int get_paths(t_mshell *shell, char **envp)
 	int path_index;
 
 	shell->cmd_count = 0;
-	path_index = find_envvar_index(envp, "PATH=");
+	path_index = find_envvar_index(envp, "PATH");
 	shell->tok_lst = NULL;
 	shell->cmd = NULL;
 	if (path_index == -1)

@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:40:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 15:36:20 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 19:11:09 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	free_arr(char **arr)
 		return ;
 	while (arr[j])
 	{
-		free(arr[j]);
+		if (arr[j])
+			free(arr[j]);
 		j++;
 	}
 	free(arr);

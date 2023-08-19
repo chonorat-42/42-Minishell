@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 17:49:22 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 17:40:50 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ void execution(t_mshell *shell, char **envp)
 				return (free_struct(shell), exit(0));
 			else if (!ft_strncmp((const char *)temp->content, "env", 3))
 				env_case(shell);
+			else if (!ft_strncmp((const char *)temp->content, "unset", 3))
+				unset_case(shell, temp->content);
 			else
 			{
 				temp->cmd_arr = ft_split(temp->content, ' ');

@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:52:08 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 15:30:23 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 17:40:59 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,6 @@ void	free_arr(char **arr);
 void	ft_free_tokens(t_tokens	**head);
 int		find_envvar_index(char **envp, const char *str);
 int		is_ws(char c);
+void	unset_case(t_mshell *shell, char *str);
 
 #endif
