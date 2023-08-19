@@ -6,7 +6,7 @@
 #    By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/08/19 17:38:11 by pgouasmi         ###   ########.fr        #
+#    Updated: 2023/08/19 22:55:38 by pgouasmi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ FILES = minishell\
 		Commands/built_in/cd\
 		Commands/built_in/env\
 		Commands/built_in/unset\
+		Commands/built_in/pwd\
 		Utils/free\
 		Utils/get_paths\
 		Utils/resources\

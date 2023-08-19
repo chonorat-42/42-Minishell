@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:52:08 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 21:38:04 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 23:12:09 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # define RCHEVRON 8
 # define APPEND 9
 # define REDIRECT 10
+# define SIZE_MAX 65535
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -62,7 +63,7 @@ typedef struct s_mshell
 	size_t		envp_size;
 	char		**menvp;
 	char		**paths;
-	char		*current_loc;
+	char		current_loc[32767];
 	size_t		cmd_count;
 	t_dlist		 history;
 	t_tokens	*tok_lst;
@@ -79,6 +80,7 @@ int		echo_case(char *prompt, int fd);
 void	env_case(t_mshell *shell);
 char	*get_cmd_arguments(char *prompt);
 int 	cd_case(t_mshell *shell);
+void	pwd_case(t_mshell *shell);
 int 	redirect(t_mshell *shell);
 void 	struct_init(t_mshell *shell);
 void	sig_handler(void);
@@ -89,5 +91,9 @@ void	ft_free_tokens(t_tokens	**head);
 int		find_envvar_index(char **envp, const char *str);
 int		is_ws(char c);
 void	unset_case(t_mshell *shell, char *str);
+void	get_current_location(t_mshell *shell);
+
 
 #endif
+
+

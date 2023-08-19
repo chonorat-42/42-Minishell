@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 22:04:37 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 23:47:15 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,21 @@ int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 		child = fork();
 		if (child == -1)
 			return (free(temp), 1);
-		if (child == 0)
+		else if (child == 0)
 		{
+			// ft_printf("before execve : trying %s\n", temp);
 			if (execve(temp, cmd_arr, envp) == -1)
 			{
+				// ft_printf("%s failed\n", temp);
 				free(temp);
 				exit(1);
 			}
 		}
 		else
+		{
+			// ft_printf("waiting child...\n\n");
 			waitpid(child, NULL, 0);
+		}
 		free(temp);
 	}
 	return (ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell.cmd_count, cmd_arr[0]), 1);
@@ -116,8 +121,10 @@ void execution(t_mshell *shell, char **envp)
 				return (free_struct(shell), exit(0));
 			else if (!ft_strncmp((const char *)temp->content, "env", 3))
 				env_case(shell);
-			else if (!ft_strncmp((const char *)temp->content, "unset", 3))
+			else if (!ft_strncmp((const char *)temp->content, "unset", 5))
 				unset_case(shell, temp->content);
+			else if (!ft_strncmp((const char *)temp->content, "pwd", 3))
+				pwd_case(shell);
 			else
 			{
 				temp->cmd_arr = ft_split(temp->content, ' ');

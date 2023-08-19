@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:19:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 21:32:27 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:53:53 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,10 @@ static char	*get_zero(char *str, unsigned int start)
 	return (result);
 }
 
-int get_current_location(t_mshell *shell, char **envp)
+void get_current_location(t_mshell *shell)
 {
-	int index;
-
-	index = find_envvar_index(envp, "PWD");
-	if (index < 0)
-		return (shell->current_loc = NULL, ft_printf("Could not find current location\n"), 1);
-	shell->current_loc = get_zero(envp[index], ft_strlen("PWD="));
-	if (!shell->current_loc)
-		return (2);
-	return (0);
+	if (getcwd(shell->current_loc, SIZE_MAX) == NULL)
+	shell->current_loc[0] = '\0';
 }
 
 static char	*add_ending_slash(char *str)
@@ -141,7 +134,6 @@ int get_paths(t_mshell *shell, char **envp)
 		return (0);
 	if (fix_paths(envp[path_index], shell))
 		return (2);
-	if (get_current_location(shell, envp))
-		return (6);
+	get_current_location(shell);
 	return (0);
 }
