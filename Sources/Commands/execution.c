@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 17:40:50 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:04:37 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 {
 	size_t j;
 	char *temp;
+	pid_t child;
 
 	if (fd != 1)
 		dup2(fd, STDOUT_FILENO);
@@ -25,11 +26,22 @@ int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 		temp = ft_strjoin(shell.paths[j], cmd_arr[0]);
 		if (!temp)
 			return (2);
-		execve(temp, cmd_arr, envp);
+		child = fork();
+		if (child == -1)
+			return (free(temp), 1);
+		if (child == 0)
+		{
+			if (execve(temp, cmd_arr, envp) == -1)
+			{
+				free(temp);
+				exit(1);
+			}
+		}
+		else
+			waitpid(child, NULL, 0);
 		free(temp);
 	}
-	close(fd);
-	return (ft_printf("sh: %d: %s: not found\n", shell.cmd_count, cmd_arr[0]), 1);
+	return (ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell.cmd_count, cmd_arr[0]), 1);
 }
 
 char *get_cmd(char *str, size_t *i)
@@ -66,7 +78,6 @@ char *get_cmd(char *str, size_t *i)
 void execution(t_mshell *shell, char **envp)
 {
 	t_tokens *temp;
-	pid_t child;
 	int fd;
 
 	temp = shell->tok_lst;
@@ -92,7 +103,7 @@ void execution(t_mshell *shell, char **envp)
 			if (!ft_strncmp((const char *)temp->content, "echo", 4))
 			{
 				if (echo_case(temp->content, fd))
-					return(free_struct(shell), exit(6));
+					return (free_struct(shell), exit(6));
 				if (fd != 1)
 				{
 					while (temp && temp->type != CMD)
@@ -112,16 +123,7 @@ void execution(t_mshell *shell, char **envp)
 				temp->cmd_arr = ft_split(temp->content, ' ');
 				if (!temp->cmd_arr)
 					return (free_struct(shell), exit(1));
-				child = fork();
-				if (child == -1)
-					return (free_struct(shell), exit(2));
-				if (child == 0)
-				{
-					if (bin_exec(*shell, temp->cmd_arr, envp, fd))
-						return (free_struct(shell), exit(4));
-				}
-				else
-					waitpid(child, NULL, 0);
+				bin_exec(*shell, temp->cmd_arr, envp, fd);
 				if (temp->cmd_arr)
 					free_arr(temp->cmd_arr);
 				temp->cmd_arr = NULL;

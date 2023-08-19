@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 10:35:22 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 19:05:40 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 21:32:59 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int main(int argc, char **argv, char **envp)
 	{
 		get_envp(&shell, envp);
 		if (get_paths(&shell, shell.menvp))
-			return (1);
+			return (free_struct(&shell), 1);
 	}
 	else
 	{
@@ -78,7 +78,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	while (1)
 	{
-		ft_printf("%s ", shell.join_user);
+		ft_printf("minishell:$ ");
 		line = get_next_line(0);
 		if (!line)
 			return (free_struct(&shell), 1);

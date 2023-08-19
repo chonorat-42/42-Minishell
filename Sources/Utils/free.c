@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:40:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 19:11:09 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 21:28:53 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,6 @@ void	free_struct(t_mshell *shell)
 {
 	if (shell->prompt)
 		free(shell->prompt);
-	if (shell->user)
-		free(shell->user);
-	if (shell->session)
-		free(shell->session);
-	if (shell->join_user)
-		free(shell->join_user);
 	if (shell->current_loc)
 		free(shell->current_loc);
 	if (shell->cmd)
@@ -83,11 +77,6 @@ void	free_struct(t_mshell *shell)
 	{
 		free_arr(shell->paths);
 		shell->paths = NULL;
-	}
-	if (shell->temp)
-	{
-		free_arr(shell->paths);
-		shell->temp = NULL;
 	}
 	if (shell->tok_lst)
 		ft_free_tokens(&shell->tok_lst);

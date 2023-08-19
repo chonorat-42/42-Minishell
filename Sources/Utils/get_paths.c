@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:19:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 19:04:55 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 21:32:27 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,46 +78,6 @@ int get_current_location(t_mshell *shell, char **envp)
 	return (0);
 }
 
-int join_user_session(t_mshell *shell)
-{
-	char *temp;
-	char *temp2;
-
-	temp = ft_strjoin((const char *)shell->user, "@");
-	if (!temp)
-		return (1);
-	temp2 = ft_strjoin((const char *)temp, shell->session);
-	if (!temp2)
-		return (free(temp), 2);
-	shell->join_user = ft_strjoin((const char *)temp2, ":~$ ");
-	if (!shell->join_user)
-		return (free(temp), free(temp2), 3);
-	return (free(temp), free(temp2), 0);
-
-}
-
-int get_session(t_mshell *shell, char **envp)
-{
-	int index;
-
-	index = find_envvar_index(envp, "DESKTOP_SESSION");
-	shell->session = get_zero(envp[index], ft_strlen("DESKTOP_SESSION="));
-	if (!shell->session)
-		return (1);
-	return (0);
-}
-
-int get_user_info(t_mshell *shell, char **envp)
-{
-	int index;
-
-	index = find_envvar_index(envp, "USER");
-	shell->user = get_zero(envp[index], ft_strlen("USER="));
-	if (!shell->user)
-		return (2);
-	return (0);
-}
-
 static char	*add_ending_slash(char *str)
 {
 	char	*result;
@@ -141,30 +101,32 @@ static int	fix_paths(char *str, t_mshell *args)
 {
 	size_t	size;
 	size_t	j;
+	char **temp;
+	char *zero;
 
-	args->temp = ft_split((const char *)str, ':');
-	if (!args->temp)
+	temp = ft_split((const char *)str, ':');
+	if (!temp)
 		return (1);
-	size = count_arr_size(args->temp);
+	size = count_arr_size(temp);
 	args->paths = malloc(sizeof(char *) * (size + 1));
 	if (!args->paths)
-		return (free_arr(args->temp), args->temp = NULL, 2);
+		return (free_arr(temp), temp = NULL, 2);
 	args->paths[size] = NULL;
-	args->zero = get_zero(args->temp[0], 5);
-	if (!args->zero)
-		return (free_arr(args->temp), args->temp = NULL, free_arr(args->paths), args->paths = NULL, 3);
-	args->paths[0] = add_ending_slash(args->zero);
+	zero = get_zero(temp[0], 5);
+	if (!zero)
+		return (free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 3);
+	args->paths[0] = add_ending_slash(zero);
 	if (!args->paths[0])
-		return (free(args->zero), free_arr(args->temp), args->temp = NULL, free_arr(args->paths), args->paths = NULL, 4);
-	free(args->zero);
+		return (free(zero), free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 4);
+	free(zero);
 	j = 0;
 	while (++j < size)
 	{
-		args->paths[j] = add_ending_slash(args->temp[j]);
+		args->paths[j] = add_ending_slash(temp[j]);
 		if (!args->paths[j])
-			return (free_arr(args->temp), args->temp = NULL, free_arr(args->paths), args->paths = NULL, 3);
+			return (free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 3);
 	}
-	return (free_arr(args->temp), args->temp = NULL, 0);
+	return (free_arr(temp), temp = NULL, 0);
 }
 
 int get_paths(t_mshell *shell, char **envp)
@@ -176,15 +138,9 @@ int get_paths(t_mshell *shell, char **envp)
 	shell->tok_lst = NULL;
 	shell->cmd = NULL;
 	if (path_index == -1)
-		return (1);
+		return (0);
 	if (fix_paths(envp[path_index], shell))
 		return (2);
-	if (get_user_info(shell, envp))
-		return (3);
-	if (get_session(shell, envp))
-		return(4);
-	if (join_user_session(shell))
-		return (5);
 	if (get_current_location(shell, envp))
 		return (6);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:52:08 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 17:40:59 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 21:38:04 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,6 @@ typedef struct s_mshell
 	size_t		envp_size;
 	char		**menvp;
 	char		**paths;
-	char		**temp;
-	char 		*zero;
-	char		*user;
-	char		*session;
-	char		*join_user;
 	char		*current_loc;
 	size_t		cmd_count;
 	t_dlist		 history;
