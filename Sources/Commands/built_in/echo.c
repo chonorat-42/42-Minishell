@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 11:35:26 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 14:50:23 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 14:58:01 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int echo_case(char *prompt, int fd)
 		if (!to_display)
 			return (free(option), 1);
 	}
-	if (to_display[0])
+	if (to_display[0] && ft_strlen(to_display) == 0)
 	{
 		ft_putstr_fd(to_display, fd);
 		if (option)
