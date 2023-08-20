@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 13:11:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 23:03:52 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/20 14:51:44 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,18 @@ int cd_case(t_mshell *shell)
 	str = get_cmd_arguments(shell->prompt);
 	if (!str)
 		return (1);
-	temp = ft_strtrim(str, "\n");
+	temp = ft_strtrim(str, "\n\t\v\f\r ");
 	free(str);
 	if (!temp)
 		return (1);
 	ft_printf("in cd case, temp = %s\n", temp);
 	result = chdir(temp);
-	free(temp);
 	if (result != 0)
 	{
 		ft_printf("minishell: %d: can't cd to %s\n", shell->cmd_count, temp);
+		free(temp);
 		return (1);
 	}
+	free(temp);
 	return (0);
 }
