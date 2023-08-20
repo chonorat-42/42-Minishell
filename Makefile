@@ -6,7 +6,7 @@
 #    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/08/21 01:00:26 by chonorat         ###   ########.fr        #
+#    Updated: 2023/08/21 01:11:55 by chonorat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,6 +74,7 @@ all: $(NAME)
 clean:
 	$(CLEAN_LIBFT)
 	$(PRINT) "\n${_BOLD}Cleaning Objects...${_END}"
+	$(RM) .OS
 	$(RM) $(OBJS)
 	$(PRINT) "${_BOLD}${_GREEN}Objects cleaned.${_END}"
 
@@ -85,6 +86,7 @@ fclean:
 	$(RM) $(NAME)
 	$(PRINT) "${_RED}Deleting Objects directory...${_END}"
 	$(RM) Objects
+	$(RM) .OS
 	$(PRINT) "${_GREEN}Objects cleaned.${_END}"
 	$(PRINT) "${_GREEN}$(NAME) deleted.${_END}"
 	$(PRINT) "${_GREEN}Objects directory deleted.\n${_END}"
