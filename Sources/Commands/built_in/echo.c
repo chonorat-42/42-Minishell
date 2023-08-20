@@ -38,7 +38,7 @@ int echo_case(char *prompt, int fd)
 	option = get_builtin_opt(prompt, &i);
 	if (option)
 	{
-		if (strncmp(option, "-n", ft_strlen(option)))
+		if (ft_strncmp(option, "-n", ft_strlen(option)))
 			return (ft_printf("Error\nWrong options for echo\n"), free(option), 0);
 	}
 	while (prompt[i] && is_ws(prompt[i]))
