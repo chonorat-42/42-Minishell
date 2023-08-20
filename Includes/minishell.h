@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:52:08 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/17 16:58:42 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/08/20 15:04:58 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # define RCHEVRON 8
 # define APPEND 9
 # define REDIRECT 10
+# define SIZE_MAX 65535
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -62,12 +63,7 @@ typedef struct s_mshell
 	size_t		envp_size;
 	char		**menvp;
 	char		**paths;
-	char		**temp;
-	char 		*zero;
-	char		*user;
-	char		*session;
-	char		*join_user;
-	char		*current_loc;
+	char		current_loc[32767];
 	size_t		cmd_count;
 	t_dlist		 history;
 	t_tokens	*tok_lst;
@@ -79,9 +75,12 @@ void	print_arr(char **arr);
 void	print_lst(t_list *lst);
 void	free_struct(t_mshell *shell);
 void	free_arr(char **arr);
-int 	env_case(t_mshell shell, char **cmd_arr, char **envp, int fd);
+int 	bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd);
 int		echo_case(char *prompt, int fd);
+void	env_case(t_mshell *shell);
+char	*get_cmd_arguments(char *prompt);
 int 	cd_case(t_mshell *shell);
+void	pwd_case(t_mshell *shell);
 int 	redirect(t_mshell *shell);
 void 	struct_init(t_mshell *shell);
 void	sig_handler(void);
@@ -89,6 +88,16 @@ int		tokenizer(t_mshell *shell);
 void 	execution(t_mshell *shell, char **envp);
 void	free_arr(char **arr);
 void	ft_free_tokens(t_tokens	**head);
-int		find_index(char **envp, const char *str);
+int		find_envvar_index(char **envp, const char *str);
+int		is_ws(char c);
+void	unset_case(t_mshell *shell, char *str);
+void	get_current_location(t_mshell *shell);
+void 	parsing(t_mshell *shell);
+char	*get_envvar_content(char *envvar, unsigned int start);
+
+
+
 
 #endif
+
+
