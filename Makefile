@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/08/18 14:04:35 by chonorat         ###   ########.fr        #
+#    Updated: 2023/08/21 01:00:26 by chonorat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,8 @@ _RED = \033[31m
 #POLICE
 _END = \033[0m
 _BOLD = \033[1m
+
+OS = $(shell uname | cat)
 
 NAME = minishell
 CFLAGS = -Wall -Wextra -Werror -ggdb3
@@ -47,17 +49,25 @@ SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 
 $(NAME): $(OBJS)
+ifeq ($(OS),Linux)
 	$(PRINT) "\n${_YELLOW}Checking Libft...${_END}"
 	$(MAKE_LIBFT)
 	$(PRINT) "\n${_YELLOW}Making $(NAME)...${_END}"
 	$(CC) $(OBJS) -o $(NAME) $(LIBFT)
 	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.${_END}"
+else
+	$(PRINT) "ERROR\n$(NAME) was made for Linux only.\n"
+endif
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
+ifeq ($(OS),Linux)
 	$(DIR) Objects
 	$(DIR) Objects/Commands Objects/Utils Objects/Commands/built_in
 	$(PRINT) "Compiling ${_BOLD}$<$(_END)..."
 	$(CC) -c $(CFLAGS) $< -o $@
+else
+	$(PRINT) "OS=$(OS)" > .OS
+endif
 
 all: $(NAME)
 
