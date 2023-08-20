@@ -16,8 +16,9 @@ void env_case(t_mshell *shell, char *cmd)
 {
 	size_t j;
 
+	j = 0;
 	if (ft_strlen(cmd) != 3)
-	j = -1;
+		j = -1;
 	while (++j < shell->envp_size)
 	{
 		if (shell->menvp[j])
