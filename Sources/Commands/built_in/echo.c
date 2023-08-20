@@ -6,13 +6,13 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 11:35:26 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 14:43:26 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/20 18:47:40 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../Includes/minishell.h"
 
-char *get_echo_opt(char *str, size_t *i)
+char *get_builtin_opt(char *str, size_t *i)
 {
 	size_t j;
 	char *result;
@@ -35,10 +35,10 @@ int echo_case(char *prompt, int fd)
 	size_t i;
 
 	i = 5;
-	option = get_echo_opt(prompt, &i);
+	option = get_builtin_opt(prompt, &i);
 	if (option)
 	{
-		if (option[0] != '-' || ft_strlen(option) != 2 || option[1] != 'n')
+		if (strncmp(option, "-n", ft_strlen(option)))
 			return (ft_printf("Error\nWrong options for echo\n"), free(option), 0);
 	}
 	while (prompt[i] && is_ws(prompt[i]))

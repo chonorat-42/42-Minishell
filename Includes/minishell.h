@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:52:08 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 15:04:58 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/20 19:07:47 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,9 @@ void	free_struct(t_mshell *shell);
 void	free_arr(char **arr);
 int 	bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd);
 int		echo_case(char *prompt, int fd);
-void	env_case(t_mshell *shell);
+void	env_case(t_mshell *shell, char *cmd);
 char	*get_cmd_arguments(char *prompt);
-int 	cd_case(t_mshell *shell);
+int 	cd_case(t_mshell *shell, char *cmd);
 void	pwd_case(t_mshell *shell);
 int 	redirect(t_mshell *shell);
 void 	struct_init(t_mshell *shell);
@@ -94,6 +94,8 @@ void	unset_case(t_mshell *shell, char *str);
 void	get_current_location(t_mshell *shell);
 void 	parsing(t_mshell *shell);
 char	*get_envvar_content(char *envvar, unsigned int start);
+char	*get_builtin_opt(char *str, size_t *i);
+
 
 
 

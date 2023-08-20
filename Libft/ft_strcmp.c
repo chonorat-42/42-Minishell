@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/18 13:16:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 18:51:16 by pgouasmi         ###   ########.fr       */
+/*   Created: 2023/08/20 18:53:27 by pgouasmi          #+#    #+#             */
+/*   Updated: 2023/08/20 18:58:25 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../Includes/minishell.h"
+#include "../Includes/libft.h"
 
-void env_case(t_mshell *shell, char *cmd)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	size_t j;
+	size_t	i;
 
-	if (ft_strlen(cmd) != 3)
-	j = -1;
-	while (++j < shell->envp_size)
+	i = 0;
+	while(s1[i] || s2[i])
 	{
-		if (shell->menvp[j])
-			ft_printf("%s\n", shell->menvp[j]);
+		if (s1[i] != s2[i])
+			return (1);
+		i++; 
 	}
+	if (s1[i] || s2[i])
+		return (1);
+	return (0);
 }
