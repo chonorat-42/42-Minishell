@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/20 13:59:48 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 14:43:14 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/20 15:14:28 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,4 +100,5 @@ void parsing(t_mshell *shell)
 	}
 	free(shell->prompt);
 	shell->prompt = ft_strdup(result);
+	free(result);
 }

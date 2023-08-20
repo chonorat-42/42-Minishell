@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:19:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 22:53:53 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/20 15:12:05 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int	find_envvar_index(char **envp, const char *str)
 	int	j;
 	size_t len;
 
+	if (!envp)
+		return (-1);
 	j = 0;
 	len = ft_strlen(str);
 	while (envp[j])
@@ -51,15 +53,15 @@ int	find_envvar_index(char **envp, const char *str)
 	return (-1);
 }
 
-static char	*get_zero(char *str, unsigned int start)
+char	*get_envvar_content(char *envvar, unsigned int start)
 {
 	char	*result;
 	size_t	len;
 
-	len = ft_strlen((const char *)str);
-	if (!str || start > len || len == 0)
+	len = ft_strlen((const char *)envvar);
+	if (!envvar || start > len || len == 0)
 		return (NULL);
-	result = ft_substr((const char *)str, start, len - start);
+	result = ft_substr((const char *)envvar, start, len - start);
 	if (!result)
 		return (NULL);
 	return (result);
@@ -105,7 +107,7 @@ static int	fix_paths(char *str, t_mshell *args)
 	if (!args->paths)
 		return (free_arr(temp), temp = NULL, 2);
 	args->paths[size] = NULL;
-	zero = get_zero(temp[0], 5);
+	zero = get_envvar_content(temp[0], 5);
 	if (!zero)
 		return (free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 3);
 	args->paths[0] = add_ending_slash(zero);
