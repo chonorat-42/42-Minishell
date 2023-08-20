@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 10:35:22 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 21:32:59 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/20 14:09:33 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,11 @@ int main(int argc, char **argv, char **envp)
 		line = get_next_line(0);
 		if (!line)
 			return (free_struct(&shell), 1);
-		shell.prompt = ft_strtrim((const char *)line, "\n");
+		shell.prompt = ft_strtrim((const char *)line, "\n\t\v\f\r ");
 		free(line);
 		if (!shell.prompt)
 			return (free_struct(&shell), 1);
+		parsing(&shell);
 		tokenizer(&shell);
 		execution(&shell, envp);
 		free(shell.prompt);

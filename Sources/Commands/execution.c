@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 00:13:50 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/20 13:58:45 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ char *get_cmd(char *str, size_t *i)
 }
 
 /*to do :
+- parsing avant exec
 - debugger cd (??)
 - gerer simple quotes echo
 - verifier les options des builtins (opt only for echo)
