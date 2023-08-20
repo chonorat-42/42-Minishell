@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:40:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/17 16:50:30 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/08/19 22:39:53 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,12 @@ void	free_arr(char **arr)
 	int j;
 
 	j = 0;
+	if (!arr)
+		return ;
 	while (arr[j])
 	{
-		free(arr[j]);
+		if (arr[j])
+			free(arr[j]);
 		j++;
 	}
 	free(arr);
@@ -63,14 +66,6 @@ void	free_struct(t_mshell *shell)
 {
 	if (shell->prompt)
 		free(shell->prompt);
-	if (shell->user)
-		free(shell->user);
-	if (shell->session)
-		free(shell->session);
-	if (shell->join_user)
-		free(shell->join_user);
-	if (shell->current_loc)
-		free(shell->current_loc);
 	if (shell->cmd)
 	{
 		free_arr(shell->cmd);
@@ -80,11 +75,6 @@ void	free_struct(t_mshell *shell)
 	{
 		free_arr(shell->paths);
 		shell->paths = NULL;
-	}
-	if (shell->temp)
-	{
-		free_arr(shell->paths);
-		shell->temp = NULL;
 	}
 	if (shell->tok_lst)
 		ft_free_tokens(&shell->tok_lst);

@@ -3,7 +3,7 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
 #    Updated: 2023/08/18 14:04:35 by chonorat         ###   ########.fr        #
@@ -20,7 +20,7 @@ _END = \033[0m
 _BOLD = \033[1m
 
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -ggdb3
 RM = @rm -rf
 CC = @cc
 DIR = @mkdir -p
@@ -31,12 +31,18 @@ MAKE_LIBFT = @make -C Libft
 CLEAN_LIBFT = @make clean -C Libft
 FCLEAN_LIBFT = @make fclean -C Libft
 FILES = minishell\
-		Commands/env_cmd\
+		Commands/execution\
+		Commands/built_in/echo\
+		Commands/built_in/cd\
+		Commands/built_in/env\
+		Commands/built_in/unset\
+		Commands/built_in/pwd\
 		Utils/free\
 		Utils/get_paths\
 		Utils/resources\
 		Utils/tokenizer\
-		Utils/sig_handler
+		Utils/sig_handler\
+		Utils/parsing
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 
@@ -49,7 +55,7 @@ $(NAME): $(OBJS)
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
 	$(DIR) Objects
-	$(DIR) Objects/Commands Objects/Utils
+	$(DIR) Objects/Commands Objects/Utils Objects/Commands/built_in
 	$(PRINT) "Compiling ${_BOLD}$<$(_END)..."
 	$(CC) -c $(CFLAGS) $< -o $@
 
@@ -75,4 +81,7 @@ fclean:
 
 re: fclean all
 
-.PHONY: all clean fclean re
+exec : all
+	./minishell
+
+.PHONY: all clean fclean re exec

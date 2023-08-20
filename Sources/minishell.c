@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 10:35:22 by pgouasmi          #+#    #+#             */
 /*   Updated: 2023/08/19 14:53:06 by chonorat         ###   ########.fr       */
@@ -30,28 +30,32 @@ char **copy_tab(char **envp, size_t size)
 {
 	char **arr;
 	size_t j;
+	size_t k;
 
-	arr = malloc(sizeof(char *) * size + 1);
+	arr = malloc(sizeof(char *) * (size + 1));
 	if (!arr)
 		return (NULL);
-	arr[size] = NULL;
 	j = 0;
-	while (j < size - 1)
+	while (j < size)
 	{
 		arr[j] = ft_strdup(envp[j]);
 		if (!arr[j])
+		{
+			k = -1;
+			while (++k < j)
+				free(arr[k]);
 			return (NULL);
+		}
 		j++;
 	}
+	arr[size] = NULL;
 	return (arr);
 }
 
 void get_envp(t_mshell *shell, char **envp)
 {
 	shell->envp_size = get_arr_size(envp);
-	if (shell->envp_size == 0)
-		return (free_struct(shell), exit(1));
-	shell->menvp = copy_tab(envp, shell->envp_size + 1);
+	shell->menvp = copy_tab(envp, shell->envp_size);
 	if (!shell->menvp)
 		return (free_struct(shell), exit(2));
 }
@@ -68,20 +72,24 @@ int main(int argc, char **argv, char **envp)
 	{
 		get_envp(&shell, envp);
 		if (get_paths(&shell, shell.menvp))
-			return (1);
+			return (free_struct(&shell), 1);
 	}
 	else
+	{
 		shell.paths = NULL;
+		shell.menvp = NULL;
+	}
 	while (1)
 	{
-		ft_printf("prompt@test:~$ ");
+		ft_printf("minishell:~$ ");
 		line = get_next_line(0);
 		if (!line)
 			return (free_struct(&shell), 1);
-		shell.prompt = ft_strtrim((const char *)line, "\n");
+		shell.prompt = ft_strtrim((const char *)line, "\n\t\v\f\r ");
 		free(line);
 		if (!shell.prompt)
 			return (free_struct(&shell), 1);
+		parsing(&shell);
 		tokenizer(&shell);
 		execution(&shell, envp);
 		free(shell.prompt);
