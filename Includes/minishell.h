@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:52:08 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 19:07:47 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/18 14:06:01 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@
 # include <sys/stat.h>
 # include <errno.h>
 # include <stdio.h>
-# include <readline/history.h>
-# include <readline/readline.h>
 # include <signal.h>
 # include "libft.h"
 
@@ -69,6 +67,7 @@ typedef struct s_mshell
 	t_tokens	*tok_lst;
 }		t_mshell;
 
+void	sig_handler(void);
 int		get_paths(t_mshell *shell, char **envp);
 size_t	count_arr_size(char **arr);
 void	print_arr(char **arr);

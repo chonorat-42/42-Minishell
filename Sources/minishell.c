@@ -6,11 +6,13 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 10:35:22 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 14:09:33 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/19 14:53:06 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Includes/minishell.h"
+
+int	g_signum;
 
 size_t get_arr_size(char **arr)
 {
@@ -65,6 +67,7 @@ int main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	sig_handler();
 	if (envp)
 	{
 		get_envp(&shell, envp);
@@ -78,7 +81,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	while (1)
 	{
-		ft_printf("minishell:$ ");
+		ft_printf("minishell:~$ ");
 		line = get_next_line(0);
 		if (!line)
 			return (free_struct(&shell), 1);
@@ -91,6 +94,7 @@ int main(int argc, char **argv, char **envp)
 		execution(&shell, envp);
 		free(shell.prompt);
 		shell.prompt = NULL;
+		//kill(getpid(), SIGQUIT);
 	}
 	free_struct(&shell);
 }

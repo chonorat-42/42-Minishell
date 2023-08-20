@@ -58,8 +58,8 @@ char	*get_envvar_content(char *envvar, unsigned int start)
 	char	*result;
 	size_t	len;
 
-	len = ft_strlen((const char *)envvar);
-	if (!envvar || start > len || len == 0)
+	len = ft_strlen((const char *)str);
+	if (!str || (int)(len - start) < 0 || len == 0)
 		return (NULL);
 	result = ft_substr((const char *)envvar, start, len - start);
 	if (!result)

@@ -6,7 +6,7 @@
 #    By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/08/20 14:01:33 by pgouasmi         ###   ########.fr        #
+#    Updated: 2023/08/18 14:04:35 by chonorat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,8 +40,9 @@ FILES = minishell\
 		Utils/free\
 		Utils/get_paths\
 		Utils/resources\
-		Utils/parsing\
-		Utils/tokenizer
+		Utils/tokenizer\
+		Utils/sig_handler\
+		Utils/parsing
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 
