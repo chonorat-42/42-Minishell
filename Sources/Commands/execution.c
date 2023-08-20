@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 14:47:53 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/20 19:28:23 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void execution(t_mshell *shell, char **envp)
 			else
 				fd = 1;
 			shell->cmd_count++;
-			if (!ft_strncmp((const char *)temp->content, "echo", 4))
+			if (!ft_strncmp((const char *)temp->content, "echo", 4) && is_ws(temp->content[4]))
 			{
 				if (echo_case(temp->content, fd))
 					return (free_struct(shell), exit(6));
@@ -121,15 +121,15 @@ void execution(t_mshell *shell, char **envp)
 						temp = temp->next;
 				}
 			}
-			else if (!ft_strncmp((const char *)temp->content, "cd", 2))
-				cd_case(shell);
-			else if (!ft_strncmp((const char *)temp->content, "exit", 4))
+			else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
+				cd_case(shell, temp->content);
+			else if (!ft_strcmp(temp->content, "exit"))
 				return (free_struct(shell), exit(0));
-			else if (!ft_strncmp((const char *)temp->content, "env", 3))
-				env_case(shell);
-			else if (!ft_strncmp((const char *)temp->content, "unset", 5))
+			else if (!ft_strcmp(temp->content, "env"))
+				env_case(shell, temp->content);
+			else if (!ft_strcmp(temp->content, "unset"))
 				unset_case(shell, temp->content);
-			else if (!ft_strncmp((const char *)temp->content, "pwd", 3))
+			else if (!ft_strcmp(temp->content, "pwd"))
 				pwd_case(shell);
 			else
 			{

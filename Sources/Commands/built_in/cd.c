@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 13:11:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 15:28:21 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/20 19:29:00 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 char *get_home(char **envp)
 {
-	int		index;
-	char	*res;
+	int index;
+	char *res;
 
 	index = find_envvar_index(envp, "HOME");
 	if (index < 0)
@@ -30,7 +30,6 @@ char *get_home(char **envp)
 	if (!res)
 		return (NULL);
 	return (res);
-
 }
 
 char *get_cmd_arguments(char *prompt)
@@ -49,7 +48,7 @@ char *get_cmd_arguments(char *prompt)
 	res_len = j - i;
 	result = malloc(sizeof(char) * (res_len) + 1);
 	j = 0;
-	while (prompt[i] )
+	while (prompt[i])
 	{
 		result[j] = prompt[i];
 		i++;
@@ -59,19 +58,31 @@ char *get_cmd_arguments(char *prompt)
 	return (result);
 }
 
-int cd_case(t_mshell *shell)
+int cd_case(t_mshell *shell, char *cmd)
 {
 	char *temp;
 	char *str;
 	int result;
+	size_t i;
 
 	shell->cmd_count++;
-	if (ft_strlen(shell->prompt) == 2)
-		str = get_home(shell->menvp);
-		if (str && !str[0])
+	i = 0;
+	while (cmd[i] && !is_ws(cmd[i]))
+		i++;
+	i++;
+	if (get_builtin_opt(cmd, &i))
+	{
+		ft_dprintf(STDERR_FILENO, "Error\nCd command does not take any option\n");
+		return (1);
+	}
+	if (ft_strlen(cmd) == 2)
+	{
+		temp = get_home(shell->menvp);
+		if (temp && !temp[0])
 			return (ft_printf("Error/nPath to HOME could not be found\n"), 2);
+	}
 	else
-		temp = get_cmd_arguments(shell->prompt);
+		temp = get_cmd_arguments(cmd);
 	if (!temp)
 		return (3);
 	str = ft_strtrim(temp, "\n\t\v\f\r ");

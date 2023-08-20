@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/14 14:37:20 by chonorat          #+#    #+#              #
-#    Updated: 2023/08/17 17:00:58 by chonorat         ###   ########.fr        #
+#    Updated: 2023/08/20 18:59:47 by pgouasmi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ FILES = ft_isalpha\
 		ft_strchr\
 		ft_strrchr\
 		ft_strncmp\
+		ft_strcmp\
 		ft_memchr\
 		ft_memcmp\
 		ft_strnstr\
