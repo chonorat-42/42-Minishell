@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:52:08 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/18 14:06:01 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/08/21 11:10:23 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ void	get_current_location(t_mshell *shell);
 void 	parsing(t_mshell *shell);
 char	*get_envvar_content(char *envvar, unsigned int start);
 char	*get_builtin_opt(char *str, size_t *i);
+size_t 	find_char_index(char *str, int c);
 
 
 
