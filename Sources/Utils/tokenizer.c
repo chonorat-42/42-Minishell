@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 17:58:25 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/17 16:49:58 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/08/21 11:48:39 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,18 +99,18 @@ void give_type(t_tokens **lst)
 	while (temp)
 	{
 		len = ft_strlen(temp->content);
-		if (!ft_strncmp(temp->content, "|", len))
+		if (!ft_strcmp(temp->content, "|"))
 			temp->type = (int)PIPE;
-		else if (!ft_strncmp(temp->content, ">>", len) && len != 1)
+		else if (!ft_strcmp(temp->content, ">>"))
 			temp->type = (int)APPEND;
-		else if (!ft_strncmp(temp->content, ">", len) && len == 1)
+		else if (!ft_strcmp(temp->content, ">"))
 			temp->type = (int)RCHEVRON;
-		else if (!ft_strncmp(temp->content, "<<", len) && len != 1)
+		else if (!ft_strcmp(temp->content, "<<"))
 			temp->type = (int)REDIRECT;
-		else if (!ft_strncmp(temp->content, "<", len) && len == 1)
+		else if (!ft_strcmp(temp->content, "<"))
 			temp->type = (int)LCHEVRON;
-		else if (!ft_strncmp(temp->content, "$", len))
-			temp->type = (int)ENVVAR;
+		// else if (!ft_strncmp(temp->content, "$", len))
+		// 	temp->type = (int)ENVVAR;
 		temp = temp->next;
 	}
 	temp = *lst;
@@ -182,6 +182,61 @@ void print_tkns_up(t_tokens *lst)
 	}
 }
 
+int	content_has_envvar(char *cmd)
+{
+	size_t	i;
+
+	i = 0;
+	while (is_ws(cmd[i]))
+		i++;
+	while (!is_ws(cmd[i]))
+		i++;
+	if (cmd[i] == '-')
+	{
+		while (!is_ws(cmd[i]))
+			i++;
+	}
+	while (is_ws(cmd[i]))
+		i++;
+	if (cmd[i] == '$')
+		return (1);
+	return (0);
+}
+
+char *get_envvar(char *str)
+{
+	size_t	end;
+	char *res;
+
+	end = 0;
+	while (str[end] && !is_ws(str[end]))
+		end++;
+	res = ft_substr(str, 0, end);
+	if (!res)
+		return (NULL);
+	return (res);
+}
+
+char *expanse_envvar(char *str, char **envp)
+{
+	size_t 	envvar_start;
+	char 	*cmd;
+	char	*envvar_content;
+	int		var_index;
+	char	*envvar;
+	char	*res;
+
+	envvar_start = find_char_index(str, '$');
+	cmd = ft_substr(str, 0, envvar_start);
+	if (!cmd)
+		return (NULL);
+	envvar = get_envvar(&str[envvar_start + 1]);
+	var_index = find_envvar_index(envp, envvar);
+	envvar_content = get_envvar_content(envp[var_index], ft_strlen(envvar) + 1);
+	res = ft_strjoin(cmd, envvar_content);
+	return (free(cmd), free(envvar_content), free(envvar), res);
+}
+
 int create_token(t_mshell *shell, int i, int j)
 {
 	t_tokens *new;
@@ -229,7 +284,10 @@ int create_token(t_mshell *shell, int i, int j)
 		new->position = temp->position + 1;
 		new->next = NULL;
 	}
-	new->content = ft_strdup(result);
+	if (content_has_envvar(result))
+		new->content = expanse_envvar(result, shell->menvp);
+	else
+		new->content = ft_strdup(result);
 	// ft_printf("%s\n", result);
 	new->type = 0;
 	new->cmd_arr = NULL;

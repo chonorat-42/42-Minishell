@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_paths.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:19:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 15:12:05 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/21 10:48:23 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ char	*get_envvar_content(char *envvar, unsigned int start)
 	char	*result;
 	size_t	len;
 
-	len = ft_strlen((const char *)str);
-	if (!str || (int)(len - start) < 0 || len == 0)
+	len = ft_strlen((const char *)envvar);
+	if (!envvar || (int)(len - start) < 0 || len == 0)
 		return (NULL);
 	result = ft_substr((const char *)envvar, start, len - start);
 	if (!result)

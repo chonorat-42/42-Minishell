@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 19:28:23 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/21 10:47:36 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,9 @@ char *get_cmd(char *str, size_t *i)
 }
 
 /*to do :
-- parsing avant exec OK
-- debugger cd (??)
 - gerer simple quotes echo
-- verifier les options des builtins (opt only for echo)
 - export (diff export env ?)
-- gestion variables $
+- gestion variables $ WORKING
 - debugger bin_exec double execution
 - gestion des pipes
 - factorisation + cleaning*/
