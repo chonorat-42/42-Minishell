@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 17:58:25 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/21 13:26:47 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/21 17:03:55 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,8 @@ int	content_has_envvar(char *cmd)
 		i++;
 	while (cmd[i] && !is_ws(cmd[i]))
 		i++;
+	while (cmd[i] && is_ws(cmd[i]))
+		i++;
 	if (cmd[i] == '-')
 	{
 		while (cmd[i] && !is_ws(cmd[i]))
@@ -217,22 +219,74 @@ char *get_envvar(char *str)
 
 char *expanse_envvar(char *str, char **envp)
 {
-	size_t 	envvar_start;
-	char 	*cmd;
-	char	*envvar_content;
-	int		var_index;
-	char	*envvar;
+
+	size_t	i;
+	size_t	j;
+	char	*temp;
 	char	*res;
 
-	envvar_start = find_char_index(str, '$');
-	cmd = ft_substr(str, 0, envvar_start);
-	if (!cmd)
-		return (NULL);
-	envvar = get_envvar(&str[envvar_start + 1]);
-	var_index = find_envvar_index(envp, envvar);
-	envvar_content = get_envvar_content(envp[var_index], ft_strlen(envvar) + 1);
-	res = ft_strjoin(cmd, envvar_content);
-	return (free(cmd), free(envvar_content), free(envvar), res);
+	i = 0;
+	while (is_ws(str[i]))
+		i++;
+	j = i;
+	while (str[i])
+	{
+		if (content_has_envvar(&str[i]))
+		{
+			while (str[j] != '$')
+				j++;
+			temp = ft_substr(str, i, j - i);
+			ft_printf()
+			
+		}
+	}
+	// size_t 	envvar_start;
+	// char 	*cmd;
+	// char	*envvar_content;
+	// int		var_index;
+	// char	*envvar;
+	// char	*res;
+	// char	*after;
+
+	// envvar_start = find_char_index(str, '$');
+	// cmd = ft_substr(str, 0, envvar_start);
+	// if (!cmd)
+	// 	return (NULL);
+	// envvar = get_envvar(&str[envvar_start + 1]);
+	// if (!envvar)
+	// 	return (free(cmd), NULL);
+	// var_index = find_envvar_index(envp, envvar);
+	// if (var_index == -1)
+	// {
+	// 	res = malloc(sizeof(char) * 1);
+	// 	res[0] = '\0';
+	// 	return (free(cmd), free(envvar), res);
+	// }
+	// else
+	// {
+	// if (var_index != -1)
+	// {
+	// 	envvar_content = get_envvar_content(envp[var_index], ft_strlen(envvar) + 1);
+	// 	if (!envvar_content)
+	// 		return (free(cmd), free(envvar), NULL);
+	// }
+	// else 
+	// 	envvar = NULL;
+	// if (envvar)
+	// {
+	// 	res = ft_strjoin(cmd, envvar_content);
+	// 	if (!res)
+	// 		return (free(cmd), free(envvar), NULL);
+	// }
+	// else
+	// 	res = ft_strdup(cmd);
+	// after = ft_substr(str, envvar_start + ft_strlen(envvar) + 1, ft_strlen(str));
+	// if (!after)
+	// 	return (free(cmd), free(envvar), free(res), NULL);
+	// res = ft_strjoin(res, after);
+	// if (!res)
+	// 	return (free(cmd), free(envvar), free(after), NULL);
+	// return (free(cmd), free(envvar_content), free(after), res);
 }
 
 int create_token(t_mshell *shell, int i, int j)
@@ -276,6 +330,9 @@ int create_token(t_mshell *shell, int i, int j)
 	if (content_has_envvar(result))
 	{
 		new->content = expanse_envvar(result, shell->menvp);
+		if (!new->content)
+			return (free(new), free_struct(shell), free(result), exit(5), 5);
+
 	}
 	else
 		new->content = ft_strdup(result);

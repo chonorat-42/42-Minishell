@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/21 13:28:12 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/21 17:04:57 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 {
 	size_t j;
 	char *temp;
-	// pid_t child;
 
 	if (fd != 1)
 		dup2(fd, STDOUT_FILENO);
@@ -26,24 +25,9 @@ int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 		temp = ft_strjoin(shell.paths[j], cmd_arr[0]);
 		if (!temp)
 			return (2);
-		// child = fork();
-		// if (child == -1)
-		// 	return (free(temp), 1);
-		// else if (child == 0)
-		// {
-			// ft_printf("before execve : trying %s\n", temp);
 		if (execve(temp, cmd_arr, envp) == -1)
 			free(temp);
-				// ft_printf("%s failed\n", temp);
-				
-		// }
-		// else
-		// {
-		// 	// ft_printf("waiting child...\n\n");
-		// 	waitpid(child, NULL, 0);
-
 	}
-	free(temp);
 	return (ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell.cmd_count, cmd_arr[0]), 1);
 }
 
@@ -75,8 +59,9 @@ char *get_cmd(char *str, size_t *i)
 }
 
 /*to do :
-- debugger bin_exec double execution
-- builtin sans arg KO
+- debugger bin_exec double execution DONE
+- builtin sans arg KO DONE
+- refaire expand
 - gerer simple quotes echo
 - export (diff export env ?)
 - gestion des pipes
@@ -107,7 +92,7 @@ void execution(t_mshell *shell, char **envp)
 			else
 				fd = 1;
 			shell->cmd_count++;
-			if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((temp->content[4]) && is_ws(temp->content[4])))
+			if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
 			{
 				if (echo_case(temp->content, fd))
 					return (free_struct(shell), exit(6));
@@ -119,13 +104,13 @@ void execution(t_mshell *shell, char **envp)
 			}
 			else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
 				cd_case(shell, temp->content);
-			else if (!ft_strncmp(temp->content, "exit", 4))
+			else if (!ft_strcmp(temp->content, "exit"))
 				return (free_struct(shell), exit(0));
-			else if (!ft_strncmp(temp->content, "env", 3))
+			else if (!ft_strcmp(temp->content, "env"))
 				env_case(shell, temp->content);
-			else if (!ft_strncmp(temp->content, "unset", 5))
+			else if (!ft_strncmp(temp->content, "unset", 5) && is_ws(temp->content[5]))
 				unset_case(shell, temp->content);
-			else if (!ft_strncmp(temp->content, "pwd", 3))
+			else if (!ft_strcmp(temp->content, "pwd"))
 				pwd_case(shell);
 			else
 			{
