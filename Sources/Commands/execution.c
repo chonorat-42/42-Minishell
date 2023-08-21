@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/21 11:54:58 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/21 13:28:12 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 {
 	size_t j;
 	char *temp;
-	pid_t child;
+	// pid_t child;
 
 	if (fd != 1)
 		dup2(fd, STDOUT_FILENO);
@@ -26,26 +26,24 @@ int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 		temp = ft_strjoin(shell.paths[j], cmd_arr[0]);
 		if (!temp)
 			return (2);
-		child = fork();
-		if (child == -1)
-			return (free(temp), 1);
-		else if (child == 0)
-		{
+		// child = fork();
+		// if (child == -1)
+		// 	return (free(temp), 1);
+		// else if (child == 0)
+		// {
 			// ft_printf("before execve : trying %s\n", temp);
-			if (execve(temp, cmd_arr, envp) == -1)
-			{
+		if (execve(temp, cmd_arr, envp) == -1)
+			free(temp);
 				// ft_printf("%s failed\n", temp);
-				free(temp);
-				exit(1);
-			}
-		}
-		else
-		{
-			// ft_printf("waiting child...\n\n");
-			waitpid(child, NULL, 0);
-		}
-		free(temp);
+				
+		// }
+		// else
+		// {
+		// 	// ft_printf("waiting child...\n\n");
+		// 	waitpid(child, NULL, 0);
+
 	}
+	free(temp);
 	return (ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell.cmd_count, cmd_arr[0]), 1);
 }
 
@@ -77,15 +75,17 @@ char *get_cmd(char *str, size_t *i)
 }
 
 /*to do :
+- debugger bin_exec double execution
+- builtin sans arg KO
 - gerer simple quotes echo
 - export (diff export env ?)
-- debugger bin_exec double execution
 - gestion des pipes
 - factorisation + cleaning*/
 void execution(t_mshell *shell, char **envp)
 {
 	t_tokens *temp;
 	int fd;
+	pid_t	child;
 
 	temp = shell->tok_lst;
 	while (temp)
@@ -107,7 +107,7 @@ void execution(t_mshell *shell, char **envp)
 			else
 				fd = 1;
 			shell->cmd_count++;
-			if (!ft_strncmp((const char *)temp->content, "echo", 4) && is_ws(temp->content[4]))
+			if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((temp->content[4]) && is_ws(temp->content[4])))
 			{
 				if (echo_case(temp->content, fd))
 					return (free_struct(shell), exit(6));
@@ -119,20 +119,26 @@ void execution(t_mshell *shell, char **envp)
 			}
 			else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
 				cd_case(shell, temp->content);
-			else if (!ft_strcmp(temp->content, "exit"))
+			else if (!ft_strncmp(temp->content, "exit", 4))
 				return (free_struct(shell), exit(0));
-			else if (!ft_strcmp(temp->content, "env"))
+			else if (!ft_strncmp(temp->content, "env", 3))
 				env_case(shell, temp->content);
-			else if (!ft_strcmp(temp->content, "unset"))
+			else if (!ft_strncmp(temp->content, "unset", 5))
 				unset_case(shell, temp->content);
-			else if (!ft_strcmp(temp->content, "pwd"))
+			else if (!ft_strncmp(temp->content, "pwd", 3))
 				pwd_case(shell);
 			else
 			{
 				temp->cmd_arr = ft_split(temp->content, ' ');
 				if (!temp->cmd_arr)
 					return (free_struct(shell), exit(1));
-				bin_exec(*shell, temp->cmd_arr, envp, fd);
+				child = fork();
+				if (child == -1)
+					return(free_struct(shell), exit(2));
+				if (!child)
+					bin_exec(*shell, temp->cmd_arr, envp, fd);
+				else
+					waitpid(child, NULL, 0);
 				if (temp->cmd_arr)
 					free_arr(temp->cmd_arr);
 				temp->cmd_arr = NULL;

@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 17:58:25 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/21 11:54:08 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/21 13:26:47 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,16 +185,16 @@ int	content_has_envvar(char *cmd)
 	size_t	i;
 
 	i = 0;
-	while (is_ws(cmd[i]))
+	while (cmd[i] && is_ws(cmd[i]))
 		i++;
-	while (!is_ws(cmd[i]))
+	while (cmd[i] && !is_ws(cmd[i]))
 		i++;
 	if (cmd[i] == '-')
 	{
-		while (!is_ws(cmd[i]))
+		while (cmd[i] && !is_ws(cmd[i]))
 			i++;
 	}
-	while (is_ws(cmd[i]))
+	while (cmd[i] && is_ws(cmd[i]))
 		i++;
 	if (cmd[i] == '$')
 		return (1);
@@ -274,7 +274,9 @@ int create_token(t_mshell *shell, int i, int j)
 		new->next = NULL;
 	}
 	if (content_has_envvar(result))
+	{
 		new->content = expanse_envvar(result, shell->menvp);
+	}
 	else
 		new->content = ft_strdup(result);
 	new->type = 0;

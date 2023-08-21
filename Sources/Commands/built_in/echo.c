@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 11:35:26 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 18:47:40 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/21 13:39:39 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char *get_builtin_opt(char *str, size_t *i)
 	if (str[(*i)] != '-')
 		return (NULL);
 	j = *i + 1;
-	while (str[j] != ' ')
+	while (str[j] && str[j] != ' ')
 		j++;
 	result = ft_substr(str, (*i), j - (*i));
 	if (!result)
@@ -38,8 +38,8 @@ int echo_case(char *prompt, int fd)
 	option = get_builtin_opt(prompt, &i);
 	if (option)
 	{
-		if (ft_strncmp(option, "-n", ft_strlen(option)))
-			return (ft_printf("Error\nWrong options for echo\n"), free(option), 0);
+		if (ft_strcmp(option, "-n"))
+			ft_printf("%s", option);
 	}
 	while (prompt[i] && is_ws(prompt[i]))
 		i++;

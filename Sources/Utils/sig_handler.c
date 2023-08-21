@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sig_handler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 13:19:34 by chonorat          #+#    #+#             */
-/*   Updated: 2023/08/19 14:54:02 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/08/21 13:27:46 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	get_sig(int signum, siginfo_t *info, void *context)
 	(void)context;
 	g_signum = signum;
 	if (signum == SIGINT)
-		ft_printf("\nprompt@test:~$ ");
+		ft_printf("\nminishell:~$ ");
 }
 
 void	sig_handler(void)
