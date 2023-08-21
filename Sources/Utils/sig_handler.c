@@ -20,7 +20,7 @@ static void	get_sig(int signum, siginfo_t *info, void *context)
 	(void)context;
 	g_signum = signum;
 	if (signum == SIGINT)
-		ft_printf("\nprompt@test:~$ ");
+		ft_printf("\nminishell:~$ ");
 }
 
 void	sig_handler(void)
