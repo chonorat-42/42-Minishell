@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 17:58:25 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/21 11:48:39 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/21 11:54:08 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,6 @@ void give_type(t_tokens **lst)
 			temp->type = (int)REDIRECT;
 		else if (!ft_strcmp(temp->content, "<"))
 			temp->type = (int)LCHEVRON;
-		// else if (!ft_strncmp(temp->content, "$", len))
-		// 	temp->type = (int)ENVVAR;
 		temp = temp->next;
 	}
 	temp = *lst;
@@ -255,15 +253,6 @@ int create_token(t_mshell *shell, int i, int j)
 		return (1);
 	if (str_is_ws(result))
 		return (2);
-	// if (word_count(result) == 3 && (!strncmp(result, "echo", 4)))
-	// {
-	// 	if (create_token(shell, find_space_index(result, 2), j))
-	// 		return (1);
-	// 	if (create_token(shell, ft_strlen(result), find_space_index(result, 2)))
-	// 		return (1);
-	// 	free(result);
-	// 	return (0);
-	// }
 	new = malloc(sizeof(t_tokens));
 	if (!new)
 		return (free(str), free(result), 1);
@@ -288,7 +277,6 @@ int create_token(t_mshell *shell, int i, int j)
 		new->content = expanse_envvar(result, shell->menvp);
 	else
 		new->content = ft_strdup(result);
-	// ft_printf("%s\n", result);
 	new->type = 0;
 	new->cmd_arr = NULL;
 	free(result);

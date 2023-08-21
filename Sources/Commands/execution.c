@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/21 10:47:36 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/21 11:54:58 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ char *get_cmd(char *str, size_t *i)
 /*to do :
 - gerer simple quotes echo
 - export (diff export env ?)
-- gestion variables $ WORKING
 - debugger bin_exec double execution
 - gestion des pipes
 - factorisation + cleaning*/
