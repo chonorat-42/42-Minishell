@@ -56,7 +56,7 @@ ifeq ($(OS),Linux)
 	$(CC) $(OBJS) -o $(NAME) $(LIBFT)
 	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.${_END}"
 else
-	$(PRINT) "ERROR\nThis $(NAME) was made for Linux only.\n"
+	$(PRINT) "This $(NAME) was made for Linux only.\n"
 endif
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
