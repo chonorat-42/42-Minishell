@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 10:35:22 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/19 14:53:06 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/08/21 13:31:16 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void get_envp(t_mshell *shell, char **envp)
 		return (free_struct(shell), exit(2));
 }
 
+
+/*mettre get paths en void et delete condition*/
 int main(int argc, char **argv, char **envp)
 {
 	t_mshell shell;
