@@ -101,6 +101,7 @@ int main(int argc, char **argv, char **envp)
 		//kill(getpid(), SIGQUIT);
 		}
 		free(shell.prompt);
+		shell.prompt = NULL;
 	}
 	free_struct(&shell);
 }
