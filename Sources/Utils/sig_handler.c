@@ -20,7 +20,7 @@ static void	get_sig(int signum, siginfo_t *info, void *context)
 	(void)context;
 	g_signum = signum;
 	if (signum == SIGINT)
-		ft_printf("\nminishell:~\033[0;32m$\033[0m ");
+		ft_printf("\n\033[1mminishell\033[0m:~\033[0;32m$\033[0m ");
 }
 
 void	sig_handler(void)
