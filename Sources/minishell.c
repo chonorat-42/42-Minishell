@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 10:35:22 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/21 13:31:16 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/23 13:52:10 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,19 @@ int main(int argc, char **argv, char **envp)
 		if (!line)
 			return (free_struct(&shell), 1);
 		shell.prompt = ft_strtrim((const char *)line, "\n\t\v\f\r ");
-		free(line);
 		if (!shell.prompt)
 			return (free_struct(&shell), 1);
-		parsing(&shell);
-		tokenizer(&shell);
-		execution(&shell, envp);
-		free(shell.prompt);
-		shell.prompt = NULL;
+		free(line);
+		if (shell.prompt[0] != '\0')
+		{
+			expand(&shell, shell.prompt);
+			parsing(&shell);
+			tokenizer(&shell);
+			execution(&shell, envp);
+			shell.prompt = NULL;
 		//kill(getpid(), SIGQUIT);
+		}
+		free(shell.prompt);
 	}
 	free_struct(&shell);
 }

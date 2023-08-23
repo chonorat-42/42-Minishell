@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/18 11:35:26 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/21 15:10:20 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/23 14:00:34 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ int echo_case(char *prompt, int fd)
 {
 	char *option;
 	size_t i;
-
-	ft_printf("got into echo case\n\n");
 	i = 5;
 	option = get_builtin_opt(prompt, &i);
 	if (option)

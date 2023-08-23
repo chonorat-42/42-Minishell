@@ -3,36 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/20 13:59:48 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 15:14:28 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/23 13:58:35 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../Includes/minishell.h"
-
-int are_all_quotes_closed(char *str)
-{
-	size_t i;
-	size_t j;
-
-	i = 0;
-	while (str[i])
-	{
-		if ((str[i] == '\'' || str[i] == '\"'))
-		{
-			j = i + 1;
-			while (str[j] && str[j] != str[i])
-				j++;
-			if (!str[j])
-				return (0);
-			i = j;
-		}
-		i++;
-	}
-	return (1);
-}
 
 char *get_between_quotes(char *str, int c, size_t *i)
 {
@@ -51,21 +29,6 @@ char *get_between_quotes(char *str, int c, size_t *i)
 	if (!result)
 		return (NULL);
 	return (result);
-}
-
-char *get_other(char *str, size_t *i)
-{
-	size_t j;
-	char *temp;
-
-	j = *i;
-	while (str[j] && str[j] != '\'' && str[j] != '\"')
-		j++;
-	temp = ft_substr(str, (*i), j - (*i));
-	if (!temp)
-		return (NULL);
-	*i = j;
-	return (temp);
 }
 
 void parsing(t_mshell *shell)
