@@ -83,7 +83,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	while (1)
 	{
-		ft_printf("minishell:~$ ");
+		ft_printf("minishell:~\033[0;32m$\033[0m ");
 		line = get_next_line(0);
 		if (!line)
 			return (free_struct(&shell), 1);
