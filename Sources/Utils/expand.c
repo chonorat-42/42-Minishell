@@ -6,16 +6,16 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 16:26:35 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/23 13:58:04 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/24 18:06:50 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../Includes/minishell.h"
 
-char *get_quotes(char *str, int c, size_t *i)
+char	*get_quotes(char *str, int c, size_t *i)
 {
-	char *result;
-	int j;
+	char	*result;
+	int		j;
 
 	j = *i;
     (*i)++;
@@ -33,10 +33,10 @@ char *get_quotes(char *str, int c, size_t *i)
 	return (result);
 }
 
-int are_all_quotes_closed(char *str)
+int	are_all_quotes_closed(char *str)
 {
-	size_t i;
-	size_t j;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
 	while (str[i])
@@ -55,10 +55,10 @@ int are_all_quotes_closed(char *str)
 	return (1);
 }
 
-char *get_other(char *str, size_t *i)
+char	*get_other(char *str, size_t *i)
 {
-	size_t j;
-	char *temp;
+	size_t	j;
+	char	*temp;
 
 	j = *i + 1;
 	while (str[j] && str[j] != '\'' && str[j] != '\"')
@@ -70,7 +70,7 @@ char *get_other(char *str, size_t *i)
 	return (temp);
 }
 
-char *expand_envvar(char *str, char **envp)
+char	*expand_envvar(char *str, char **envp)
 {
 
 	size_t	i;
@@ -147,21 +147,16 @@ char *expand_envvar(char *str, char **envp)
 	return (res);
 }
 
-void expand(t_mshell *shell, char *cmd)
+int	expand(t_mshell *shell, char *cmd)
 {
-    char *res;
-    char *temp;
-    // char *expanded_temp;
-    size_t i;
+    char	*res;
+    char	*temp;
+    size_t	i;
 
     res = NULL;
     i = 0;
     if (!are_all_quotes_closed(shell->prompt))
-    {
-        free_struct(shell);
-        exit (4);
-        return ;
-    }
+		return (ft_printf("Error\nUnclosed quotes\n"), 1);
     while (cmd[i])
     {
         if (cmd[i] == '\'' || cmd[i] == '\"')
@@ -181,4 +176,5 @@ void expand(t_mshell *shell, char *cmd)
     free(shell->prompt);
     shell->prompt = ft_strdup(res);
 	free(res);
+	return (0);
 }

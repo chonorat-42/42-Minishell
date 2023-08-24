@@ -6,13 +6,13 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:48:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/21 17:04:57 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/24 19:06:58 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../Includes/minishell.h"
 
-int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
+void bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 {
 	size_t j;
 	char *temp;
@@ -20,15 +20,18 @@ int bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 	if (fd != 1)
 		dup2(fd, STDOUT_FILENO);
 	j = -1;
-	while (shell.paths[++j])
+	if (shell.paths)
 	{
-		temp = ft_strjoin(shell.paths[j], cmd_arr[0]);
-		if (!temp)
-			return (2);
-		if (execve(temp, cmd_arr, envp) == -1)
-			free(temp);
+		while (shell.paths[++j])
+		{
+			temp = ft_strjoin(shell.paths[j], cmd_arr[0]);
+			if (!temp)
+				return (exit(2));
+			if (execve(temp, cmd_arr, envp) == -1)
+				free(temp);
+		}
 	}
-	return (ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell.cmd_count, cmd_arr[0]), 1);
+	return (ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell.cmd_count, cmd_arr[0]), exit(1));
 }
 
 char *get_cmd(char *str, size_t *i)
@@ -61,16 +64,16 @@ char *get_cmd(char *str, size_t *i)
 /*to do :
 - debugger bin_exec double execution DONE
 - builtin sans arg KO DONE
-- refaire expand
+- refaire expand DONE
 - gerer simple quotes echo
 - export (diff export env ?)
 - gestion des pipes
 - factorisation + cleaning*/
-void execution(t_mshell *shell, char **envp)
+void execution(t_mshell *shell)
 {
-	t_tokens *temp;
-	int fd;
-	pid_t	child;
+	t_tokens	*temp;
+	int			fd;
+	pid_t		child;
 
 	temp = shell->tok_lst;
 	while (temp)
@@ -121,7 +124,7 @@ void execution(t_mshell *shell, char **envp)
 				if (child == -1)
 					return(free_struct(shell), exit(2));
 				if (!child)
-					bin_exec(*shell, temp->cmd_arr, envp, fd);
+					bin_exec(*shell, temp->cmd_arr, shell->menvp, fd);
 				else
 					waitpid(child, NULL, 0);
 				if (temp->cmd_arr)

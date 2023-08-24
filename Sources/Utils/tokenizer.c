@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 17:58:25 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/23 14:05:48 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/24 13:45:28 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,6 +279,5 @@ int tokenizer(t_mshell *shell)
 			i++;
 	}
 	give_type(&shell->tok_lst);
-	print_lst
 	return (0);
 }

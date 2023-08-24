@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 12:19:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/21 10:48:23 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/24 19:03:32 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int compare_strings(char *str, char *envs)
 
 int	find_envvar_index(char **envp, const char *str)
 {
-	int	j;
-	size_t len;
+	int		j;
+	size_t	len;
 
 	if (!envp)
 		return (-1);
@@ -96,8 +96,8 @@ static int	fix_paths(char *str, t_mshell *args)
 {
 	size_t	size;
 	size_t	j;
-	char **temp;
-	char *zero;
+	char	**temp;
+	char	*zero;
 
 	temp = ft_split((const char *)str, ':');
 	if (!temp)
@@ -124,18 +124,20 @@ static int	fix_paths(char *str, t_mshell *args)
 	return (free_arr(temp), temp = NULL, 0);
 }
 
-int get_paths(t_mshell *shell, char **envp)
+void	get_paths(t_mshell *shell, char **envp)
 {
-	int path_index;
+	int	path_index;
 
 	shell->cmd_count = 0;
 	path_index = find_envvar_index(envp, "PATH");
 	shell->tok_lst = NULL;
 	shell->cmd = NULL;
 	if (path_index == -1)
-		return (0);
+	{
+		shell->paths = NULL;
+		return ;
+	}
 	if (fix_paths(envp[path_index], shell))
-		return (2);
+		return (free_struct(shell));
 	get_current_location(shell);
-	return (0);
 }
