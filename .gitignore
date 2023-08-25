@@ -16,3 +16,6 @@
 
 # Debug files
 *.dSYM/
+
+#VS_Code files
+.vscode/
