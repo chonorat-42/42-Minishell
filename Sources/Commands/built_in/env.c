@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../Includes/minishell.h"
+#include "minishell.h"
 
 void env_case(t_mshell *shell, char *cmd)
 {

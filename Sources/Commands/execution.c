@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../Includes/minishell.h"
+#include "minishell.h"
 
 void bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 {
@@ -135,4 +135,5 @@ void execution(t_mshell *shell)
 		temp = temp->next;
 	}
 	ft_free_tokens(&shell->tok_lst);
+	free(shell->input);
 }

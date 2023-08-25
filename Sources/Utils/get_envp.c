@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../Includes/minishell.h"
+#include "minishell.h"
 
 size_t  get_arr_size(char **arr)
 {

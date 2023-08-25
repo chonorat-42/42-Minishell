@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../Includes/minishell.h"
+#include "minishell.h"
 
 
 int lst_type_missing(t_tokens **lst)
@@ -92,13 +92,10 @@ int str_is_ws(char *str)
 void give_type(t_tokens **lst)
 {
 	t_tokens *temp;
-	size_t len;
 	temp = *lst;
 
-	len = 0;
 	while (temp)
 	{
-		len = ft_strlen(temp->content);
 		if (!ft_strcmp(temp->content, "|"))
 			temp->type = (int)PIPE;
 		else if (!ft_strcmp(temp->content, ">>"))
@@ -187,7 +184,7 @@ int create_token(t_mshell *shell, int i, int j)
 	char *str;
 	char *result;
 
-	str = ft_substr((const char *)shell->prompt, j, (i - j));
+	str = ft_substr((const char *)shell->input, j, (i - j));
 	if (!str)
 		return (1);
 	if (!str[0])
@@ -248,19 +245,19 @@ int tokenizer(t_mshell *shell)
 
 	i = 0;
 	j = 0;
-	while (shell->prompt[i])
+	while (shell->input[i])
 	{
-		while (shell->prompt[i] && !is_sep(shell->prompt[i]))
+		while (shell->input[i] && !is_sep(shell->input[i]))
 			i++;
 		if (create_token(shell, i, j) == 1)
 			return (1);
-		if (is_sep(shell->prompt[i]))
+		if (is_sep(shell->input[i]))
 		{
-			if (shell->prompt[i] == '\'' || shell->prompt[i] == '\"')
+			if (shell->input[i] == '\'' || shell->input[i] == '\"')
 			{
 				j = i;
-				i = next_quote(shell->prompt, j, shell->prompt[i]);
-				if (shell->prompt[i] == '\0')
+				i = next_quote(shell->input, j, shell->input[i]);
+				if (shell->input[i] == '\0')
 					return (ft_printf("Error\nUnclosed quotes"), 1);
 				i++;
 				create_token(shell, i, j);
@@ -268,14 +265,14 @@ int tokenizer(t_mshell *shell)
 			else
 			{
 				j = i;
-				while (shell->prompt[i] && is_sep(shell->prompt[i]))
+				while (shell->input[i] && is_sep(shell->input[i]))
 					i++;
 				if (create_token(shell, i, j) == 1)
 					return (1);
 			}
 		}
 		j = i;
-		if (shell->prompt[i])
+		if (shell->input[i])
 			i++;
 	}
 	give_type(&shell->tok_lst);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../Includes/minishell.h"
+#include "minishell.h"
 
 void	free_arr(char **arr)
 {
@@ -64,8 +64,8 @@ void	ft_free_tokens(t_tokens	**head)
 
 void	free_struct(t_mshell *shell)
 {
-	if (shell->prompt)
-		free(shell->prompt);
+	if (shell->input)
+		free(shell->input);
 	if (shell->cmd)
 	{
 		free_arr(shell->cmd);

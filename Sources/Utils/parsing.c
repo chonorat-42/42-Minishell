@@ -10,20 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../Includes/minishell.h"
+#include "minishell.h"
 
 void    parsing(t_mshell *shell)
 {
-    if (shell->prompt[0] != '\0')
+    if (shell->input[0] != '\0')
 		{
-			if (expand(shell, shell->prompt) == 1)
-                return (free(shell->prompt), get_input_loop(shell));
+			if (expand(shell, shell->input) == 1)
+                return (free(shell->input), get_input_loop(shell));
 			manage_quotes(shell);
 		}
     else
     {
-        free(shell->prompt);
-        shell->prompt = NULL;
+        free(shell->input);
+        shell->input = NULL;
         get_input_loop(shell);
     }	
 }

@@ -22,7 +22,7 @@ _BOLD = \033[1m
 OS = $(shell uname | cat)
 
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror -ggdb3
+CFLAGS = -Wall -Wextra -Werror -IIncludes -ggdb3
 RM = @rm -rf
 CC = @cc
 DIR = @mkdir -p
