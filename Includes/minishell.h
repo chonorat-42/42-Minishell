@@ -23,7 +23,7 @@
 # define RCHEVRON 8
 # define APPEND 9
 # define REDIRECT 10
-# define SIZE_MAX 65535
+# define MAX_SIZE 100
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -61,7 +61,7 @@ typedef struct s_mshell
 	size_t		envp_size;
 	char		**menvp;
 	char		**paths;
-	char		current_loc[32767];
+	char		*current_loc;
 	size_t		cmd_count;
 	t_dlist		 history;
 	t_tokens	*tok_lst;

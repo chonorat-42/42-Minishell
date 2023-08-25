@@ -67,12 +67,6 @@ char	*get_envvar_content(char *envvar, unsigned int start)
 	return (result);
 }
 
-void get_current_location(t_mshell *shell)
-{
-	if (getcwd(shell->current_loc, SIZE_MAX) == NULL)
-	shell->current_loc[0] = '\0';
-}
-
 static char	*add_ending_slash(char *str)
 {
 	char	*result;
@@ -139,5 +133,4 @@ void	get_paths(t_mshell *shell, char **envp)
 	}
 	if (fix_paths(envp[path_index], shell))
 		return (free_struct(shell));
-	get_current_location(shell);
 }

@@ -12,6 +12,13 @@
 
 #include "../../../Includes/minishell.h"
 
+void get_current_location(t_mshell *shell)
+{
+	 shell->current_loc = getcwd(NULL, 0);
+	 if (!shell->current_loc)
+		shell->current_loc[0] = '\0';
+}
+
 void	pwd_case(t_mshell *shell)
 {
 	get_current_location(shell);
@@ -19,4 +26,6 @@ void	pwd_case(t_mshell *shell)
 		ft_printf("%s\n", shell->current_loc);
 	else
 		ft_printf("\n");
+	if (shell->current_loc)
+		free(shell->current_loc);
 }
