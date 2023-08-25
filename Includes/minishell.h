@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:52:08 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/23 11:03:00 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/08/24 19:06:24 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,13 @@ typedef struct s_mshell
 }		t_mshell;
 
 void	sig_handler(void);
-int		get_paths(t_mshell *shell, char **envp);
+void	get_paths(t_mshell *shell, char **envp);
 size_t	count_arr_size(char **arr);
 void	print_arr(char **arr);
 void	print_lst(t_list *lst);
 void	free_struct(t_mshell *shell);
 void	free_arr(char **arr);
-int 	bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd);
+void 	bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd);
 int		echo_case(char *prompt, int fd);
 void	env_case(t_mshell *shell, char *cmd);
 char	*get_cmd_arguments(char *prompt);
@@ -84,20 +84,24 @@ int 	redirect(t_mshell *shell);
 void 	struct_init(t_mshell *shell);
 void	sig_handler(void);
 int		tokenizer(t_mshell *shell);
-void 	execution(t_mshell *shell, char **envp);
+void 	execution(t_mshell *shell);
 void	free_arr(char **arr);
 void	ft_free_tokens(t_tokens	**head);
 int		find_envvar_index(char **envp, const char *str);
 int		is_ws(char c);
 void	unset_case(t_mshell *shell, char *str);
 void	get_current_location(t_mshell *shell);
-void 	parsing(t_mshell *shell);
+void 	manage_quotes(t_mshell *shell);
 char	*get_envvar_content(char *envvar, unsigned int start);
 char	*get_builtin_opt(char *str, size_t *i);
 size_t 	find_char_index(char *str, int c);
-void	expand(t_mshell *shell, char *cmd);
+void    parsing(t_mshell *shell);
+int		expand(t_mshell *shell, char *cmd);
 int 	are_all_quotes_closed(char *str);
 char 	*get_other(char *str, size_t *i);
+void    get_envp(t_mshell *shell, char **envp);
+void    get_input_loop(t_mshell *shell);
+
 
 
 

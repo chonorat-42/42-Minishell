@@ -6,7 +6,7 @@
 #    By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/08/23 10:43:14 by pgouasmi         ###   ########.fr        #
+#    Updated: 2023/08/24 18:25:25 by pgouasmi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,12 +40,15 @@ FILES = minishell\
 		Commands/built_in/unset\
 		Commands/built_in/pwd\
 		Utils/free\
+		Utils/get_envp\
 		Utils/get_paths\
+		Utils/get_input\
 		Utils/resources\
 		Utils/tokenizer\
 		Utils/sig_handler\
+		Utils/parsing\
 		Utils/expand\
-		Utils/parsing
+		Utils/manage_quotes
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 
