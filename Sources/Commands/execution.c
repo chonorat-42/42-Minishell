@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../Includes/minishell.h"
+#include "minishell.h"
 
 void bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 {

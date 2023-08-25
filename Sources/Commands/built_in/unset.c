@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../Includes/minishell.h"
+#include "minishell.h"
 
 void	unset_case(t_mshell *shell, char *str)
 {

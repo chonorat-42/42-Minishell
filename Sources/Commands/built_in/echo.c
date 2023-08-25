@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../Includes/minishell.h"
+#include "minishell.h"
 
 char *get_builtin_opt(char *str, size_t *i)
 {
