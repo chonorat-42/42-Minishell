@@ -135,4 +135,5 @@ void execution(t_mshell *shell)
 		temp = temp->next;
 	}
 	ft_free_tokens(&shell->tok_lst);
+	free(shell->prompt);
 }

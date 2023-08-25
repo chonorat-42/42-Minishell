@@ -92,13 +92,10 @@ int str_is_ws(char *str)
 void give_type(t_tokens **lst)
 {
 	t_tokens *temp;
-	size_t len;
 	temp = *lst;
 
-	len = 0;
 	while (temp)
 	{
-		len = ft_strlen(temp->content);
 		if (!ft_strcmp(temp->content, "|"))
 			temp->type = (int)PIPE;
 		else if (!ft_strcmp(temp->content, ">>"))
