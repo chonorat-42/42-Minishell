@@ -155,7 +155,7 @@ int	expand(t_mshell *shell, char *cmd)
 
     res = NULL;
     i = 0;
-    if (!are_all_quotes_closed(shell->prompt))
+    if (!are_all_quotes_closed(shell->input))
 		return (ft_printf("Error\nUnclosed quotes\n"), 1);
     while (cmd[i])
     {
@@ -173,8 +173,8 @@ int	expand(t_mshell *shell, char *cmd)
             res = ft_strjoin(res, temp);
         free(temp);
     }
-    free(shell->prompt);
-    shell->prompt = ft_strdup(res);
+    free(shell->input);
+    shell->input = ft_strdup(res);
 	free(res);
 	return (0);
 }

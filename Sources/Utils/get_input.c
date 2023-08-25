@@ -22,14 +22,14 @@ void    get_input_loop(t_mshell *shell)
 		line = get_next_line(0);
 		if (!line)
 			return (free_struct(shell), exit(2));
-		shell->prompt = ft_strtrim((const char *)line, "\n\t\v\f\r ");
-		if (!shell->prompt)
+		shell->input = ft_strtrim((const char *)line, "\n\t\v\f\r ");
+		if (!shell->input)
 			return (free_struct(shell), exit(3));
 		free(line);
         parsing(shell);
         tokenizer(shell);
         execution(shell);
 	}
-    free(shell->prompt);
-	shell->prompt = NULL;
+    free(shell->input);
+	shell->input = NULL;
 }

@@ -38,21 +38,21 @@ void manage_quotes(t_mshell *shell)
 	size_t	i;
 
 	i = 0; 
-	if (!are_all_quotes_closed(shell->prompt))
+	if (!are_all_quotes_closed(shell->input))
 	{
 		ft_printf("Error\nUnclosed Quotes\n");
 		return ;
 	}
 	result = NULL;
-	while(shell->prompt[i])
+	while(shell->input[i])
 	{
-		if (shell->prompt[i] == '\'' || shell->prompt[i] == '\"')
+		if (shell->input[i] == '\'' || shell->input[i] == '\"')
 		{
 			i++;
-			temp = get_between_quotes(shell->prompt, shell->prompt[i], &i);
+			temp = get_between_quotes(shell->input, shell->input[i], &i);
 		}
 		else
-			temp = get_other(shell->prompt, &i);
+			temp = get_other(shell->input, &i);
 		if (!result)
 			result = ft_strdup(temp);
 		else
@@ -61,7 +61,7 @@ void manage_quotes(t_mshell *shell)
 		if (!result)
 			return ;
 	}
-	free(shell->prompt);
-	shell->prompt = ft_strdup(result);
+	free(shell->input);
+	shell->input = ft_strdup(result);
 	free(result);
 }

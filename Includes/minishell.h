@@ -56,7 +56,7 @@ typedef struct s_tokens
 
 typedef struct s_mshell
 {
-	char		*prompt;
+	char		*input;
 	char		**cmd;
 	size_t		envp_size;
 	char		**menvp;
