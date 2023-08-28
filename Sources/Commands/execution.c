@@ -31,6 +31,7 @@ void bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd)
 				free(temp);
 		}
 	}
+	
 	return (ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell.cmd_count, cmd_arr[0]), exit(1));
 }
 
@@ -119,14 +120,6 @@ int	get_final_out(t_tokens *lst)
 	return (1);
 }
 
-/*to do :
-- debugger bin_exec double execution DONE
-- builtin sans arg KO DONE
-- refaire expand DONE
-- gerer simple quotes echo
-- export (diff export env ?)
-- gestion des pipes
-- factorisation + cleaning*/
 void execution(t_mshell *shell)
 {
 	t_tokens	*temp;
