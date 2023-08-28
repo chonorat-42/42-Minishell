@@ -29,7 +29,7 @@ char *get_builtin_opt(char *str, size_t *i)
 	return (result);
 }
 
-int echo_case(char *prompt, int fd)
+void	echo_case(char *prompt, int fd)
 {
 	char *option;
 	size_t i;
@@ -57,5 +57,4 @@ int echo_case(char *prompt, int fd)
 		free(option);
 	}
 	ft_dprintf(fd, "\n");
-	return (0);
 }

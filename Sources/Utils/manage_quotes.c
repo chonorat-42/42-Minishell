@@ -38,11 +38,6 @@ void manage_quotes(t_mshell *shell)
 	size_t	i;
 
 	i = 0; 
-	if (!are_all_quotes_closed(shell->input))
-	{
-		ft_printf("Error\nUnclosed Quotes\n");
-		return ;
-	}
 	result = NULL;
 	while(shell->input[i])
 	{

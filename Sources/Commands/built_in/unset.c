@@ -16,16 +16,30 @@ void	unset_case(t_mshell *shell, char *str)
 {
 	int		index;
 	char	*var;
+	char	**to_unset;
+	size_t	i;
 
 	var = ft_substr(str, 6, ft_strlen(str));
-	index = find_envvar_index(shell->menvp, var);
-	if (index < 0)
-		return ;
-	if (!ft_strcmp(var, "PATH"))
+	if (!var)
+		return (free_struct(shell), exit (11));
+	to_unset = ft_split(var, ' ');
+	if (!to_unset)
+		return (free(var), free_struct(shell), exit(12));
+	i = 0;
+	while (to_unset[i])
 	{
-		free_arr(shell->paths);
-		shell->paths = NULL;
+		index = find_envvar_index(shell->menvp, to_unset[i]);
+		if (index >= 0)
+		{
+			if (!ft_strcmp(var, "PATH"))
+			{
+				free_arr(shell->paths);
+				shell->paths = NULL;
+			}
+			free(shell->menvp[index]);
+			shell->menvp[index] = NULL;
+		}
+		i++;
 	}
-	free(shell->menvp[index]);
-	shell->menvp[index] = NULL;
+	shell->envp_size -= i + 1;
 }

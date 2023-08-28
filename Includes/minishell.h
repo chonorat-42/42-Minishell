@@ -75,11 +75,11 @@ void	print_lst(t_list *lst);
 void	free_struct(t_mshell *shell);
 void	free_arr(char **arr);
 void 	bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd);
-int		echo_case(char *prompt, int fd);
-void	env_case(t_mshell *shell, char *cmd);
+void	echo_case(char *prompt, int fd);
+void	env_case(t_mshell *shell, char *cmd, int fd);
 char	*get_cmd_arguments(char *prompt);
 int 	cd_case(t_mshell *shell, char *cmd);
-void	pwd_case(t_mshell *shell);
+void	pwd_case(t_mshell *shell, int fd);
 int 	redirect(t_mshell *shell);
 void 	struct_init(t_mshell *shell);
 void	sig_handler(void);
@@ -101,11 +101,8 @@ int 	are_all_quotes_closed(char *str);
 char 	*get_other(char *str, size_t *i);
 void    get_envp(t_mshell *shell, char **envp);
 void    get_input_loop(t_mshell *shell);
-
-
-
-
-
+void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in);
+void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out);
 
 
 
