@@ -70,7 +70,7 @@ int cd_case(t_mshell *shell, char *cmd)
 	while (cmd[i] && !is_ws(cmd[i]))
 		i++;
 	i++;
-	if (get_builtin_opt(cmd, &i))
+	if (cmd[i] && get_builtin_opt(cmd, &i))
 	{
 		ft_dprintf(STDERR_FILENO, "Error\nCd command does not take any option\n");
 		return (1);

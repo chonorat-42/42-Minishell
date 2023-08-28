@@ -34,6 +34,7 @@ CLEAN_LIBFT = @make clean -C Libft
 FCLEAN_LIBFT = @make fclean -C Libft
 FILES = minishell\
 		Commands/execution\
+		Commands/pipe\
 		Commands/built_in/echo\
 		Commands/built_in/cd\
 		Commands/built_in/env\

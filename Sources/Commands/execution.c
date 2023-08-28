@@ -61,6 +61,66 @@ char *get_cmd(char *str, size_t *i)
 	return (result);
 }
 
+void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
+{
+	pid_t	child;
+	(void) fd_in;
+
+	// ft_printf("got in exec_forwarding, cmd = %s, out = %d\n\n", temp->content, fd_out);
+	if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
+		echo_case(temp->content, fd_out);
+	 if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
+		cd_case(shell, temp->content);
+	 if (!ft_strcmp(temp->content, "exit"))
+		return (free_struct(shell), exit(0));
+	 if (!ft_strcmp(temp->content, "env"))
+		env_case(shell, temp->content, fd_out);
+	 if (!ft_strncmp(temp->content, "unset", 5) && is_ws(temp->content[5]))
+		unset_case(shell, temp->content);
+	 if (!ft_strcmp(temp->content, "pwd"))
+		pwd_case(shell, fd_out);
+	else
+	{
+		temp->cmd_arr = ft_split(temp->content, ' ');
+		if (!temp->cmd_arr)
+			return (free_struct(shell), exit(1));
+		child = fork();
+		if (child == -1)
+			return(free_struct(shell), exit(2));
+		if (!child)
+			bin_exec(*shell, temp->cmd_arr, shell->menvp, fd_out);
+		else
+			waitpid(child, NULL, 0);
+		if (temp->cmd_arr)
+			free_arr(temp->cmd_arr);
+		temp->cmd_arr = NULL;
+	}		
+}
+
+int	get_final_out(t_tokens *lst)
+{
+	t_tokens	*temp;
+	int			result;
+
+	temp = lst;
+	while (temp)
+	{
+		if (temp->type == RCHEVRON)
+		{
+			result = open(temp->next->content, O_RDWR | O_CREAT, 0666);
+			// ft_printf("in get out, fd = %d\n\n", result);
+			return (result);
+		}
+		else if (temp->type == APPEND)
+		{
+			result = open(temp->next->content, O_RDWR | O_APPEND, 0666);
+			return (result);
+		}
+		temp = temp->next;
+	}
+	return (1);
+}
+
 /*to do :
 - debugger bin_exec double execution DONE
 - builtin sans arg KO DONE
@@ -72,9 +132,10 @@ char *get_cmd(char *str, size_t *i)
 void execution(t_mshell *shell)
 {
 	t_tokens	*temp;
-	int			fd;
-	pid_t		child;
+	int 		fd_in;
+	int			fd_out;
 
+	fd_in = 0;
 	temp = shell->tok_lst;
 	while (temp)
 	{
@@ -85,55 +146,33 @@ void execution(t_mshell *shell)
 				if (temp->next->next)
 				{
 					if (temp->next->type == RCHEVRON)
-						fd = open(temp->next->next->content, O_RDWR | O_CREAT, 0666);
+						fd_out = open(temp->next->next->content, O_RDWR | O_CREAT, 0666);
 					else
-						fd = open(temp->next->next->content, O_RDWR | O_APPEND, 0666);
-					if (fd == -1)
+						fd_out = open(temp->next->next->content, O_RDWR | O_APPEND, 0666);
+					if (fd_out == -1)
 						return (free_struct(shell), exit(4));
 				}
 			}
 			else
-				fd = 1;
-			shell->cmd_count++;
-			if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
+				fd_out = 1;
+			if (temp->next && temp->next->type == PIPE)
 			{
-				if (echo_case(temp->content, fd))
-					return (free_struct(shell), exit(6));
-				if (fd != 1)
-				{
-					while (temp && temp->type != CMD)
-						temp = temp->next;
-				}
+				fd_out = get_final_out(temp);
+				// ft_printf("bf handle pipes, fd_out = %d\n\n", fd_out);
+				handle_pipes(shell, &temp, fd_in, fd_out);
 			}
-			else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
-				cd_case(shell, temp->content);
-			else if (!ft_strcmp(temp->content, "exit"))
-				return (free_struct(shell), exit(0));
-			else if (!ft_strcmp(temp->content, "env"))
-				env_case(shell, temp->content);
-			else if (!ft_strncmp(temp->content, "unset", 5) && is_ws(temp->content[5]))
-				unset_case(shell, temp->content);
-			else if (!ft_strcmp(temp->content, "pwd"))
-				pwd_case(shell);
 			else
-			{
-				temp->cmd_arr = ft_split(temp->content, ' ');
-				if (!temp->cmd_arr)
-					return (free_struct(shell), exit(1));
-				child = fork();
-				if (child == -1)
-					return(free_struct(shell), exit(2));
-				if (!child)
-					bin_exec(*shell, temp->cmd_arr, shell->menvp, fd);
-				else
-					waitpid(child, NULL, 0);
-				if (temp->cmd_arr)
-					free_arr(temp->cmd_arr);
-				temp->cmd_arr = NULL;
-			}
+				exec_forwarding(temp, shell, fd_in, fd_out);
+		}
+		if (fd_out != 1)
+		{
+			while (temp->next && temp->next->type != CMD)
+				temp = temp->next;
 		}
 		temp = temp->next;
 	}
-	ft_free_tokens(&shell->tok_lst);
-	free(shell->input);
+	if (shell->tok_lst)
+		ft_free_tokens(&shell->tok_lst);
+	if (shell->input)
+		free(shell->input);
 }

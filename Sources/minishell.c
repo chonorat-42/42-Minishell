@@ -25,5 +25,4 @@ int main(int argc, char **argv, char **envp)
 	get_envp(&shell, envp);
 	get_paths(&shell, shell.menvp);
 	get_input_loop(&shell);
-	free_struct(&shell);
 }

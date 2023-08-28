@@ -28,22 +28,6 @@ void	free_arr(char **arr)
 	free(arr);
 }
 
-/*void	ft_free_list(t_list	**head)
-{
-	t_list	*temp;
-
-	if (!*head)
-		return ;
-	while (*head)
-	{
-		if ((*head)->cmd)
-			free((*head)->cmd);
-		temp = *head;
-		*head = temp->next;
-		free(temp);
-	}
-}*/
-
 void	ft_free_tokens(t_tokens	**head)
 {
 	t_tokens	*temp;

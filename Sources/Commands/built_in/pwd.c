@@ -19,13 +19,13 @@ void get_current_location(t_mshell *shell)
 		shell->current_loc[0] = '\0';
 }
 
-void	pwd_case(t_mshell *shell)
+void	pwd_case(t_mshell *shell, int fd)
 {
 	get_current_location(shell);
 	if (shell->current_loc[0])
-		ft_printf("%s\n", shell->current_loc);
+		ft_dprintf(fd, "%s\n", shell->current_loc);
 	else
-		ft_printf("\n");
+		ft_dprintf(fd, "\n");
 	if (shell->current_loc)
 		free(shell->current_loc);
 }
