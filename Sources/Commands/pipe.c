@@ -35,7 +35,7 @@ void	create_child(int fd_in, int fd_out, t_tokens *temp, t_mshell *shell)
 {
 	pid_t	pid;
 
-	ft_printf("got in create child, in = %d, out = %d\n\n", fd_in, fd_out);
+	// ft_printf("got in create child, in = %d, out = %d\n\n", fd_in, fd_out);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -49,7 +49,7 @@ void	create_child(int fd_in, int fd_out, t_tokens *temp, t_mshell *shell)
 			dup2(fd_out, 1);
 			close(fd_out);
 		}
-		ft_printf("in child , bf exec_forwarding\n\n");
+		// ft_printf("in child , bf exec_forwarding\n\n");
 		exec_forwarding(temp, shell, 0, 1);
 		waitpid(pid, NULL, 0);
 		exit(0);
@@ -61,7 +61,7 @@ void	fork_pipes(size_t pipes_nbr, t_tokens **temp, int fd_in, t_mshell *shell)
 	size_t	i;
 	int		pipefd[2];
 
-	ft_printf("got in fork pipes\n\n");
+	// ft_printf("got in fork pipes\n\n");
 	i = 0;
 	while (i < pipes_nbr)
 	{
@@ -83,7 +83,7 @@ void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in)
 	size_t	pipes_nbr;
 
 	pipes_nbr = count_successive_pipes(*temp);
-	ft_printf("in handle pipes, pipes_nbr = %d, in = %d\n\n", pipes_nbr, fd_in);
+	// ft_printf("in handle pipes, pipes_nbr = %d, in = %d\n\n", pipes_nbr, fd_in);
 	fork_pipes(pipes_nbr, temp, fd_in, shell);
 	// return (free_struct(shell), exit(0));
 }

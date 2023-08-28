@@ -66,7 +66,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 	pid_t	child;
 	(void) fd_in;
 
-	ft_printf("got in exec_forwarding, cmd = %s, out = %d\n\n", temp->content, fd_out);
+	// ft_printf("got in exec_forwarding, cmd = %s, out = %d\n\n", temp->content, fd_out);
 	if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
 		echo_case(temp->content, fd_out);
 	 if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
