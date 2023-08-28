@@ -97,6 +97,30 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 	}		
 }
 
+int	get_final_out(t_tokens *lst)
+{
+	t_tokens	*temp;
+	int			result;
+
+	temp = lst;
+	while (temp)
+	{
+		if (temp->type == RCHEVRON)
+		{
+			result = open(temp->next->content, O_RDWR | O_CREAT, 0666);
+			// ft_printf("in get out, fd = %d\n\n", result);
+			return (result);
+		}
+		else if (temp->type == APPEND)
+		{
+			result = open(temp->next->content, O_RDWR | O_APPEND, 0666);
+			return (result);
+		}
+		temp = temp->next;
+	}
+	return (1);
+}
+
 /*to do :
 - debugger bin_exec double execution DONE
 - builtin sans arg KO DONE
@@ -132,7 +156,11 @@ void execution(t_mshell *shell)
 			else
 				fd_out = 1;
 			if (temp->next && temp->next->type == PIPE)
-				handle_pipes(shell, &temp, fd_in);
+			{
+				fd_out = get_final_out(temp);
+				// ft_printf("bf handle pipes, fd_out = %d\n\n", fd_out);
+				handle_pipes(shell, &temp, fd_in, fd_out);
+			}
 			else
 				exec_forwarding(temp, shell, fd_in, fd_out);
 		}
