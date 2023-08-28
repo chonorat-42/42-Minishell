@@ -66,6 +66,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 	pid_t	child;
 	(void) fd_in;
 
+	ft_printf("got in exec_forwarding, cmd = %s, out = %d\n\n", temp->content, fd_out);
 	if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
 		echo_case(temp->content, fd_out);
 	 if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
@@ -134,35 +135,6 @@ void execution(t_mshell *shell)
 				handle_pipes(shell, &temp, fd_in);
 			else
 				exec_forwarding(temp, shell, fd_in, fd_out);
-			// shell->cmd_count++;
-			// if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
-			// 	echo_case(temp->content, fd);
-			// else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
-			// 	cd_case(shell, temp->content);
-			// else if (!ft_strcmp(temp->content, "exit"))
-			// 	return (free_struct(shell), exit(0));
-			// else if (!ft_strcmp(temp->content, "env"))
-			// 	env_case(shell, temp->content, fd);
-			// else if (!ft_strncmp(temp->content, "unset", 5) && is_ws(temp->content[5]))
-			// 	unset_case(shell, temp->content);
-			// else if (!ft_strcmp(temp->content, "pwd"))
-			// 	pwd_case(shell, fd);
-			// else
-			// {
-			// 	temp->cmd_arr = ft_split(temp->content, ' ');
-			// 	if (!temp->cmd_arr)
-			// 		return (free_struct(shell), exit(1));
-			// 	child = fork();
-			// 	if (child == -1)
-			// 		return(free_struct(shell), exit(2));
-			// 	if (!child)
-			// 		bin_exec(*shell, temp->cmd_arr, shell->menvp, fd);
-			// 	else
-			// 		waitpid(child, NULL, 0);
-			// 	if (temp->cmd_arr)
-			// 		free_arr(temp->cmd_arr);
-			// 	temp->cmd_arr = NULL;
-			// }
 		}
 		if (fd_out != 1)
 		{
@@ -171,6 +143,8 @@ void execution(t_mshell *shell)
 		}
 		temp = temp->next;
 	}
-	ft_free_tokens(&shell->tok_lst);
-	free(shell->input);
+	if (shell->tok_lst)
+		ft_free_tokens(&shell->tok_lst);
+	if (shell->input)
+		free(shell->input);
 }
