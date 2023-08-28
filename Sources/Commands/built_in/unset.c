@@ -18,7 +18,7 @@ void	unset_case(t_mshell *shell, char *str)
 	char	*var;
 	char	**to_unset;
 	size_t	i;
-
+	
 	var = ft_substr(str, 6, ft_strlen(str));
 	if (!var)
 		return (free_struct(shell), exit (11));
@@ -31,7 +31,7 @@ void	unset_case(t_mshell *shell, char *str)
 		index = find_envvar_index(shell->menvp, to_unset[i]);
 		if (index >= 0)
 		{
-			if (!ft_strcmp(var, "PATH"))
+			if (!ft_strcmp(to_unset[i], "PATH"))
 			{
 				free_arr(shell->paths);
 				shell->paths = NULL;
@@ -41,4 +41,6 @@ void	unset_case(t_mshell *shell, char *str)
 		}
 		i++;
 	}
+	free(var);
+	free_arr(to_unset);
 }

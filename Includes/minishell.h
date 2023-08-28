@@ -76,7 +76,7 @@ void	free_struct(t_mshell *shell);
 void	free_arr(char **arr);
 void 	bin_exec(t_mshell shell, char **cmd_arr, char **envp, int fd);
 void	echo_case(char *prompt, int fd);
-void	env_case(t_mshell *shell, char *cmd, int fd);
+void	env_case(t_mshell *shell, int fd);
 char	*get_cmd_arguments(char *prompt);
 int 	cd_case(t_mshell *shell, char *cmd);
 void	pwd_case(t_mshell *shell, int fd);

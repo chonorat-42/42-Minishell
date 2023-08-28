@@ -46,7 +46,7 @@ void	ft_free_tokens(t_tokens	**head)
 	}
 }
 
-void	atomic_arr(char **arr, size_t size)
+void	free_atomic_arr(char **arr, size_t size)
 {
 	size_t	i;
 
@@ -54,7 +54,7 @@ void	atomic_arr(char **arr, size_t size)
 	while (i < size)
 	{
 		if (arr[i])
-			free(arr[i])
+			free(arr[i]);
 		i++;
 	}
 	free(arr);

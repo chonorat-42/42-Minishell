@@ -66,18 +66,17 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 	pid_t	child;
 	(void) fd_in;
 
-	// ft_printf("got in exec_forwarding, cmd = %s, out = %d\n\n", temp->content, fd_out);
 	if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
 		echo_case(temp->content, fd_out);
-	 if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
+	else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
 		cd_case(shell, temp->content);
-	 if (!ft_strcmp(temp->content, "exit"))
+	else if (!ft_strcmp(temp->content, "exit"))
 		return (free_struct(shell), exit(0));
-	 if (!ft_strcmp(temp->content, "env"))
-		env_case(shell, temp->content, fd_out);
-	 if (!ft_strncmp(temp->content, "unset", 5) && is_ws(temp->content[5]))
+	else if (!ft_strcmp(temp->content, "env"))
+		env_case(shell, fd_out);
+	else if (!ft_strncmp(temp->content, "unset", 5) && is_ws(temp->content[5]))
 		unset_case(shell, temp->content);
-	 if (!ft_strcmp(temp->content, "pwd"))
+	else if (!ft_strcmp(temp->content, "pwd"))
 		pwd_case(shell, fd_out);
 	else
 	{
@@ -108,7 +107,6 @@ int	get_final_out(t_tokens *lst)
 		if (temp->type == RCHEVRON)
 		{
 			result = open(temp->next->content, O_RDWR | O_CREAT, 0666);
-			// ft_printf("in get out, fd = %d\n\n", result);
 			return (result);
 		}
 		else if (temp->type == APPEND)
@@ -158,7 +156,6 @@ void execution(t_mshell *shell)
 			if (temp->next && temp->next->type == PIPE)
 			{
 				fd_out = get_final_out(temp);
-				// ft_printf("bf handle pipes, fd_out = %d\n\n", fd_out);
 				handle_pipes(shell, &temp, fd_in, fd_out);
 			}
 			else
