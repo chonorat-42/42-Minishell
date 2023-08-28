@@ -46,6 +46,20 @@ void	ft_free_tokens(t_tokens	**head)
 	}
 }
 
+void	atomic_arr(char **arr, size_t size)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < size)
+	{
+		if (arr[i])
+			free(arr[i])
+		i++;
+	}
+	free(arr);
+}
+
 void	free_struct(t_mshell *shell)
 {
 	if (shell->input)
@@ -63,5 +77,8 @@ void	free_struct(t_mshell *shell)
 	if (shell->tok_lst)
 		ft_free_tokens(&shell->tok_lst);
 	if (shell->menvp)
-		free_arr(shell->menvp);
+	{
+		free_atomic_arr(shell->menvp, shell->envp_size);
+		shell->menvp = NULL;
+	}
 }

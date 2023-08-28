@@ -41,5 +41,4 @@ void	unset_case(t_mshell *shell, char *str)
 		}
 		i++;
 	}
-	shell->envp_size -= i + 1;
 }
