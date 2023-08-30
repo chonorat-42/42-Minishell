@@ -28,6 +28,13 @@ int	g_signum;
 - readline a la place de GNL
 - $?
 - executable PATH relatif ou absolu ->ex : ./minishell
+- expand meme entre quotes
+
+
+remake parsing
+1) decouper selon metacaracteres
+2) Quotes
+3) Expand
 */
 
 int main(int argc, char **argv, char **envp)

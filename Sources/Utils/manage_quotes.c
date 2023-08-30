@@ -12,6 +12,22 @@
 
 #include "minishell.h"
 
+
+char	*get_other(char *str, size_t *i)
+{
+	size_t	j;
+	char	*temp;
+
+	j = *i + 1;
+	while (str[j] && str[j] != '\'' && str[j] != '\"')
+		j++;
+	temp = ft_substr(str, (*i), j - (*i));
+	if (!temp)
+		return (NULL);
+	*i = j;
+	return (temp);
+}
+
 char *get_between_quotes(char *str, int c, size_t *i)
 {
 	char *result;
@@ -39,6 +55,7 @@ void manage_quotes(t_mshell *shell)
 
 	i = 0; 
 	result = NULL;
+	
 	while(shell->input[i])
 	{
 		if (shell->input[i] == '\'' || shell->input[i] == '\"')
@@ -52,6 +69,7 @@ void manage_quotes(t_mshell *shell)
 			result = ft_strdup(temp);
 		else
 			result = ft_strjoin(result, temp);
+
 		free(temp);
 		if (!result)
 			return ;

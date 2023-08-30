@@ -55,19 +55,16 @@ int	are_all_quotes_closed(char *str)
 	return (1);
 }
 
-char	*get_other(char *str, size_t *i)
+int	check_after_dollar(char *str)
 {
-	size_t	j;
-	char	*temp;
+	size_t	i;
 
-	j = *i + 1;
-	while (str[j] && str[j] != '\'' && str[j] != '\"')
-		j++;
-	temp = ft_substr(str, (*i), j - (*i));
-	if (!temp)
-		return (NULL);
-	*i = j;
-	return (temp);
+	i = 0;
+	while (str[i] != '$')
+		i++;
+	if (ft_isalnum(str[i + 1]))
+		return (1);
+	return (0);
 }
 
 char	*expand_envvar(char *str, char **envp)
@@ -90,16 +87,14 @@ char	*expand_envvar(char *str, char **envp)
 
 	i = 0;
 	j = 0;
-    
 	while (str[i])
 	{
-		if (ft_strchr(&str[i], '$'))
+		if (ft_strchr(&str[i], '$') && check_after_dollar(&str[i]))
 		{
 			j = i;
 			i = find_char_index(&str[i], '$');
 			i += j;
 			bf_envvar = ft_substr(str, j, i - j);
-
 			if (res && bf_envvar)
 				res = ft_strjoin(res, bf_envvar);
 			else if (!res && bf_envvar)
@@ -110,11 +105,16 @@ char	*expand_envvar(char *str, char **envp)
 				free(bf_envvar);
 			i++;
 			j = i;
-			while (str[i] && !is_ws(str[i]))
+			while (str[i] && (!is_ws(str[i]) && str[i] != '\'' && str[i] != '\"'))
 				i++;
 			envvar = ft_substr(str, j, i - j);
-			envvar_index = find_envvar_index(envp, envvar);
-			env_content = get_envvar_content(envp[envvar_index], ft_strlen(envvar) + 1);
+
+			ft_printf("ENVVAR = %s\n\n", envvar);
+			if (envvar && envvar[0])
+			{
+				envvar_index = find_envvar_index(envp, envvar);
+				env_content = get_envvar_content(envp[envvar_index], ft_strlen(envvar) + 1);
+			}
 			if (envvar)
 				free(envvar);
 			j = i;
@@ -131,7 +131,7 @@ char	*expand_envvar(char *str, char **envp)
 		}
 		else
 		{
-			while (str[i])
+			while (str[i] && str[i] == '$')
 				i++;
 			temp = ft_substr(str, j, i - j);
 			if (res && temp)
@@ -149,32 +149,22 @@ char	*expand_envvar(char *str, char **envp)
 
 int	expand(t_mshell *shell, char *cmd)
 {
-    char	*res;
     char	*temp;
     size_t	i;
 
-    res = NULL;
+	temp = NULL;
     i = 0;
-    if (!are_all_quotes_closed(shell->input))
+    if (!are_all_quotes_closed(cmd))
 		return (ft_printf("Error\nUnclosed quotes\n"), 1);
-    while (cmd[i])
-    {
-        if (cmd[i] == '\'' || cmd[i] == '\"')
-            temp = get_quotes(cmd, cmd[i], &i);
-        else
-        {
-            temp = get_other(cmd, &i);
-            if (ft_strchr(temp, '$') != NULL)
-                temp = expand_envvar(temp, shell->menvp);
-        }
-        if (!res)
-            res = ft_strdup(temp);
-        else
-            res = ft_strjoin(res, temp);
-        free(temp);
-    }
-    free(shell->input);
-    shell->input = ft_strdup(res);
-	free(res);
+    if (ft_strchr(cmd, '$') != NULL)
+	{
+		if (check_after_dollar(cmd))
+		{
+    		temp = expand_envvar(cmd, shell->menvp);
+    		free(shell->input);
+    		shell->input = ft_strdup(temp);
+			free(temp);
+		}
+	}
 	return (0);
 }
