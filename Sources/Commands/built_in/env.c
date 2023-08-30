@@ -12,16 +12,15 @@
 
 #include "minishell.h"
 
-void env_case(t_mshell *shell, char *cmd, int fd)
+void env_case(t_mshell *shell, int fd)
 {
 	size_t j;
 
 	j = 0;
-	if (ft_strlen(cmd) != 3)
-		j = -1;
-	while (++j < shell->envp_size)
+	while (j < shell->envp_size)
 	{
 		if (shell->menvp[j])
 			ft_dprintf(fd, "%s\n", shell->menvp[j]);
+		j++;
 	}
 }
