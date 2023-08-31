@@ -35,19 +35,16 @@ int compare_strings(char *str, char *envs)
 int	find_envvar_index(char **envp, const char *str)
 {
 	int		j;
-	size_t	len;
+	char	*temp;
 
 	if (!envp)
 		return (-1);
 	j = 0;
-	len = ft_strlen(str);
 	while (envp[j])
 	{
-		if (!ft_strncmp((const char *)envp[j], str, len))
-		{
-			if (compare_strings((char *)str, envp[j]))
+		temp = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
+		if (!ft_strcmp(temp, str))
 				return (j);
-		}
 		j++;
 	}
 	return (-1);
@@ -118,19 +115,24 @@ static int	fix_paths(char *str, t_mshell *args)
 	return (free_arr(temp), temp = NULL, 0);
 }
 
-void	get_paths(t_mshell *shell, char **envp)
+char	*get_envp_content(t_envp *envp, char *to_find)
 {
-	int	path_index;
+	t_envp	*temp;
+	char	*res;
 
-	shell->cmd_count = 0;
-	path_index = find_envvar_index(envp, "PATH");
-	shell->tok_lst = NULL;
-	shell->cmd = NULL;
-	if (path_index == -1)
-	{
-		shell->paths = NULL;
-		return ;
-	}
-	if (fix_paths(envp[path_index], shell))
+	temp = envp;
+	while (temp->next && ft_strcmp(to_find, temp->var_name))
+		temp = temp->next;
+	res = ft_strdup(temp->var_cont);
+	return (res);
+}
+
+void	get_paths(t_mshell *shell)
+{
+	char *paths;
+
+	paths = get_envp_content(shell->envp, "PATH");
+	if (fix_paths(paths, shell))
 		return (free_struct(shell));
+	free(paths);
 }

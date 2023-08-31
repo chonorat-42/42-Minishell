@@ -61,7 +61,7 @@ void manage_quotes(t_mshell *shell)
 		if (shell->input[i] == '\'' || shell->input[i] == '\"')
 		{
 			i++;
-			temp = get_between_quotes(shell->input, shell->input[i], &i);
+			temp = get_between_quotes(shell->input, shell->input[i - 1], &i);
 		}
 		else
 			temp = get_other(shell->input, &i);

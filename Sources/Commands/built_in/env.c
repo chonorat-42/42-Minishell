@@ -14,13 +14,12 @@
 
 void env_case(t_mshell *shell, int fd)
 {
-	size_t j;
+	t_envp	*temp;
 
-	j = 0;
-	while (j < shell->envp_size)
+	temp = shell->envp;
+	while (temp->next)
 	{
-		if (shell->menvp[j])
-			ft_dprintf(fd, "%s\n", shell->menvp[j]);
-		j++;
+			ft_dprintf(fd, "%s=%s\n", temp->var_name, temp->var_cont);
+			temp = temp->next;
 	}
 }

@@ -16,6 +16,8 @@ void	free_arr(char **arr)
 {
 	int j;
 
+	if (!arr)
+		return ;
 	j = 0;
 	if (!arr)
 		return ;
@@ -40,6 +42,24 @@ void	ft_free_tokens(t_tokens	**head)
 			free((*head)->content);
 		if ((*head)->cmd_arr)
 			free_arr((*head)->cmd_arr);
+		temp = *head;
+		*head = temp->next;
+		free(temp);
+	}
+}
+
+void	free_envp(t_envp **head)
+{
+	t_envp	*temp;
+
+	if (!*head)
+		return ;
+	while (*head)
+	{
+		if ((*head)->var_name)
+			free((*head)->var_name);
+		if ((*head)->var_cont)
+			free((*head)->var_cont);
 		temp = *head;
 		*head = temp->next;
 		free(temp);
@@ -81,4 +101,6 @@ void	free_struct(t_mshell *shell)
 		free_atomic_arr(shell->menvp, shell->envp_size);
 		shell->menvp = NULL;
 	}
+	if (shell->envp)
+		free_envp(&shell->envp);
 }

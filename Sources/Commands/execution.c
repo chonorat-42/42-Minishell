@@ -20,7 +20,7 @@ char *get_exec(char *cmd)
 	j = 0;
 	while (cmd[j])
 		j++;
-	while (cmd[j] != '/')
+	while (j != 0 && cmd[j] != '/')
 		j--;
 	j++;
 	res = ft_substr(cmd, j, ft_strlen(cmd));
@@ -49,21 +49,26 @@ void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd)
 	char	*exec;
 	char	**exec_split;
 
+	(void) envp;
+
 	if (fd != 1)
 		dup2(fd, STDOUT_FILENO);
 	j = -1;
 	get_current_location(shell);
 	temp = ft_strjoin(shell->current_loc, ft_strtrim(cmd_arr[0], "."));
-	if (execve(temp, cmd_arr, envp) == -1)
+	if (execve(temp, cmd_arr, NULL) == -1)
 		free(temp);
-	exec = get_exec(cmd_arr[0]);
-	exec_split = ft_split(exec, ' ');
-	temp = ft_strjoin(get_path(cmd_arr[0]), exec);
-	if (execve(temp, exec_split, envp) == -1)
+	if (ft_strchr(cmd_arr[0], '/'))
 	{
-		free(exec);
-		free_arr(exec_split);
-		free(temp);
+		exec = get_exec(cmd_arr[0]);
+		exec_split = ft_split(exec, ' ');
+		temp = ft_strjoin(get_path(cmd_arr[0]), exec);
+		if (execve(temp, exec_split, NULL) == -1)
+		{
+			free(exec);
+			free_arr(exec_split);
+			free(temp);
+		}
 	}
 	if (shell->paths)
 	{
@@ -72,7 +77,7 @@ void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd)
 			temp = ft_strjoin(shell->paths[j], cmd_arr[0]);
 			if (!temp)
 				return (exit(2));
-			if (execve(temp, cmd_arr, envp) == -1)
+			if (execve(temp, cmd_arr, NULL) == -1)
 				free(temp);
 		}
 	}

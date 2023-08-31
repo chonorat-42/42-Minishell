@@ -12,9 +12,30 @@
 
 #include "minishell.h"
 
+int	delete_envvar(t_envp **envp, char *var)
+{
+	t_envp	*temp;
+
+	temp = *envp;
+	while (temp->next)
+	{
+		if (!ft_strcmp(var, temp->var_name))
+		{
+			free(temp->var_cont);
+			free(temp->var_name);
+			if (temp->prev)
+				temp->prev->next = temp->next;
+			if (temp->next)
+				temp->next->prev = temp->prev;
+			free(temp);
+			return (0);
+		}
+		temp = temp->next;
+	}
+	return (1);
+}
 void	unset_case(t_mshell *shell, char *str)
 {
-	int		index;
 	char	*var;
 	char	**to_unset;
 	size_t	i;
@@ -28,16 +49,13 @@ void	unset_case(t_mshell *shell, char *str)
 	i = 0;
 	while (to_unset[i])
 	{
-		index = find_envvar_index(shell->menvp, to_unset[i]);
-		if (index >= 0)
+		if  (delete_envvar(&shell->envp, to_unset[i]))
 		{
 			if (!ft_strcmp(to_unset[i], "PATH"))
 			{
 				free_arr(shell->paths);
 				shell->paths = NULL;
 			}
-			free(shell->menvp[index]);
-			shell->menvp[index] = NULL;
 		}
 		i++;
 	}

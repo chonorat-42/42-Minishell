@@ -46,6 +46,6 @@ int main(int argc, char **argv, char **envp)
 		return (ft_printf("Error\nMinishell does not take arguments\n"), 1);
 	sig_handler();
 	get_envp(&shell, envp);
-	get_paths(&shell, shell.menvp);
+	get_paths(&shell);
 	get_input_loop(&shell);
 }

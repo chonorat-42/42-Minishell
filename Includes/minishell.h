@@ -37,12 +37,13 @@
 # include <signal.h>
 # include "libft.h"
 
-typedef struct s_dlist
+typedef struct s_envp
 {
-	char			*content;
-	struct s_d_list	*next;
-	struct s_d_list	*prev;
-}				t_dlist;
+	char			*var_name;
+	char			*var_cont;
+	struct s_envp	*next;
+	struct s_envp	*prev;
+}				t_envp;
 
 typedef struct s_tokens
 {
@@ -63,12 +64,12 @@ typedef struct s_mshell
 	char		**paths;
 	char		*current_loc;
 	size_t		cmd_count;
-	t_dlist		 history;
 	t_tokens	*tok_lst;
+	t_envp		*envp;
 }		t_mshell;
 
 void	sig_handler(void);
-void	get_paths(t_mshell *shell, char **envp);
+void	get_paths(t_mshell *shell);
 size_t	count_arr_size(char **arr);
 void	print_arr(char **arr);
 void	print_lst(t_list *lst);
@@ -104,6 +105,8 @@ void    get_input_loop(t_mshell *shell);
 void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);
 void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out);
 void	get_current_location(t_mshell *shell);
+void	print_env(t_envp *lst);
+
 
 
 

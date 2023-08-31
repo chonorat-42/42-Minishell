@@ -101,4 +101,7 @@ re: fclean all
 exec : all
 	./minishell
 
-.PHONY: all clean fclean re exec
+val : all
+	valgrind --leak-check=full --track-origins=yes -s ./minishell
+
+.PHONY: all clean fclean re exec val
