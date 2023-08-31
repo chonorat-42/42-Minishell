@@ -28,7 +28,10 @@ void	unset_case(t_mshell *shell, char *str)
 	i = 0;
 	while (to_unset[i])
 	{
-		index = find_envvar_index(shell->menvp, to_unset[i]);
+		index = find_envvar_index(shell->menvp, ft_strtrim(to_unset[i], " \n\t"));
+
+		ft_printf("index = %d\n\n", index);
+		
 		if (index >= 0)
 		{
 			if (!ft_strcmp(to_unset[i], "PATH"))

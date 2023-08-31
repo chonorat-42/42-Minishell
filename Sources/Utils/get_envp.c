@@ -50,15 +50,56 @@ char    **copy_tab(char **envp, size_t size)
 	return (arr);
 }
 
+void	print_env(t_envp *lst)
+{
+	t_envp	*temp;
+
+	temp = lst;
+	while (temp->next)
+	{
+		ft_printf("name = %s\n", temp->var_name);
+		ft_printf("content = %s\n\n", temp->var_cont);
+		temp = temp->next;
+	}
+}
+
+void	create_envp_list(t_mshell *shell, char *name, char *content)
+{
+	t_envp	*new;
+	t_envp	*temp;
+
+	new = malloc(sizeof(t_envp));
+	new->var_cont = ft_strdup(content);
+	new->var_name = ft_strdup(name);
+	if (!shell->envp)
+	{
+		shell->envp = new;
+		new->next = NULL;
+		new->prev = NULL;
+	}
+	else
+	{
+		temp = shell->envp;
+		while(temp->next)
+			temp = temp->next;
+		new->prev = temp;
+		temp->next = new;
+		new->next = NULL;
+	}
+}
+
 void    get_envp(t_mshell *shell, char **envp)
 {
-    if (!envp)
-    {
-        shell->paths = NULL;
-        return ;
-    }
-	shell->envp_size = get_arr_size(envp);
-	shell->menvp = copy_tab(envp, shell->envp_size);
-	if (!shell->menvp)
-		return (free_struct(shell), exit(2));
+	size_t	j;
+	char	*name;
+	char	*content;
+
+	j = 0;
+	while (envp[j])
+	{
+		name = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
+		content = ft_substr(envp[j], find_char_index(envp[j], '=') + 1, ft_strlen(envp[j]));
+		create_envp_list(shell, name, content);
+		j++;
+	}
 }

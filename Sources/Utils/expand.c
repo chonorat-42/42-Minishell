@@ -91,9 +91,16 @@ char	*expand_envvar(char *str, char **envp)
 	{
 		if (ft_strchr(&str[i], '$') && check_after_dollar(&str[i]))
 		{
+
+			/*s'il y a un $ dans la suite de la string
+			j = debut du reste de la string*/
+
 			j = i;
 			i = find_char_index(&str[i], '$');
 			i += j;
+
+			/*i = index de $*/
+
 			bf_envvar = ft_substr(str, j, i - j);
 			if (res && bf_envvar)
 				res = ft_strjoin(res, bf_envvar);
@@ -105,16 +112,26 @@ char	*expand_envvar(char *str, char **envp)
 				free(bf_envvar);
 			i++;
 			j = i;
-			while (str[i] && (!is_ws(str[i]) && str[i] != '\'' && str[i] != '\"'))
+
+			/*j et i = premier caractere de la variable 'environnement*/
+
+
+			while (str[i] && !is_ws(str[i]) && str[i] != '\'' && str[i] != '\"')
 				i++;
 			envvar = ft_substr(str, j, i - j);
 
-			ft_printf("ENVVAR = %s\n\n", envvar);
+			// ft_printf("ENVVAR = %s\n\n", envvar);
+
 			if (envvar && envvar[0])
 			{
 				envvar_index = find_envvar_index(envp, envvar);
 				env_content = get_envvar_content(envp[envvar_index], ft_strlen(envvar) + 1);
 			}
+			else
+				env_content = ft_strdup("");
+
+			// ft_printf("env content = %s\n\n", env_content);
+			
 			if (envvar)
 				free(envvar);
 			j = i;
@@ -131,7 +148,7 @@ char	*expand_envvar(char *str, char **envp)
 		}
 		else
 		{
-			while (str[i] && str[i] == '$')
+			while (str[i])
 				i++;
 			temp = ft_substr(str, j, i - j);
 			if (res && temp)
