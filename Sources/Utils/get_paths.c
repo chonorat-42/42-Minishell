@@ -140,4 +140,5 @@ void	get_paths(t_mshell *shell)
 	if (fix_paths(paths, shell))
 		return (free_struct(shell));
 	print_arr(shell->paths);
+	free(paths);
 }

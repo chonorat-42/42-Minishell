@@ -95,11 +95,14 @@ void    get_envp(t_mshell *shell, char **envp)
 	char	*content;
 
 	j = 0;
+	shell->menvp = NULL;
 	while (envp[j])
 	{
 		name = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
 		content = ft_substr(envp[j], find_char_index(envp[j], '=') + 1, ft_strlen(envp[j]));
 		create_envp_list(shell, name, content);
+		free(name);
+		free(content);
 		j++;
 	}
 }
