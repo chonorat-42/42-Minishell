@@ -35,13 +35,11 @@ int compare_strings(char *str, char *envs)
 int	find_envvar_index(char **envp, const char *str)
 {
 	int		j;
-	size_t	len;
 	char	*temp;
 
 	if (!envp)
 		return (-1);
 	j = 0;
-	len = ft_strlen(str);
 	while (envp[j])
 	{
 		temp = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
@@ -134,11 +132,7 @@ void	get_paths(t_mshell *shell)
 	char *paths;
 
 	paths = get_envp_content(shell->envp, "PATH");
-
-	ft_printf("in get_paths, paths = %s\n\n", paths);
-
 	if (fix_paths(paths, shell))
 		return (free_struct(shell));
-	print_arr(shell->paths);
 	free(paths);
 }

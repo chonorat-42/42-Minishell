@@ -247,7 +247,6 @@ int tokenizer(t_mshell *shell)
 	j = 0;
 
 	shell->tok_lst = NULL;
-	ft_printf("in tokenizer, input = %s\n\n", shell->input);
 	while (shell->input[i])
 	{
 		while (shell->input[i] && !is_sep(shell->input[i]))

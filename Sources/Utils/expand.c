@@ -167,10 +167,8 @@ char	*expand_envvar(char *str, char **envp)
 int	expand(t_mshell *shell, char *cmd)
 {
     char	*temp;
-    size_t	i;
 
 	temp = NULL;
-    i = 0;
     if (!are_all_quotes_closed(cmd))
 		return (ft_printf("Error\nUnclosed quotes\n"), 1);
     if (ft_strchr(cmd, '$') != NULL)
