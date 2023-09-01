@@ -61,7 +61,7 @@ ifeq ($(OS),Linux)
 	$(CC) $(OBJS) -o $(NAME) $(LIBFT)
 	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.\a${_END}"
 else
-	$(PRINT) "This $(NAME) was made for Linux only.\n"
+	$(PRINT) "This $(NAME) was made for Linux only.\a\n"
 endif
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
@@ -81,7 +81,7 @@ clean:
 	$(PRINT) "\n${_BOLD}Cleaning Objects...${_END}"
 	$(RM) .OS
 	$(RM) $(OBJS)
-	$(PRINT) "${_BOLD}${_GREEN}Objects cleaned.${_END}"
+	$(PRINT) "${_BOLD}${_GREEN}Objects cleaned.\a${_END}"
 
 fclean:
 	$(FCLEAN_LIBFT)
@@ -93,8 +93,8 @@ fclean:
 	$(RM) Objects
 	$(RM) .OS
 	$(PRINT) "${_GREEN}Objects cleaned.${_END}"
-	$(PRINT) "${_GREEN}$(NAME) deleted.${_END}"
 	$(PRINT) "${_GREEN}Objects directory deleted.\n${_END}"
+	$(PRINT) "${_GREEN}$(NAME) deleted.\a${_END}"
 
 re: fclean all
 
