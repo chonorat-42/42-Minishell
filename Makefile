@@ -59,7 +59,7 @@ ifeq ($(OS),Linux)
 	$(MAKE_LIBFT)
 	$(PRINT) "\n${_YELLOW}Making $(NAME)...${_END}"
 	$(CC) $(OBJS) -o $(NAME) $(LIBFT)
-	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.${_END}"
+	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.\a${_END}"
 else
 	$(PRINT) "This $(NAME) was made for Linux only.\n"
 endif
