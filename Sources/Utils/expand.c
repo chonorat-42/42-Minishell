@@ -67,7 +67,7 @@ int	check_after_dollar(char *str)
 	return (0);
 }
 
-char	*expand_envvar(char *str, char **envp)
+char	*expand_envvar(char *str, t_envp *envp)
 {
 
 	size_t	i;
@@ -76,7 +76,6 @@ char	*expand_envvar(char *str, char **envp)
 	char	*env_content;
 	char	*res;
 	char	*envvar;
-	int		envvar_index;
 	char	*temp;
 
 	bf_envvar = NULL;
@@ -120,13 +119,10 @@ char	*expand_envvar(char *str, char **envp)
 				i++;
 			envvar = ft_substr(str, j, i - j);
 
-			// ft_printf("ENVVAR = %s\n\n", envvar);
+			ft_printf("ENVVAR = %s, len = %d\n\n", envvar, ft_strlen(envvar));
 
 			if (envvar && envvar[0])
-			{
-				envvar_index = find_envvar_index(envp, envvar);
-				env_content = get_envvar_content(envp[envvar_index], ft_strlen(envvar) + 1);
-			}
+				env_content = get_envvar_content(envp, envvar);
 			else
 				env_content = ft_strdup("");
 
@@ -175,7 +171,7 @@ int	expand(t_mshell *shell, char *cmd)
 	{
 		if (check_after_dollar(cmd))
 		{
-    		temp = expand_envvar(cmd, shell->menvp);
+    		temp = expand_envvar(cmd, shell->envp);
     		free(shell->input);
     		shell->input = ft_strdup(temp);
 			free(temp);
