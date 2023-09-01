@@ -60,11 +60,118 @@ int	check_after_dollar(char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i] != '$')
+	while (str[i] && str[i] != '$')
 		i++;
 	if (ft_isalnum(str[i + 1]))
 		return (1);
 	return (0);
+}
+
+int	is_char_in_set(char c, char *set)
+{
+	size_t	i;
+
+	i = 0;
+	while (set[i])
+	{
+		if (c == set[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+size_t	last_envvar_char(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (is_ws(str[i]) || is_char_in_set(str[i], "\"\'"))
+			return (i);
+		i++;
+	}
+	return (i);
+}
+
+char	*strjoin_free(char *tf_s1, char *s2)
+{
+	size_t	i;
+	size_t	j;
+	size_t	size;
+	char	*res;
+
+	size = ft_strlen(tf_s1) + ft_strlen(s2);
+	res = malloc(sizeof(char) * (size + 1));
+	i = 0;
+	j = 0;
+	while (tf_s1[i])
+	{
+		res[j] = tf_s1[i];
+		i++;
+		j++;
+	}
+	free(tf_s1);
+	i = 0;
+	while (s2[i])
+	{
+		res[j] = s2[i];
+		i++;
+		j++;
+	}
+	res[j] = '\0';
+	return (res);
+}
+
+char	*expand_envvar2(char *str, t_envp *envp)
+{
+	size_t	i;
+	size_t	j;
+	char	*temp;
+	char	*join;
+	char	*res;
+
+	res = NULL;
+	i = 0;
+	while (str[i])
+	{
+		j = i;
+		if (find_char_index(&str[i], '$' >= 0))
+		{
+			i = (size_t)find_char_index(&str[i], '$');
+			temp = ft_substr(str, j, i - j);
+			join = ft_strdup(temp);
+			free(temp);
+			i++;
+			j = i;
+			i += last_envvar_char(&str[i]);
+			temp = ft_substr(str, j, last_envvar_char(&str[i]) - j);
+			join = strjoin_free(join, get_envvar_content(envp, temp));
+			if (res)
+				res = strjoin_free(res, join);
+			else
+				res = ft_strdup(join);
+			free(join);
+			free(temp);
+			// if (str[i])
+			// 	i++;
+		}
+		else
+		{
+			j = i;
+			while (str[i])
+				i++;
+			temp = ft_substr(str, j, i - j);
+			if (res)
+				res = strjoin_free(res, temp);
+			else
+				res = ft_strdup(temp);
+		}
+		if (join)
+			free(join);		
+	}
+	return (res);
 }
 
 char	*expand_envvar(char *str, t_envp *envp)
@@ -90,16 +197,9 @@ char	*expand_envvar(char *str, t_envp *envp)
 	{
 		if (ft_strchr(&str[i], '$') && check_after_dollar(&str[i]))
 		{
-
-			/*s'il y a un $ dans la suite de la string
-			j = debut du reste de la string*/
-
 			j = i;
 			i = find_char_index(&str[i], '$');
 			i += j;
-
-			/*i = index de $*/
-
 			bf_envvar = ft_substr(str, j, i - j);
 			if (res && bf_envvar)
 				res = ft_strjoin(res, bf_envvar);
@@ -111,23 +211,13 @@ char	*expand_envvar(char *str, t_envp *envp)
 				free(bf_envvar);
 			i++;
 			j = i;
-
-			/*j et i = premier caractere de la variable 'environnement*/
-
-
 			while (str[i] && !is_ws(str[i]) && str[i] != '\'' && str[i] != '\"')
 				i++;
 			envvar = ft_substr(str, j, i - j);
-
-			ft_printf("ENVVAR = %s, len = %d\n\n", envvar, ft_strlen(envvar));
-
 			if (envvar && envvar[0])
 				env_content = get_envvar_content(envp, envvar);
 			else
 				env_content = ft_strdup("");
-
-			// ft_printf("env content = %s\n\n", env_content);
-			
 			if (envvar)
 				free(envvar);
 			j = i;
@@ -167,11 +257,11 @@ int	expand(t_mshell *shell, char *cmd)
 	temp = NULL;
     if (!are_all_quotes_closed(cmd))
 		return (ft_printf("Error\nUnclosed quotes\n"), 1);
-    if (ft_strchr(cmd, '$') != NULL)
+    if (find_char_index(cmd, '$'))
 	{
 		if (check_after_dollar(cmd))
 		{
-    		temp = expand_envvar(cmd, shell->envp);
+    		temp = expand_envvar2(cmd, shell->envp);
     		free(shell->input);
     		shell->input = ft_strdup(temp);
 			free(temp);
