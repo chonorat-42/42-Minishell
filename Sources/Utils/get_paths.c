@@ -50,18 +50,22 @@ int	find_envvar_index(char **envp, const char *str)
 	return (-1);
 }
 
-char	*get_envvar_content(char *envvar, unsigned int start)
+char	*get_envvar_content(t_envp *envp, char *to_find)
 {
+	t_envp	*temp;
 	char	*result;
-	size_t	len;
 
-	len = ft_strlen((const char *)envvar);
-	if (!envvar || (int)(len - start) < 0 || len == 0)
-		return (NULL);
-	result = ft_substr((const char *)envvar, start, len - start);
-	if (!result)
-		return (NULL);
-	return (result);
+	temp = envp;
+	while (temp->next)
+	{
+		if (!ft_strcmp(to_find, temp->var_name))
+		{
+			result = ft_strdup(temp->var_cont);
+			return (result);
+		}
+		temp = temp->next;
+	}
+	return (NULL);
 }
 
 static char	*add_ending_slash(char *str)
@@ -88,7 +92,7 @@ static int	fix_paths(char *str, t_mshell *args)
 	size_t	size;
 	size_t	j;
 	char	**temp;
-	char	*zero;
+	// char	*zero;
 
 	temp = ft_split((const char *)str, ':');
 	if (!temp)
@@ -98,14 +102,14 @@ static int	fix_paths(char *str, t_mshell *args)
 	if (!args->paths)
 		return (free_arr(temp), temp = NULL, 2);
 	args->paths[size] = NULL;
-	zero = get_envvar_content(temp[0], 5);
-	if (!zero)
-		return (free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 3);
-	args->paths[0] = add_ending_slash(zero);
-	if (!args->paths[0])
-		return (free(zero), free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 4);
-	free(zero);
-	j = 0;
+	// zero = get_envvar_content(temp[0], 5);
+	// if (!zero)
+	// 	return (free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 3);
+	// args->paths[0] = add_ending_slash(zero);
+	// if (!args->paths[0])
+	// 	return (free(zero), free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 4);
+	// free(zero);
+	j = -1;
 	while (++j < size)
 	{
 		args->paths[j] = add_ending_slash(temp[j]);
@@ -134,5 +138,6 @@ void	get_paths(t_mshell *shell)
 	paths = get_envp_content(shell->envp, "PATH");
 	if (fix_paths(paths, shell))
 		return (free_struct(shell));
+	print_env(shell->envp);
 	free(paths);
 }

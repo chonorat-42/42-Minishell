@@ -93,7 +93,7 @@ int		is_ws(char c);
 void	unset_case(t_mshell *shell, char *str);
 void	get_current_location(t_mshell *shell);
 void 	manage_quotes(t_mshell *shell);
-char	*get_envvar_content(char *envvar, unsigned int start);
+char	*get_envvar_content(t_envp *envp, char *to_find);
 char	*get_builtin_opt(char *str, size_t *i);
 size_t 	find_char_index(char *str, int c);
 void    parsing(t_mshell *shell);

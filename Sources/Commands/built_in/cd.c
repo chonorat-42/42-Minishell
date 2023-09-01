@@ -12,25 +12,15 @@
 
 #include "minishell.h"
 
-char *get_home(char **envp)
-{
-	int index;
-	char *res;
+// char *get_home(t_envp *envp)
+// {
+// 	char *res;
 
-	index = find_envvar_index(envp, "HOME");
-	if (index < 0)
-	{
-		res = malloc(sizeof(char) * 1);
-		if (!res)
-			return (NULL);
-		res[0] = '\0';
-		return (res);
-	}
-	res = get_envvar_content(envp[index], 5);
-	if (!res)
-		return (NULL);
-	return (res);
-}
+// 	res = get_envvar_content(envp, 5);
+// 	if (!res)
+// 		return (NULL);
+// 	return (res);
+// }
 
 char *get_cmd_arguments(char *prompt)
 {
@@ -77,7 +67,7 @@ int cd_case(t_mshell *shell, char *cmd)
 	}
 	if (ft_strlen(cmd) == 2)
 	{
-		temp = get_home(shell->menvp);
+		temp = get_envvar_content(shell->envp, "HOME");
 		if (temp && !temp[0])
 			return (ft_printf("Error/nPath to HOME could not be found\n"), 2);
 	}
