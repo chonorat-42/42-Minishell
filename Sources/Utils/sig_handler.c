@@ -12,25 +12,31 @@
 
 #include "minishell.h"
 
-extern int	g_signum;
-
 static void	get_sig(int signum, siginfo_t *info, void *context)
 {
 	(void)info;
 	(void)context;
-	g_signum = signum;
 	if (signum == SIGINT)
-		ft_printf("\n\033[1mminishell\033[0m:~\033[0;32m$\033[0m ");
+	{
+		rl_on_new_line();
+		rl_redisplay();
+		ft_printf("  \n\033[1mminishell@42\033[0m:~\033[0;31m$ \033[0m");
+	}
+	if (signum == SIGQUIT)
+	{
+		rl_on_new_line();
+		rl_redisplay();
+		ft_printf("  \b\b");
+	}
 }
 
 void	sig_handler(void)
 {
 	struct sigaction	sig;
 
-	g_signum = 0;
 	sigemptyset(&sig.sa_mask);
 	sig.sa_flags = SA_RESTART;
 	sig.sa_sigaction = get_sig;
 	sigaction(SIGINT, &sig, NULL);
-	signal(SIGQUIT, SIG_IGN);
+	sigaction(SIGQUIT, &sig, NULL);
 }

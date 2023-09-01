@@ -103,4 +103,5 @@ void	free_struct(t_mshell *shell)
 	}
 	if (shell->envp)
 		free_envp(&shell->envp);
+	clear_history();
 }
