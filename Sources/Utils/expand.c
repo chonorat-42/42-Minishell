@@ -97,68 +97,6 @@ size_t	last_envvar_char(char *str)
 	return (i);
 }
 
-char	*strjoin_free_both(char *tf_s1, char *s2)
-{
-	size_t	i;
-	size_t	j;
-	size_t	size;
-	char	*res;
-
-	size = ft_strlen(tf_s1) + ft_strlen(s2);
-	res = malloc(sizeof(char) * (size + 1));
-	i = 0;
-	j = 0;
-	while (tf_s1[i])
-	{
-		res[j] = tf_s1[i];
-		i++;
-		j++;
-	}
-	free(tf_s1);
-	tf_s1 = NULL;
-	i = 0;
-	while (s2[i])
-	{
-		res[j] = s2[i];
-		i++;
-		j++;
-	}
-	free(s2);
-	s2 =  NULL;
-	res[j] = '\0';
-	return (res);
-}
-
-char	*strjoin_free(char *tf_s1, char *s2)
-{
-	size_t	i;
-	size_t	j;
-	size_t	size;
-	char	*res;
-
-	size = ft_strlen(tf_s1) + ft_strlen(s2);
-	res = malloc(sizeof(char) * (size + 1));
-	i = 0;
-	j = 0;
-	while (tf_s1[i])
-	{
-		res[j] = tf_s1[i];
-		i++;
-		j++;
-	}
-	free(tf_s1);
-	tf_s1 = NULL;
-	i = 0;
-	while (s2[i])
-	{
-		res[j] = s2[i];
-		i++;
-		j++;
-	}
-	res[j] = '\0';
-	return (res);
-}
-
 char	*expand_envvar(char *str, t_envp *envp)
 {
 	size_t	i;
@@ -185,7 +123,7 @@ char	*expand_envvar(char *str, t_envp *envp)
 			temp = ft_substr(str, j, i - j);
 			join = strjoin_free_both(join, get_envvar_content(envp, temp));
 			if (res)
-				res = strjoin_free(res, join);
+				res = strjoin_free_first(res, join);
 			else
 				res = ft_strdup(join);
 			if (join)
@@ -206,7 +144,7 @@ char	*expand_envvar(char *str, t_envp *envp)
 				i++;
 			temp = ft_substr(str, j, i - j);
 			if (res)
-				res = strjoin_free(res, temp);
+				res = strjoin_free_first(res, temp);
 			else
 				res = ft_strdup(temp);
 		}

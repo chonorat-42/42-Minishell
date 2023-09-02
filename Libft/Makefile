@@ -71,6 +71,9 @@ FILES = ft_isalpha\
 		ft_lstclear\
 		ft_lstiter\
 		ft_lstmap\
+		ft_strjoin_free_first\
+		ft_strjoin_free_both\
+		ft_free_null\
 		ft_printf/ft_printf\
 		ft_printf/ft_putchar_pf\
 		ft_printf/ft_putnbr_base_p\
