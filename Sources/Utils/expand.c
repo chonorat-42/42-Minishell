@@ -89,10 +89,44 @@ size_t	last_envvar_char(char *str)
 	while (str[i])
 	{
 		if (is_ws(str[i]) || is_char_in_set(str[i], "\"\'"))
+		{
 			return (i);
+		}
 		i++;
 	}
 	return (i);
+}
+
+char	*strjoin_free_both(char *tf_s1, char *s2)
+{
+	size_t	i;
+	size_t	j;
+	size_t	size;
+	char	*res;
+
+	size = ft_strlen(tf_s1) + ft_strlen(s2);
+	res = malloc(sizeof(char) * (size + 1));
+	i = 0;
+	j = 0;
+	while (tf_s1[i])
+	{
+		res[j] = tf_s1[i];
+		i++;
+		j++;
+	}
+	free(tf_s1);
+	tf_s1 = NULL;
+	i = 0;
+	while (s2[i])
+	{
+		res[j] = s2[i];
+		i++;
+		j++;
+	}
+	free(s2);
+	s2 =  NULL;
+	res[j] = '\0';
+	return (res);
 }
 
 char	*strjoin_free(char *tf_s1, char *s2)
@@ -113,6 +147,7 @@ char	*strjoin_free(char *tf_s1, char *s2)
 		j++;
 	}
 	free(tf_s1);
+	tf_s1 = NULL;
 	i = 0;
 	while (s2[i])
 	{
@@ -124,7 +159,7 @@ char	*strjoin_free(char *tf_s1, char *s2)
 	return (res);
 }
 
-char	*expand_envvar2(char *str, t_envp *envp)
+char	*expand_envvar(char *str, t_envp *envp)
 {
 	size_t	i;
 	size_t	j;
@@ -139,23 +174,30 @@ char	*expand_envvar2(char *str, t_envp *envp)
 		j = i;
 		if (find_char_index(&str[i], '$' >= 0))
 		{
-			i = (size_t)find_char_index(&str[i], '$');
+			i += (size_t)find_char_index(&str[i], '$');
 			temp = ft_substr(str, j, i - j);
 			join = ft_strdup(temp);
 			free(temp);
+			temp = NULL;
 			i++;
 			j = i;
 			i += last_envvar_char(&str[i]);
-			temp = ft_substr(str, j, last_envvar_char(&str[i]) - j);
-			join = strjoin_free(join, get_envvar_content(envp, temp));
+			temp = ft_substr(str, j, i - j);
+			join = strjoin_free_both(join, get_envvar_content(envp, temp));
 			if (res)
 				res = strjoin_free(res, join);
 			else
 				res = ft_strdup(join);
-			free(join);
-			free(temp);
-			// if (str[i])
-			// 	i++;
+			if (join)
+			{
+				free(join);
+				join = NULL;
+			}
+			if (temp)
+			{
+				free(temp);
+				temp = NULL;
+			}
 		}
 		else
 		{
@@ -169,83 +211,25 @@ char	*expand_envvar2(char *str, t_envp *envp)
 				res = ft_strdup(temp);
 		}
 		if (join)
-			free(join);		
+		{
+			free(join);
+			join = NULL;
+		}
+		if (temp)
+		{
+			free(temp);
+			res = NULL;
+		}
 	}
-	return (res);
-}
-
-char	*expand_envvar(char *str, t_envp *envp)
-{
-
-	size_t	i;
-	size_t	j;
-	char	*bf_envvar;
-	char	*env_content;
-	char	*res;
-	char	*envvar;
-	char	*temp;
-
-	bf_envvar = NULL;
-	env_content = NULL;
-	res = NULL;
-	envvar = NULL;
-	temp = NULL;
-
-	i = 0;
-	j = 0;
-	while (str[i])
+	if (join)
 	{
-		if (ft_strchr(&str[i], '$') && check_after_dollar(&str[i]))
-		{
-			j = i;
-			i = find_char_index(&str[i], '$');
-			i += j;
-			bf_envvar = ft_substr(str, j, i - j);
-			if (res && bf_envvar)
-				res = ft_strjoin(res, bf_envvar);
-			else if (!res && bf_envvar)
-				res = ft_strdup(bf_envvar);
-			else if (!res && !bf_envvar)
-				res = NULL;
-			if (bf_envvar)
-				free(bf_envvar);
-			i++;
-			j = i;
-			while (str[i] && !is_ws(str[i]) && str[i] != '\'' && str[i] != '\"')
-				i++;
-			envvar = ft_substr(str, j, i - j);
-			if (envvar && envvar[0])
-				env_content = get_envvar_content(envp, envvar);
-			else
-				env_content = ft_strdup("");
-			if (envvar)
-				free(envvar);
-			j = i;
-			if (res && env_content)
-				res = ft_strjoin(res, env_content);
-			else if (!res && env_content)
-				res = ft_strdup(env_content);
-			else if (bf_envvar && !env_content)
-				res = ft_strdup(bf_envvar);
-			else
-				res = NULL;
-			if (env_content)
-				free(env_content);
-		}
-		else
-		{
-			while (str[i])
-				i++;
-			temp = ft_substr(str, j, i - j);
-			if (res && temp)
-				res = ft_strjoin(res, temp);
-			if (!res && temp)
-				res = ft_strdup(temp);
-			if (!res && !temp)
-				res = NULL;
-			if (temp)
-				free(temp);
-		}
+		free(join);
+		join = NULL;
+	}
+	if (temp)
+	{
+		free(res);
+		res = NULL;
 	}
 	return (res);
 }
@@ -257,11 +241,11 @@ int	expand(t_mshell *shell, char *cmd)
 	temp = NULL;
     if (!are_all_quotes_closed(cmd))
 		return (ft_printf("Error\nUnclosed quotes\n"), 1);
-    if (find_char_index(cmd, '$'))
+    if (find_char_index(cmd, '$') >= 0)
 	{
 		if (check_after_dollar(cmd))
 		{
-    		temp = expand_envvar2(cmd, shell->envp);
+    		temp = expand_envvar(cmd, shell->envp);
     		free(shell->input);
     		shell->input = ft_strdup(temp);
 			free(temp);
