@@ -49,7 +49,7 @@ void	unset_case(t_mshell *shell, char *str)
 	i = 0;
 	while (to_unset[i])
 	{
-		if  (delete_envvar(&shell->envp, to_unset[i]))
+		if  (!delete_envvar(&shell->envp, to_unset[i]))
 		{
 			if (!ft_strcmp(to_unset[i], "PATH"))
 			{

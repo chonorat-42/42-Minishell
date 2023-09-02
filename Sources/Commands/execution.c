@@ -176,6 +176,7 @@ void execution(t_mshell *shell)
 	int 		fd_in;
 	int			fd_out;
 
+	shell->cmd_count++;
 	fd_in = 0;
 	temp = shell->tok_lst;
 	while (temp)
