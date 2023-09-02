@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-int	g_signum;
-
 /*to do :
 - debugger bin_exec double execution DONE
 - builtin sans arg KO DONE

@@ -58,7 +58,7 @@ ifeq ($(OS),Linux)
 	$(PRINT) "\n${_YELLOW}Checking Libft...${_END}"
 	$(MAKE_LIBFT)
 	$(PRINT) "\n${_YELLOW}Making $(NAME)...${_END}"
-	$(CC) $(OBJS) -o $(NAME) $(LIBFT)
+	$(CC) $(OBJS) -lreadline -o $(NAME) $(LIBFT)
 	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.\a${_END}"
 else
 	$(PRINT) "This $(NAME) was made for Linux only.\a\n"
@@ -93,8 +93,8 @@ fclean:
 	$(RM) Objects
 	$(RM) .OS
 	$(PRINT) "${_GREEN}Objects cleaned.${_END}"
-	$(PRINT) "${_GREEN}Objects directory deleted.\n${_END}"
-	$(PRINT) "${_GREEN}$(NAME) deleted.\a${_END}"
+	$(PRINT) "${_GREEN}Objects directory deleted.${_END}"
+	$(PRINT) "${_GREEN}$(NAME) deleted.\a\n${_END}"
 
 re: fclean all
 
