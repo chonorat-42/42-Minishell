@@ -25,6 +25,8 @@ int	delete_envvar(t_envp **envp, char *var)
 			free(temp->var_name);
 			if (temp->prev)
 				temp->prev->next = temp->next;
+			else
+				*envp = temp->next;
 			if (temp->next)
 				temp->next->prev = temp->prev;
 			free(temp);
@@ -34,6 +36,7 @@ int	delete_envvar(t_envp **envp, char *var)
 	}
 	return (1);
 }
+
 void	unset_case(t_mshell *shell, char *str)
 {
 	char	*var;

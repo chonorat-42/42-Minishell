@@ -14,20 +14,14 @@
 
 void	get_input_loop(t_mshell *shell)
 {
-	char	*line;
-
-	line = NULL;
+	shell->input = NULL;
 	while (1)
 	{
-		line = readline("\033[1mminishell@42\033[0m:~\033[0;32m$\033[0m ");
-		if (!line)
+		shell->input = readline("\033[1mminishell@42\033[0m:~\033[0;32m$\033[0m ");
+		if (!shell->input)
 			return (free_struct(shell), exit(2));
 		else
-			add_history(line);
-		shell->input = ft_strtrim((const char *)line, "\n\t\v\f\r ");
-		free(line);
-		if (!shell->input)
-			return (free_struct(shell), exit(3));
+			add_history(shell->input);
 		parsing(shell);
 		tokenizer(shell);
 		execution(shell);
