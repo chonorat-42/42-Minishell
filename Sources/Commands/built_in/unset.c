@@ -29,6 +29,8 @@ int	delete_envvar(t_envp **envp, char *var)
 				*envp = temp->next;
 			if (temp->next)
 				temp->next->prev = temp->prev;
+			else
+				temp->next = NULL;
 			free(temp);
 			return (0);
 		}
