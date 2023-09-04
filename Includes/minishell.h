@@ -70,7 +70,7 @@ typedef struct s_mshell
 	t_envp		*envp;
 }		t_mshell;
 
-void	sig_handler(void);
+void		sig_handler(void);
 void	get_paths(t_mshell *shell);
 size_t	count_arr_size(char **arr);
 void	print_arr(char **arr);
@@ -97,8 +97,8 @@ void	get_current_location(t_mshell *shell);
 void 	manage_quotes(t_mshell *shell);
 char	*get_envvar_content(t_envp *envp, char *to_find);
 char	*get_builtin_opt(char *str, size_t *i);
-size_t 	find_char_index(char *str, int c);
-void    parsing(t_mshell *shell);
+long int 	find_char_index(char *str, int c);
+void			parsing(t_mshell *shell);
 int		expand(t_mshell *shell, char *cmd);
 int 	are_all_quotes_closed(char *str);
 char 	*get_other(char *str, size_t *i);

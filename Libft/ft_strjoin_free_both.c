@@ -1,31 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strjoin_free_both.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/19 22:44:37 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/31 16:34:29 by pgouasmi         ###   ########.fr       */
+/*   Created: 2023/09/03 00:10:11 by pgouasmi          #+#    #+#             */
+/*   Updated: 2023/09/03 00:10:11 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../Includes/libft.h"
 
-void get_current_location(t_mshell *shell)
+char	*strjoin_free_both(char *s1, char *s2)
 {
-	 shell->current_loc = getcwd(NULL, 0);
-	 if (!shell->current_loc)
-		shell->current_loc[0] = '\0';
-}
+	size_t	i;
+	size_t	j;
+	char	*res;
 
-void	pwd_case(t_mshell *shell, int fd)
-{
-	get_current_location(shell);
-	if (shell->current_loc[0])
-		ft_dprintf(fd, "%s\n", shell->current_loc);
-	else
-		ft_dprintf(fd, "\n");
-	if (shell->current_loc)
-		free(shell->current_loc);
+	res = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	i = 0;
+	j = 0;
+	while (s1[i])
+	{
+		res[j] = s1[i];
+		i++;
+		j++;
+	}
+	ft_free_null(s1);
+	i = 0;
+	while (s2[i])
+	{
+		res[j] = s2[i];
+		i++;
+		j++;
+	}
+	ft_free_null(s2);
+	res[j] = '\0';
+	return (res);
 }

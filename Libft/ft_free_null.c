@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_free_null.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/19 22:44:37 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/31 16:34:29 by pgouasmi         ###   ########.fr       */
+/*   Created: 2023/09/02 23:59:12 by pgouasmi          #+#    #+#             */
+/*   Updated: 2023/09/02 23:59:12 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../Includes/libft.h"
 
-void get_current_location(t_mshell *shell)
+void	ft_free_null(char *str)
 {
-	 shell->current_loc = getcwd(NULL, 0);
-	 if (!shell->current_loc)
-		shell->current_loc[0] = '\0';
-}
-
-void	pwd_case(t_mshell *shell, int fd)
-{
-	get_current_location(shell);
-	if (shell->current_loc[0])
-		ft_dprintf(fd, "%s\n", shell->current_loc);
-	else
-		ft_dprintf(fd, "\n");
-	if (shell->current_loc)
-		free(shell->current_loc);
+	if (str)
+		free(str);
+	str = NULL;
 }

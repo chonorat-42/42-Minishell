@@ -12,14 +12,18 @@
 
 #include "minishell.h"
 
-size_t find_char_index(char *str, int c)
+long int find_char_index(char *str, int c)
 {
-	size_t i;
+	long int	i;
 
 	i = 0;
-	while (str[i] && str[i] != c)
+	while (str[i])
+	{
+		if (str[i] == c)
+			return (i);
 		i++;
-	return (i);
+	}
+	return (-1);
 }
 
 int compare_strings(char *str, char *envs)
@@ -92,7 +96,6 @@ static int	fix_paths(char *str, t_mshell *args)
 	size_t	size;
 	size_t	j;
 	char	**temp;
-	// char	*zero;
 
 	temp = ft_split((const char *)str, ':');
 	if (!temp)
@@ -102,13 +105,6 @@ static int	fix_paths(char *str, t_mshell *args)
 	if (!args->paths)
 		return (free_arr(temp), temp = NULL, 2);
 	args->paths[size] = NULL;
-	// zero = get_envvar_content(temp[0], 5);
-	// if (!zero)
-	// 	return (free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 3);
-	// args->paths[0] = add_ending_slash(zero);
-	// if (!args->paths[0])
-	// 	return (free(zero), free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 4);
-	// free(zero);
 	j = -1;
 	while (++j < size)
 	{
@@ -125,10 +121,16 @@ char	*get_envp_content(t_envp *envp, char *to_find)
 	char	*res;
 
 	temp = envp;
-	while (temp->next && ft_strcmp(to_find, temp->var_name))
+	while (temp->next)
+	{
+		if (!ft_strcmp(to_find, temp->var_name))
+		{
+			res = ft_strdup(temp->var_cont);
+			return (res);
+		}
 		temp = temp->next;
-	res = ft_strdup(temp->var_cont);
-	return (res);
+	}
+	return (NULL);
 }
 
 void	get_paths(t_mshell *shell)
@@ -138,6 +140,5 @@ void	get_paths(t_mshell *shell)
 	paths = get_envp_content(shell->envp, "PATH");
 	if (fix_paths(paths, shell))
 		return (free_struct(shell));
-	print_env(shell->envp);
 	free(paths);
 }

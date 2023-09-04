@@ -12,16 +12,6 @@
 
 #include "minishell.h"
 
-// char *get_home(t_envp *envp)
-// {
-// 	char *res;
-
-// 	res = get_envvar_content(envp, 5);
-// 	if (!res)
-// 		return (NULL);
-// 	return (res);
-// }
-
 char *get_cmd_arguments(char *prompt)
 {
 	char *result;
