@@ -112,7 +112,7 @@ char	*expand_envvar(char *str, t_envp *envp)
 		j = i;
 		if (find_char_index(&str[i], '$' >= 0))
 		{
-			i += (size_t)find_char_index(&str[i], '$');
+			i += find_char_index(&str[i], '$');
 			temp = ft_substr(str, j, i - j);
 			join = ft_strdup(temp);
 			free(temp);
