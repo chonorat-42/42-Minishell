@@ -88,7 +88,7 @@ size_t	last_envvar_char(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (is_ws(str[i]) || is_char_in_set(str[i], "\"\'"))
+		if (is_ws(str[i]) || is_char_in_set(str[i], "\"\'="))
 		{
 			return (i);
 		}
@@ -110,7 +110,7 @@ char	*expand_envvar(char *str, t_envp *envp)
 	while (str[i])
 	{
 		j = i;
-		if (find_char_index(&str[i], '$' >= 0))
+		if (find_char_index(&str[i], '$') >= 0)
 		{
 			i += find_char_index(&str[i], '$');
 			temp = ft_substr(str, j, i - j);
@@ -121,6 +121,8 @@ char	*expand_envvar(char *str, t_envp *envp)
 			j = i;
 			i += last_envvar_char(&str[i]);
 			temp = ft_substr(str, j, i - j);
+			if (!temp)
+				temp = ft_strdup("");
 			join = strjoin_free_both(join, get_envvar_content(envp, temp));
 			if (res)
 				res = strjoin_free_first(res, join);
@@ -147,6 +149,8 @@ char	*expand_envvar(char *str, t_envp *envp)
 				res = strjoin_free_first(res, temp);
 			else
 				res = ft_strdup(temp);
+			// if (temp)
+			// 	ft_free_null(temp);
 		}
 		if (join)
 		{
@@ -156,7 +160,7 @@ char	*expand_envvar(char *str, t_envp *envp)
 		if (temp)
 		{
 			free(temp);
-			res = NULL;
+			temp = NULL;
 		}
 	}
 	if (join)
@@ -166,8 +170,8 @@ char	*expand_envvar(char *str, t_envp *envp)
 	}
 	if (temp)
 	{
-		free(res);
-		res = NULL;
+		free(temp);
+		temp = NULL;
 	}
 	return (res);
 }

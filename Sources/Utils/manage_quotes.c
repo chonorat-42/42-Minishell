@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 char	*get_other(char *str, size_t *i)
 {
 	size_t	j;
