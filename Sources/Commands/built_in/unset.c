@@ -17,7 +17,7 @@ int	delete_envvar(t_envp **envp, char *var)
 	t_envp	*temp;
 
 	temp = *envp;
-	while (temp->next)
+	while (temp)
 	{
 		if (!ft_strcmp(var, temp->var_name))
 		{
