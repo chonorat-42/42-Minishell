@@ -69,7 +69,7 @@ char	*get_envvar_content(t_envp *envp, char *to_find)
 		}
 		temp = temp->next;
 	}
-	return (NULL);
+	return (ft_strdup(""));
 }
 
 static char	*add_ending_slash(char *str)
@@ -137,6 +137,7 @@ void	get_paths(t_mshell *shell)
 {
 	char *paths;
 
+	shell->export = NULL;
 	paths = get_envp_content(shell->envp, "PATH");
 	if (fix_paths(paths, shell))
 		return (free_struct(shell));

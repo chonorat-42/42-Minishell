@@ -57,6 +57,14 @@ typedef struct s_tokens
 	struct s_tokens *next;
 }			t_tokens;
 
+typedef struct s_export
+{
+	char			*var;
+	char			*content;
+	struct s_export	*prev;
+	struct s_export	*next;
+}				t_export;
+
 typedef struct s_mshell
 {
 	char		*input;
@@ -65,6 +73,7 @@ typedef struct s_mshell
 	char		**menvp;
 	char		**paths;
 	char		*current_loc;
+	t_export	*export;
 	size_t		cmd_count;
 	t_tokens	*tok_lst;
 	t_envp		*envp;
@@ -97,7 +106,7 @@ void	get_current_location(t_mshell *shell);
 void 	manage_quotes(t_mshell *shell);
 char	*get_envvar_content(t_envp *envp, char *to_find);
 char	*get_builtin_opt(char *str, size_t *i);
-long int 	find_char_index(char *str, int c);
+long int	find_char_index(char *str, int c);
 void			parsing(t_mshell *shell);
 int		expand(t_mshell *shell, char *cmd);
 int 	are_all_quotes_closed(char *str);
@@ -108,6 +117,14 @@ void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);
 void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out);
 void	get_current_location(t_mshell *shell);
 void	print_env(t_envp *lst);
+void	create_envp_list(t_mshell *shell, char *name, char *content);
+int		delete_envvar(t_envp **envp, char *var);
+int		is_char_in_set(char c, char *set);
+
+void	export_case(t_mshell *shell, char *cmd);
+void	print_export(t_export *export);
+void	create_export(t_mshell *shell);
+void	free_export(t_export **export);
 
 
 

@@ -80,6 +80,24 @@ void	free_atomic_arr(char **arr, size_t size)
 	free(arr);
 }
 
+void	free_export(t_export **export)
+{
+	t_export	*temp;
+	t_export	*next;
+
+	temp = *export;
+	next = NULL;
+	while (temp)
+	{
+		next = temp->next;
+		free(temp->var);
+		free(temp->content);
+		free(temp);
+		temp = next;
+	}
+	*export = NULL;
+}
+
 void	free_struct(t_mshell *shell)
 {
 	if (shell->input)
@@ -103,5 +121,7 @@ void	free_struct(t_mshell *shell)
 	}
 	if (shell->envp)
 		free_envp(&shell->envp);
+	if (shell->export)
+		free_export(&shell->export);
 	clear_history();
 }

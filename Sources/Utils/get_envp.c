@@ -69,7 +69,8 @@ void	create_envp_list(t_mshell *shell, char *name, char *content)
 	t_envp	*temp;
 
 	new = malloc(sizeof(t_envp));
-	new->var_cont = ft_strdup(content);
+	if (content)
+		new->var_cont = ft_strdup(content);
 	new->var_name = ft_strdup(name);
 	if (!shell->envp)
 	{

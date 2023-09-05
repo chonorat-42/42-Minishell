@@ -17,7 +17,7 @@ void env_case(t_mshell *shell, int fd)
 	t_envp	*temp;
 
 	temp = shell->envp;
-	while (temp->next)
+	while (temp)
 	{
 			ft_dprintf(fd, "%s=%s\n", temp->var_name, temp->var_cont);
 			temp = temp->next;

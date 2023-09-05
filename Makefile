@@ -39,6 +39,7 @@ FILES = minishell\
 		Commands/built_in/cd\
 		Commands/built_in/env\
 		Commands/built_in/unset\
+		Commands/built_in/export\
 		Commands/built_in/pwd\
 		Utils/free\
 		Utils/get_envp\
@@ -48,6 +49,7 @@ FILES = minishell\
 		Utils/tokenizer\
 		Utils/sig_handler\
 		Utils/parsing\
+		Utils/export_utils\
 		Utils/expand\
 		Utils/manage_quotes
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
