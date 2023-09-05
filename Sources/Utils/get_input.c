@@ -24,6 +24,7 @@ void	get_input_loop(t_mshell *shell)
 			add_history(shell->input);
 		parsing(shell);
 		tokenizer(shell);
+		manage_quotes(&shell->tok_lst);
 		execution(shell);
 	}
 }
