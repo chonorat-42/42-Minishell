@@ -46,34 +46,46 @@ char *get_between_quotes(char *str, int c, size_t *i)
 	return (result);
 }
 
-void manage_quotes(t_mshell *shell)
+char	*remove_quotes(char	*str)
 {
-	char *temp;
-	char *result;
+	char	*temp;
+	char	*result;
 	size_t	i;
 
 	i = 0; 
 	result = NULL;
-	
-	while(shell->input[i])
+	while(str[i])
 	{
-		if (shell->input[i] == '\'' || shell->input[i] == '\"')
+		if (str[i] == '\'' || str[i] == '\"')
 		{
 			i++;
-			temp = get_between_quotes(shell->input, shell->input[i - 1], &i);
+			temp = get_between_quotes(str, str[i - 1], &i);
+			i++;
 		}
 		else
-			temp = get_other(shell->input, &i);
+			temp = get_other(str, &i);
 		if (!result)
 			result = ft_strdup(temp);
 		else
 			result = ft_strjoin(result, temp);
-
 		free(temp);
 		if (!result)
-			return ;
+			return (NULL);
 	}
-	free(shell->input);
-	shell->input = ft_strdup(result);
-	free(result);
+	return (result);
+}
+
+void	manage_quotes(t_tokens **lst)
+{
+	t_tokens	*tmp;
+	char		*new_content;
+
+	tmp = *lst;
+	while (tmp)
+	{
+		new_content = remove_quotes(tmp->content);
+		free(tmp->content);
+		tmp->content = ft_strdup(new_content);
+		tmp = tmp->next;
+	}
 }

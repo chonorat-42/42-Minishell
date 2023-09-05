@@ -18,7 +18,6 @@ void    parsing(t_mshell *shell)
 		{
 			if (expand(shell, shell->input) == 1)
                 return (free(shell->input), get_input_loop(shell));
-			manage_quotes(shell);
 		}
     else
     {
