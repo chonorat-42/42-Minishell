@@ -18,11 +18,12 @@ static void	get_sig(int signum, siginfo_t *info, void *context)
 	(void)context;
 	if (signum == SIGINT)
 	{
+		ft_printf("\b\b  ");
+		ft_printf("\n");
 		rl_on_new_line();
-		rl_redisplay();
-		ft_printf("  \b\b");
 		rl_replace_line("", 0);
-		ft_printf("\n\033[1mminishell@42\033[0m:~\033[0;31m$\033[0m ");
+		rl_redisplay();
+		//ft_printf("\033[1mminishell@42\033[0m:~\033[0;31m$\033[0m ");
 	}
 	if (signum == SIGQUIT)
 	{
