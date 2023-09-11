@@ -176,6 +176,71 @@ char	*expand_envvar(char *str, t_envp *envp)
 	return (res);
 }
 
+size_t	count_char(char *str, char c)
+{
+	size_t	i;
+	size_t	res;
+	char	q;
+
+	i = 0;
+	res = 0;
+	while (str[i])
+	{
+		if (is_char_in_set(str[i], "\'\""))
+		{
+			q = str[i];
+			i++;
+			while (str[i] && str[i] != q)
+				i++;
+		}
+		else if (str[i] == c)
+			res++;
+		i++;
+	}
+	return (res);
+}
+
+char	*remove_char(char *str, char c)
+{
+	size_t	i;
+	size_t	j;
+	size_t	to_delete;
+	char	*res;
+	char	q;
+
+	to_delete = count_char(str, c);
+	i = 0;
+	j = 0;
+	res = malloc(sizeof(char) * (ft_strlen(str) - to_delete));
+	while(str[i])
+	{
+		if (str[i] == c)
+			i++;
+		else if (is_char_in_set(str[i], "\'\""))
+		{
+			res[j] = str[i];
+			q = str[i];
+			while (str[i] && str[i] != q)
+			{
+				res[j] = str[i];
+				i++;
+				j++;
+			}
+			res[j] = str[i];
+			i++;
+			j++;
+		}
+		else
+		{
+			res[j] = str[i];
+			j++;
+			i++;
+		}
+	}
+	res[j] = '\0';
+	return (res);
+}
+
 int	expand(t_mshell *shell, char *cmd)
 {
     char	*temp;
@@ -190,6 +255,13 @@ int	expand(t_mshell *shell, char *cmd)
     		temp = expand_envvar(cmd, shell->envp);
     		free(shell->input);
     		shell->input = ft_strdup(temp);
+			free(temp);
+		}
+		else
+		{
+			temp = remove_char(cmd, '$');
+			free(cmd);
+			cmd = ft_strdup(temp);
 			free(temp);
 		}
 	}
