@@ -51,19 +51,21 @@ void	ft_free_tokens(t_tokens	**head)
 void	free_envp(t_envp **head)
 {
 	t_envp	*temp;
+	t_envp	*next;
 
-	if (!*head)
+	temp = *head;
+	next = NULL;
+	if (*head)
 		return ;
-	while (*head)
+	while (temp)
 	{
-		if ((*head)->var_name)
-			free((*head)->var_name);
-		if ((*head)->var_cont)
-			free((*head)->var_cont);
-		temp = *head;
-		*head = temp->next;
+		next = temp->next;
+		free(temp->var.name);
+		free(temp->var.content);
 		free(temp);
+		temp = next;
 	}
+	*head = NULL;
 }
 
 void	free_atomic_arr(char **arr, size_t size)
@@ -78,24 +80,6 @@ void	free_atomic_arr(char **arr, size_t size)
 		i++;
 	}
 	free(arr);
-}
-
-void	free_export(t_export **export)
-{
-	t_export	*temp;
-	t_export	*next;
-
-	temp = *export;
-	next = NULL;
-	while (temp)
-	{
-		next = temp->next;
-		free(temp->var);
-		free(temp->content);
-		free(temp);
-		temp = next;
-	}
-	*export = NULL;
 }
 
 void	free_struct(t_mshell *shell)
@@ -122,6 +106,6 @@ void	free_struct(t_mshell *shell)
 	if (shell->envp)
 		free_envp(&shell->envp);
 	if (shell->export)
-		free_export(&shell->export);
+		free_envp(&shell->export);
 	clear_history();
 }

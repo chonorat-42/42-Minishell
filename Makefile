@@ -19,7 +19,7 @@ _RED = \033[31m
 _END = \033[0m
 _BOLD = \033[1m
 
-OS = $(shell uname | cat)
+OS = $(shell uname)
 
 NAME = minishell
 CFLAGS = -Wall -Wextra -Werror -IIncludes -ggdb3

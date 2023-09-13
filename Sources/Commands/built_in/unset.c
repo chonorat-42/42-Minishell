@@ -19,10 +19,10 @@ int	delete_envvar(t_envp **envp, char *var)
 	temp = *envp;
 	while (temp)
 	{
-		if (!ft_strcmp(var, temp->var_name))
+		if (!ft_strcmp(var, temp->var.name))
 		{
-			free(temp->var_cont);
-			free(temp->var_name);
+			free(temp->var.content);
+			free(temp->var.name);
 			if (temp->prev)
 				temp->prev->next = temp->next;
 			else
@@ -47,23 +47,25 @@ void	unset_case(t_mshell *shell, char *str)
 	
 	var = ft_substr(str, 6, ft_strlen(str));
 	if (!var)
-		return (free_struct(shell), exit (11));
+		return (free_struct(shell), exit(11));
 	to_unset = ft_split(var, ' ');
 	if (!to_unset)
 		return (free(var), free_struct(shell), exit(12));
 	i = 0;
 	while (to_unset[i])
 	{
-		if  (!delete_envvar(&shell->envp, to_unset[i]))
+		if (ft_strncmp(to_unset[i], "_", ft_strlen(to_unset[i])) != 0)
 		{
-			if (!ft_strcmp(to_unset[i], "PATH"))
+			if  (!delete_envvar(&shell->envp, to_unset[i]))
 			{
-				free_arr(shell->paths);
-				shell->paths = NULL;
+				if (!ft_strcmp(to_unset[i], "PATH"))
+				{
+					free_arr(shell->paths);
+					shell->paths = NULL;
+				}
 			}
 		}
 		i++;
 	}
-	free(var);
-	free_arr(to_unset);
+	return (free(var), free_arr(to_unset));
 }

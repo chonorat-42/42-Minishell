@@ -19,7 +19,12 @@ void env_case(t_mshell *shell, int fd)
 	temp = shell->envp;
 	while (temp)
 	{
-			ft_dprintf(fd, "%s=%s\n", temp->var_name, temp->var_cont);
-			temp = temp->next;
+		if (temp->var.readable == 1)
+		{
+			ft_putstr_fd(temp->var.name, fd);
+			ft_putchar_fd('=', fd);
+			ft_putendl_fd(temp->var.content, fd);
+		}
+		temp = temp->next;
 	}
 }

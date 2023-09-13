@@ -39,10 +39,16 @@
 # include <readline/history.h>
 # include "libft.h"
 
+typedef struct s_var
+{
+	char	*name;
+	char	*content;
+	int		readable;
+}				t_var;
+
 typedef struct s_envp
 {
-	char			*var_name;
-	char			*var_cont;
+	struct s_var	var;
 	struct s_envp	*next;
 	struct s_envp	*prev;
 }				t_envp;
@@ -57,14 +63,6 @@ typedef struct s_tokens
 	struct s_tokens *next;
 }			t_tokens;
 
-typedef struct s_export
-{
-	char			*var;
-	char			*content;
-	struct s_export	*prev;
-	struct s_export	*next;
-}				t_export;
-
 typedef struct s_mshell
 {
 	char		*input;
@@ -73,63 +71,56 @@ typedef struct s_mshell
 	char		**menvp;
 	char		**paths;
 	char		*current_loc;
-	t_export	*export;
 	size_t		cmd_count;
 	t_tokens	*tok_lst;
 	t_envp		*envp;
+	t_envp		*export;
 }		t_mshell;
 
 void		sig_handler(void);
-void	get_paths(t_mshell *shell);
-size_t	count_arr_size(char **arr);
-void	print_arr(char **arr);
-void	print_lst(t_list *lst);
-void	free_struct(t_mshell *shell);
-void	free_arr(char **arr);
-void 	bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd);
-void	echo_case(char *prompt, int fd);
-void	env_case(t_mshell *shell, int fd);
-char	*get_cmd_arguments(char *prompt);
-int 	cd_case(t_mshell *shell, char *cmd);
-void	pwd_case(t_mshell *shell, int fd);
-int 	redirect(t_mshell *shell);
-void 	struct_init(t_mshell *shell);
-void	sig_handler(void);
-int		tokenizer(t_mshell *shell);
-void 	execution(t_mshell *shell);
-void	free_arr(char **arr);
-void	ft_free_tokens(t_tokens	**head);
-int		find_envvar_index(char **envp, const char *str);
-int		is_ws(char c);
-void	unset_case(t_mshell *shell, char *str);
-void	get_current_location(t_mshell *shell);
-void	manage_quotes(t_tokens **lst);
-char	*get_envvar_content(t_envp *envp, char *to_find);
-char	*get_builtin_opt(char *str, size_t *i);
+void		get_paths(t_mshell *shell);
+size_t		count_arr_size(char **arr);
+void		print_arr(char **arr);
+void		print_lst(t_list *lst);
+void		free_struct(t_mshell *shell);
+void		free_arr(char **arr);
+void 		bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd);
+void		echo_case(char *prompt, int fd);
+void		env_case(t_mshell *shell, int fd);
+char		*get_cmd_arguments(char *prompt);
+int 		cd_case(t_mshell *shell, char *cmd);
+void		pwd_case(t_mshell *shell, int fd);
+int 		redirect(t_mshell *shell);
+void 		struct_init(t_mshell *shell);
+void		sig_handler(void);
+int			tokenizer(t_mshell *shell);
+void 		execution(t_mshell *shell);
+void		ft_free_tokens(t_tokens	**head);
+int			find_envvar_index(char **envp, const char *str);
+int			is_ws(char c);
+void		unset_case(t_mshell *shell, char *str);
+void		get_current_location(t_mshell *shell);
+void		manage_quotes(t_tokens **lst);
+char		*get_envvar_content(t_envp *envp, char *to_find);
+char		*get_builtin_opt(char *str, size_t *i);
 long int	find_char_index(char *str, int c);
-void			parsing(t_mshell *shell);
-int		expand(t_mshell *shell, char *cmd);
-int 	are_all_quotes_closed(char *str);
-char 	*get_other(char *str, size_t *i);
-void    get_envp(t_mshell *shell, char **envp);
-void    get_input_loop(t_mshell *shell);
-void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);
-void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out);
-void	get_current_location(t_mshell *shell);
-void	print_env(t_envp *lst);
-void	create_envp_list(t_mshell *shell, char *name, char *content);
-int		delete_envvar(t_envp **envp, char *var);
-int		is_char_in_set(char c, char *set);
+void		parsing(t_mshell *shell);
+int			expand(t_mshell *shell, char *cmd);
+int 		are_all_quotes_closed(char *str);
+char 		*get_other(char *str, size_t *i);
+void    	get_envp(t_mshell *shell, char **envp);
+void    	get_input_loop(t_mshell *shell);
+void		handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);
+void		exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out);
+void		get_current_location(t_mshell *shell);
+void		create_envp_list(t_mshell *shell, t_var *var);
+int			delete_envvar(t_envp **envp, char *var);
+int			is_char_in_set(char c, char *set);
+void		free_arr(char **arr);
+void		free_envp(t_envp **head);
 
-void	export_case(t_mshell *shell, char *cmd);
-void	print_export(t_export *export);
-void	create_export(t_mshell *shell);
-void	free_export(t_export **export);
-
-
-
-
+void		export_case(t_mshell *shell, char *cmd);
+void		print_export(t_envp *export);
+void		create_export(t_mshell *shell);
 
 #endif
-
-
