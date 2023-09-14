@@ -60,7 +60,7 @@ char	*get_envvar_content(t_envp *envp, char *to_find)
 	char	*result;
 
 	temp = envp;
-	while (temp->next)
+	while (temp)
 	{
 		if (!ft_strcmp(to_find, temp->var.name))
 		{
@@ -121,7 +121,7 @@ char	*get_envp_content(t_envp *envp, char *to_find)
 	char	*res;
 
 	temp = envp;
-	while (temp->next)
+	while (temp)
 	{
 		if (!ft_strcmp(to_find, temp->var.name))
 		{

@@ -62,7 +62,7 @@ int	check_after_dollar(char *str)
 	i = 0;
 	while (str[i] && str[i] != '$')
 		i++;
-	if (ft_isalnum(str[i + 1]))
+	if (ft_isalnum(str[i + 1]) || is_char_in_set(str[i + 1], "_?"))
 		return (1);
 	return (0);
 }
@@ -105,18 +105,16 @@ char	*expand_envvar(char *str, t_envp *envp)
 	char	*join;
 	char	*res;
 
-	res = NULL;
 	i = 0;
+	res = NULL;
+	temp = NULL;
 	while (str[i])
 	{
 		j = i;
 		if (find_char_index(&str[i], '$') >= 0)
 		{
 			i += find_char_index(&str[i], '$');
-			temp = ft_substr(str, j, i - j);
-			join = ft_strdup(temp);
-			free(temp);
-			temp = NULL;
+			join = ft_substr(str, j, i - j);
 			i++;
 			j = i;
 			i += last_envvar_char(&str[i]);
@@ -128,16 +126,6 @@ char	*expand_envvar(char *str, t_envp *envp)
 				res = strjoin_free_first(res, join);
 			else
 				res = ft_strdup(join);
-			if (join)
-			{
-				free(join);
-				join = NULL;
-			}
-			if (temp)
-			{
-				free(temp);
-				temp = NULL;
-			}
 		}
 		else
 		{
@@ -149,8 +137,6 @@ char	*expand_envvar(char *str, t_envp *envp)
 				res = strjoin_free_first(res, temp);
 			else
 				res = ft_strdup(temp);
-			// if (temp)
-			// 	ft_free_null(temp);
 		}
 		if (join)
 		{
@@ -162,16 +148,6 @@ char	*expand_envvar(char *str, t_envp *envp)
 			free(temp);
 			temp = NULL;
 		}
-	}
-	if (join)
-	{
-		free(join);
-		join = NULL;
-	}
-	if (temp)
-	{
-		free(temp);
-		temp = NULL;
 	}
 	return (res);
 }

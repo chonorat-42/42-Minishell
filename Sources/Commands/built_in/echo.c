@@ -46,11 +46,8 @@ void	echo_case(char *prompt, int fd)
 	}
 	while (prompt[i] && is_ws(prompt[i]))
 		i++;
-	while(prompt[i])
-	{
-		write(fd, &prompt[i], 1);
-		i++;
-	}
+	if (prompt[i])
+		ft_putstr_fd(&prompt[i], fd);
 	if (option)
 	{
 		ft_dprintf(fd, "$");
