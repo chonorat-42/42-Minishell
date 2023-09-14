@@ -17,14 +17,14 @@
 - builtin sans arg KO DONE
 - refaire expand DONE
 - gestion des pipes DONE 28/08
+- export (diff export env ?) DONE
+- readline a la place de GNL DONE
 
+- $? IN_WORK
 
-- export (diff export env ?) DONE ?
 - gerer simple quotes echo
 - factorisation + cleaning
 - redirection STDIN
-- readline a la place de GNL
-- $?
 - executable PATH relatif ou absolu ->ex : ./minishell
 - expand meme entre quotes
 
@@ -34,6 +34,8 @@ remake parsing
 2) Quotes
 3) Expand
 */
+
+int	g_status = 0;
 
 int main(int argc, char **argv, char **envp)
 {

@@ -61,9 +61,8 @@ void	create_envp_list(t_mshell *shell, t_var *var)
 	if (var->content)
 		new->var.content = ft_strdup(var->content);
 	new->var.name = ft_strdup(var->name);
-	//ft_printf("%s\n", new->var.name);
 	new->var.readable = var->readable;
-	//ft_printf("%d\n", new->var.readable);
+	new->var.alterable = var->alterable;
 	if (!shell->envp)
 	{
 		shell->envp = new;
@@ -95,6 +94,9 @@ void	get_envp(t_mshell *shell, char **envp)
 		new.name = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
 		new.content = ft_substr(envp[j], find_char_index(envp[j], '=') + 1, ft_strlen(envp[j]));
 		new.readable = 1;
+		new.alterable = 1;
+		if (ft_strcmp(new.name, "_") == 0)
+			new.alterable = 0;
 		create_envp_list(shell, &new);
 		free(new.name);
 		free(new.content);

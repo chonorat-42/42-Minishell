@@ -45,6 +45,7 @@ FILES = minishell\
 		Utils/get_envp\
 		Utils/get_paths\
 		Utils/get_input\
+		Utils/get_shellvar\
 		Utils/resources\
 		Utils/tokenizer\
 		Utils/sig_handler\
@@ -56,25 +57,17 @@ SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 
 $(NAME): $(OBJS)
-ifeq ($(OS),Linux)
 	$(PRINT) "\n${_YELLOW}Checking Libft...${_END}"
 	$(MAKE_LIBFT)
 	$(PRINT) "\n${_YELLOW}Making $(NAME)...${_END}"
 	$(CC) $(OBJS) -lreadline -o $(NAME) $(LIBFT)
 	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.\a${_END}"
-else
-	$(PRINT) "This $(NAME) was made for Linux only.\a\n"
-endif
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
-ifeq ($(OS),Linux)
 	$(DIR) Objects
 	$(DIR) Objects/Commands Objects/Utils Objects/Commands/built_in
 	$(PRINT) "Compiling ${_BOLD}$<$(_END)..."
 	$(CC) -c $(CFLAGS) $< -o $@
-else
-	$(PRINT) "OS=$(OS)" > .OS
-endif
 
 all: $(NAME)
 

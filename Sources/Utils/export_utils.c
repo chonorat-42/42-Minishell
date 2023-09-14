@@ -6,11 +6,25 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 12:31:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/09/13 15:33:45 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/09/14 16:59:03 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../Includes/minishell.h"
+
+int	var_exist(t_mshell *shell, char *var)
+{
+	t_envp	*temp;
+
+	temp = shell->envp;
+	while (temp)
+	{
+		if (ft_strcmp(var, temp->var.name) == 0)
+			return (1);
+		temp = temp->next;
+	}
+	return (0);
+}
 
 void	print_export(t_envp *export)
 {
