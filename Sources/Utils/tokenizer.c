@@ -103,7 +103,7 @@ void give_type(t_tokens **lst)
 		else if (!ft_strcmp(temp->content, ">"))
 			temp->type = (int)RCHEVRON;
 		else if (!ft_strcmp(temp->content, "<<"))
-			temp->type = (int)REDIRECT;
+			temp->type = (int)HEREDOC;
 		else if (!ft_strcmp(temp->content, "<"))
 			temp->type = (int)LCHEVRON;
 		temp = temp->next;
@@ -117,15 +117,14 @@ void give_type(t_tokens **lst)
 			{
 				if (temp->prev && (temp->prev->type == RCHEVRON || temp->prev->type == APPEND))
 					temp->type = OUTFILE;
-				else if (temp->prev && (temp->prev->type == LCHEVRON || temp->prev->type == REDIRECT))
+				else if (temp->prev && (temp->prev->type == LCHEVRON))
 					temp->type = INFILE;
+				else if (temp->prev && (temp->prev->type == HEREDOC))
+					temp->type = HEREDEL;
 				else if (temp->content[0] == '\'' || temp->content[0] == '\"')
 					temp->type = STRING;
 				else if ((temp->next && temp->next->type == PIPE) || (temp->prev && temp->prev->type == PIPE))
 					temp->type = CMD;
-				// else if (temp->prev && (!ft_strncmp(temp->prev->content, "echo", 4) ||
-				// 		!ft_strncmp(temp->prev->content, "grep", 4)))
-				// 	temp->type = STRING;
 				else
 					temp->type = CMD;
 			}
@@ -188,13 +187,13 @@ int create_token(t_mshell *shell, int i, int j)
 	if (!str)
 		return (1);
 	if (!str[0])
-		return (2);
+		return (free(str), 2);
 	result = ft_strtrim(str, "\n ");
 	free(str);
 	if (!result)
 		return (1);
 	if (str_is_ws(result))
-		return (2);
+		return (free(result), 2);
 	new = malloc(sizeof(t_tokens));
 	if (!new)
 		return (free(str), free(result), 1);
@@ -246,7 +245,6 @@ int tokenizer(t_mshell *shell)
 
 	i = 0;
 	j = 0;
-
 	shell->tok_lst = NULL;
 	while (shell->input[i])
 	{

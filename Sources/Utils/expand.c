@@ -97,6 +97,55 @@ size_t	last_envvar_char(char *str)
 	return (i);
 }
 
+// void	add_to_list(t_list **lst, char *str)
+// {
+// 	t_list	*new;
+// 	t_list	*temp;
+
+// 	new = malloc(sizeof(t_list));
+// 	if (!(*lst))
+// 		*lst = new;
+// 	else
+// 	{
+// 		temp = *lst;
+// 		while (temp)
+// 			temp = temp->next;
+// 	}
+// 	(char *)new->content = ft_strdup(str);
+// 	temp->next = NULL;
+// 	free(str); 
+// }
+
+/*creer liste chainee
+  join les differents nodes*/
+// char	*expand_envvar(char *str, t_envp *envp)
+// {
+// 	size_t	i;
+// 	size_t	j;
+// 	t_list	*lst;
+// 	char	*res;
+// 	char	*envvar;
+
+// 	res = NULL;
+// 	i = 0;
+// 	while (str[i])
+// 	{
+// 		j = i;
+// 		if (find_char_index(&str[i], '$') >= 0)
+// 		{
+// 			i += find_char_index(&str[i], '$');
+// 			add_to_lst(&lst, ft_substr(str, j, i - j));
+// 			i++;
+// 			j = 0;
+// 			i += last_envvar_char(&str[i]);
+// 			temp = ft_substr(str, j, i - j);
+// 			if (!temp)
+// 				temp = ft_strdup("");
+			
+// 		}
+// 	}
+// }
+
 char	*expand_envvar(char *str, t_envp *envp)
 {
 	size_t	i;

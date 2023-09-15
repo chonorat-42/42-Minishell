@@ -22,7 +22,8 @@
 # define LCHEVRON 7
 # define RCHEVRON 8
 # define APPEND 9
-# define REDIRECT 10
+# define HEREDOC 10
+# define HEREDEL 11
 # define MAX_SIZE 100
 
 # include <stdlib.h>
@@ -86,7 +87,7 @@ void	print_arr(char **arr);
 void	print_lst(t_list *lst);
 void	free_struct(t_mshell *shell);
 void	free_arr(char **arr);
-void 	bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd);
+void	bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd_in, int fd_out);
 void	echo_case(char *prompt, int fd);
 void	env_case(t_mshell *shell, int fd);
 char	*get_cmd_arguments(char *prompt);
