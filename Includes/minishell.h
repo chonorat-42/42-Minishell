@@ -127,6 +127,8 @@ void	print_export(t_export *export);
 void	create_export(t_mshell *shell);
 void	free_export(t_export **export);
 
+void	heredoc(char *delimiter);
+
 
 
 

@@ -17,14 +17,15 @@ void	get_input_loop(t_mshell *shell)
 	shell->input = NULL;
 	while (1)
 	{
-		shell->input = readline("\033[1mminishell@42\033[0m:~\033[0;32m$\033[0m ");
-		if (!shell->input)
-			return (free_struct(shell), exit(2));
-		else
-			add_history(shell->input);
-		parsing(shell);
-		tokenizer(shell);
-		manage_quotes(&shell->tok_lst);
-		execution(shell);
+		heredoc("EOF");
+		// shell->input = readline("\033[1mminishell@42\033[0m:~\033[0;32m$\033[0m ");
+		// if (!shell->input)
+		// 	return (free_struct(shell), exit(2));
+		// else
+		// 	add_history(shell->input);
+		// parsing(shell);
+		// tokenizer(shell);
+		// manage_quotes(&shell->tok_lst);
+		// execution(shell);
 	}
 }

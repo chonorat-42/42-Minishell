@@ -182,7 +182,6 @@ void execution(t_mshell *shell)
 	shell->cmd_count++;
 	fd_in = 0;
 	temp = shell->tok_lst;
-
 	while (temp)
 	{
 		if (temp->type == CMD)
