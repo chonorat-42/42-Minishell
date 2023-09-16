@@ -307,7 +307,6 @@ int tokenizer(t_mshell *shell)
 			i++;
 	}
 	give_type(&shell->tok_lst);
-	print_tkns_down(shell->tok_lst);
 	return (0);
 }
 
