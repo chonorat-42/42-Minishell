@@ -138,31 +138,18 @@ static int	is_var(char *cmd)
 	return (1);
 }
 
-static int	var_exist(t_mshell *shell, char *var)
-{
-	t_envp	*temp;
-
-	temp = shell->envp;
-	while (temp)
-	{
-		if (ft_strcmp(var, temp->var.name) == 0)
-			return (1);
-		temp = temp->next;
-	}
-	return (0);
-}
-
 static void	add_to_env(t_mshell *shell, t_var *new)
 {
 	if ((var_exist(shell, new->name) && new->readable == 0) ||
-		ft_strncmp(new->name, "_", ft_strlen(new->name)) == 0)
+		ft_strncmp(new->name, "_", ft_strlen(new->name)) == 0 ||
+		ft_strncmp(new->name, "?", ft_strlen(new->name)) == 0)
 	{
 		if (new->content)
 			free(new->content);
 		return (free(new->name));
 	}
 	if (shell->envp && var_exist(shell, new->name))
-		delete_envvar(&shell->envp, new->name);
+		delete_envvar(&shell->envp, new->name, 0);
 	create_envp_list(shell, new);
 	if (new->content)
 		free(new->content);
@@ -196,9 +183,10 @@ static void	get_readable(char *var, t_var *new)
 {
 	int	index;
 
-	new->readable = 0;
 	new->name = NULL;
 	new->content = NULL;
+	new->alterable = 1;
+	new->readable = 0;
 	index = find_char_index(var, '=');
 	if (index > 0)
 		new->readable = 1;

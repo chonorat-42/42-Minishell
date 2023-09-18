@@ -12,6 +12,20 @@
 
 #include "../../Includes/minishell.h"
 
+int	var_exist(t_mshell *shell, char *var)
+{
+	t_envp	*temp;
+
+	temp = shell->envp;
+	while (temp)
+	{
+		if (ft_strcmp(var, temp->var.name) == 0)
+			return (1);
+		temp = temp->next;
+	}
+	return (0);
+}
+
 void	print_export(t_envp *export)
 {
 	while (export)

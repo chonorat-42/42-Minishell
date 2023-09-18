@@ -45,6 +45,7 @@ typedef struct s_var
 	char	*name;
 	char	*content;
 	int		readable;
+	int		alterable;
 }				t_var;
 
 typedef struct s_envp
@@ -116,14 +117,19 @@ void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);
 void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out);
 void	get_current_location(t_mshell *shell);
 void	print_env(t_envp *lst);
-void	create_envp_list(t_mshell *shell, char *name, char *content);
-int		delete_envvar(t_envp **envp, char *var);
+void	create_envp_list(t_mshell *shell, t_var *var);
+int		delete_envvar(t_envp **envp, char *var, int ign_param);
 int		is_char_in_set(char c, char *set);
 
+void	free_envp(t_envp **head);
+
 void	export_case(t_mshell *shell, char *cmd);
-void	print_export(t_export *export);
+void	print_export(t_envp *export);
 void	create_export(t_mshell *shell);
-void	free_export(t_export **export);
+void	free_export(t_envp **export);
+int		var_exist(t_mshell *shell, char *var);
+
+void	get_shellvar(t_mshell *shell);
 
 void	heredoc(char *delimiter);
 

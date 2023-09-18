@@ -209,9 +209,11 @@ void execution(t_mshell *shell)
 			}
 			else if (temp->next && (temp->next->type = HEREDOC))
 			{
-				if (temp->next->next)
+				temp = temp->next;
+				if (temp->next)
 				{
-
+					heredoc(temp->next->content);
+					temp = temp->next;
 				}
 			}
 			else
@@ -237,7 +239,8 @@ void execution(t_mshell *shell)
 			else
 				exec_forwarding(temp, shell, fd_in, fd_out);
 		}
-		temp = temp->next;
+		if (temp)
+			temp = temp->next;
 	}
 	if (shell->tok_lst)
 		ft_free_tokens(&shell->tok_lst);
