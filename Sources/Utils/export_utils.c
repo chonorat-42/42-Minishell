@@ -12,16 +12,22 @@
 
 #include "../../Includes/minishell.h"
 
-void	print_export(t_export *export)
+void	print_export(t_envp *export)
 {
 	while (export)
 	{
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(export->var, 1);
-		ft_putstr_fd("=\"", 1);
-		ft_putstr_fd(export->content, 1);
-		ft_putstr_fd("\"", 1);
-		ft_putchar_fd('\n', 1);
+		if (export->var.readable == 1)
+		{
+			ft_putstr_fd("declare -x ", 1);
+			ft_putstr_fd(export->var.name, 1);
+			if (export->var.content)
+			{
+				ft_putstr_fd("=\"", 1);
+				ft_putstr_fd(export->var.content, 1);
+				ft_putstr_fd("\"", 1);
+			}
+			ft_putchar_fd('\n', 1);
+		}
 		export = export->next;
 	}
 }
