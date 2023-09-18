@@ -97,6 +97,55 @@ size_t	last_envvar_char(char *str)
 	return (i);
 }
 
+// void	add_to_list(t_list **lst, char *str)
+// {
+// 	t_list	*new;
+// 	t_list	*temp;
+
+// 	new = malloc(sizeof(t_list));
+// 	if (!(*lst))
+// 		*lst = new;
+// 	else
+// 	{
+// 		temp = *lst;
+// 		while (temp)
+// 			temp = temp->next;
+// 	}
+// 	(char *)new->content = ft_strdup(str);
+// 	temp->next = NULL;
+// 	free(str); 
+// }
+
+/*creer liste chainee
+  join les differents nodes*/
+// char	*expand_envvar(char *str, t_envp *envp)
+// {
+// 	size_t	i;
+// 	size_t	j;
+// 	t_list	*lst;
+// 	char	*res;
+// 	char	*envvar;
+
+// 	res = NULL;
+// 	i = 0;
+// 	while (str[i])
+// 	{
+// 		j = i;
+// 		if (find_char_index(&str[i], '$') >= 0)
+// 		{
+// 			i += find_char_index(&str[i], '$');
+// 			add_to_lst(&lst, ft_substr(str, j, i - j));
+// 			i++;
+// 			j = 0;
+// 			i += last_envvar_char(&str[i]);
+// 			temp = ft_substr(str, j, i - j);
+// 			if (!temp)
+// 				temp = ft_strdup("");
+			
+// 		}
+// 	}
+// }
+
 char	*expand_envvar(char *str, t_envp *envp)
 {
 	size_t	i;
@@ -176,6 +225,71 @@ char	*expand_envvar(char *str, t_envp *envp)
 	return (res);
 }
 
+size_t	count_char(char *str, char c)
+{
+	size_t	i;
+	size_t	res;
+	char	q;
+
+	i = 0;
+	res = 0;
+	while (str[i])
+	{
+		if (is_char_in_set(str[i], "\'\""))
+		{
+			q = str[i];
+			i++;
+			while (str[i] && str[i] != q)
+				i++;
+		}
+		else if (str[i] == c)
+			res++;
+		i++;
+	}
+	return (res);
+}
+
+char	*remove_char(char *str, char c)
+{
+	size_t	i;
+	size_t	j;
+	size_t	to_delete;
+	char	*res;
+	char	q;
+
+	to_delete = count_char(str, c);
+	i = 0;
+	j = 0;
+	res = malloc(sizeof(char) * (ft_strlen(str) - to_delete));
+	while(str[i])
+	{
+		if (str[i] == c)
+			i++;
+		else if (is_char_in_set(str[i], "\'\""))
+		{
+			res[j] = str[i];
+			q = str[i];
+			while (str[i] && str[i] != q)
+			{
+				res[j] = str[i];
+				i++;
+				j++;
+			}
+			res[j] = str[i];
+			i++;
+			j++;
+		}
+		else
+		{
+			res[j] = str[i];
+			j++;
+			i++;
+		}
+	}
+	res[j] = '\0';
+	return (res);
+}
+
 int	expand(t_mshell *shell, char *cmd)
 {
     char	*temp;
@@ -190,6 +304,13 @@ int	expand(t_mshell *shell, char *cmd)
     		temp = expand_envvar(cmd, shell->envp);
     		free(shell->input);
     		shell->input = ft_strdup(temp);
+			free(temp);
+		}
+		else
+		{
+			temp = remove_char(cmd, '$');
+			free(cmd);
+			cmd = ft_strdup(temp);
 			free(temp);
 		}
 	}

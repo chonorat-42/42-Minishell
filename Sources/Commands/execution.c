@@ -42,7 +42,7 @@ char	*get_path(char *cmd)
 	return (res);
 }
 
-void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd)
+void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd_in, int fd_out)
 {
 	size_t	j;
 	char	*temp;
@@ -51,8 +51,10 @@ void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd)
 
 	(void) envp;
 
-	if (fd != 1)
-		dup2(fd, STDOUT_FILENO);
+	if (fd_out != 1)
+		dup2(fd_out, STDOUT_FILENO);
+	if (fd_in != 0)
+		dup2(fd_in, STDIN_FILENO);
 	j = -1;
 	get_current_location(shell);
 	temp = ft_strjoin(shell->current_loc, ft_strtrim(cmd_arr[0], "."));
@@ -82,7 +84,7 @@ void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd)
 		}
 	}
 	
-	return (ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell->cmd_count, cmd_arr[0]), exit(1));
+	return (ft_dprintf(STDERR_FILENO, "Command '%s' not found\n", cmd_arr[0]), exit(1));
 }
 
 char *get_cmd(char *str, size_t *i)
@@ -115,7 +117,6 @@ char *get_cmd(char *str, size_t *i)
 void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 {
 	pid_t	child;
-	(void) fd_in;
 
 	if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
 		echo_case(temp->content, fd_out);
@@ -140,7 +141,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 		if (child == -1)
 			return(free_struct(shell), exit(2));
 		if (!child)
-			bin_exec(shell, temp->cmd_arr, shell->menvp, fd_out);
+			bin_exec(shell, temp->cmd_arr, shell->menvp, fd_in, fd_out);
 		else
 			waitpid(child, NULL, 0);
 		if (temp->cmd_arr)
@@ -197,8 +198,37 @@ void execution(t_mshell *shell)
 						return (free_struct(shell), exit(4));
 				}
 			}
+			else if (temp->next && (temp->next->type == LCHEVRON))
+			{
+				if (temp->next->next)
+				{
+					fd_in = open(temp->next->next->content, O_RDONLY);
+				}
+				if (fd_in == -1)
+						return (free_struct(shell), exit(4));
+			}
+			else if (temp->next && (temp->next->type = HEREDOC))
+			{
+				if (temp->next->next)
+				{
+
+				}
+			}
 			else
+			{
 				fd_out = 1;
+				fd_in = 0;
+			}
+			if (fd_out != 1)
+			{
+				while (temp->next && temp->next->type != CMD)
+					temp = temp->next;
+			}
+			if (fd_in != STDIN_FILENO)
+			{
+				while (temp->next && temp->next->type != CMD)
+					temp = temp->next;
+			}
 			if (temp->next && temp->next->type == PIPE)
 			{
 				fd_out = get_final_out(temp);
@@ -206,11 +236,6 @@ void execution(t_mshell *shell)
 			}
 			else
 				exec_forwarding(temp, shell, fd_in, fd_out);
-		}
-		if (fd_out != 1)
-		{
-			while (temp->next && temp->next->type != CMD)
-				temp = temp->next;
 		}
 		temp = temp->next;
 	}

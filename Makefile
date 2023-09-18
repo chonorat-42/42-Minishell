@@ -35,6 +35,7 @@ FCLEAN_LIBFT = @make fclean -C Libft
 FILES = minishell\
 		Commands/execution\
 		Commands/pipe\
+		Commands/heredoc\
 		Commands/built_in/echo\
 		Commands/built_in/cd\
 		Commands/built_in/env\
