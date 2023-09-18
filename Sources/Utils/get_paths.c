@@ -62,9 +62,9 @@ char	*get_envvar_content(t_envp *envp, char *to_find)
 	temp = envp;
 	while (temp->next)
 	{
-		if (!ft_strcmp(to_find, temp->var_name))
+		if (!ft_strcmp(to_find, temp->var.name))
 		{
-			result = ft_strdup(temp->var_cont);
+			result = ft_strdup(temp->var.content);
 			return (result);
 		}
 		temp = temp->next;
@@ -123,9 +123,9 @@ char	*get_envp_content(t_envp *envp, char *to_find)
 	temp = envp;
 	while (temp->next)
 	{
-		if (!ft_strcmp(to_find, temp->var_name))
+		if (!ft_strcmp(to_find, temp->var.name))
 		{
-			res = ft_strdup(temp->var_cont);
+			res = ft_strdup(temp->var.content);
 			return (res);
 		}
 		temp = temp->next;

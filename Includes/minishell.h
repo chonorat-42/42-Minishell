@@ -40,10 +40,16 @@
 # include <readline/history.h>
 # include "libft.h"
 
+typedef struct s_var
+{
+	char	*name;
+	char	*content;
+	int		readable;
+}				t_var;
+
 typedef struct s_envp
 {
-	char			*var_name;
-	char			*var_cont;
+	struct s_var	var;
 	struct s_envp	*next;
 	struct s_envp	*prev;
 }				t_envp;
@@ -58,14 +64,6 @@ typedef struct s_tokens
 	struct s_tokens *next;
 }			t_tokens;
 
-typedef struct s_export
-{
-	char			*var;
-	char			*content;
-	struct s_export	*prev;
-	struct s_export	*next;
-}				t_export;
-
 typedef struct s_mshell
 {
 	char		*input;
@@ -74,10 +72,10 @@ typedef struct s_mshell
 	char		**menvp;
 	char		**paths;
 	char		*current_loc;
-	t_export	*export;
 	size_t		cmd_count;
 	t_tokens	*tok_lst;
 	t_envp		*envp;
+	t_envp		*export;
 }		t_mshell;
 
 void		sig_handler(void);
@@ -129,10 +127,4 @@ void	free_export(t_export **export);
 
 void	heredoc(char *delimiter);
 
-
-
-
-
 #endif
-
-
