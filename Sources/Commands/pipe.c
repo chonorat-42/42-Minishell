@@ -83,7 +83,6 @@ void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out)
 {
 	size_t	pipes_nbr;
 
-	ft_dprintf(STDERR_FILENO, "got in handle pipes\n\n");
 	pipes_nbr = count_successive_pipes(*temp);
 	fork_pipes(pipes_nbr, temp, fd_in, shell, fd_out);
 }

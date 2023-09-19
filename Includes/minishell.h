@@ -133,4 +133,6 @@ void	get_shellvar(t_mshell *shell);
 
 void	heredoc(char *delimiter, int fd_in);
 
+void	print_tkns_down(t_tokens *lst);
+
 #endif
