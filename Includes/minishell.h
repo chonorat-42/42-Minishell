@@ -131,6 +131,6 @@ int		var_exist(t_mshell *shell, char *var);
 
 void	get_shellvar(t_mshell *shell);
 
-void	heredoc(char *delimiter);
+void	heredoc(char *delimiter, int fd_in);
 
 #endif

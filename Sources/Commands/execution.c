@@ -51,6 +51,7 @@ void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd_in, int fd_ou
 
 	(void) envp;
 
+	ft_printf("got in bin exec\n\n");
 	if (fd_out != 1)
 		dup2(fd_out, STDOUT_FILENO);
 	if (fd_in != 0)
@@ -118,6 +119,8 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 {
 	pid_t	child;
 
+	// ft_printf("in exec forwarding, temp->content = %s\n\n", temp->content);
+
 	if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
 		echo_case(temp->content, fd_out);
 	else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
@@ -180,7 +183,8 @@ void execution(t_mshell *shell)
 	int			fd_out;
 
 	shell->cmd_count++;
-	fd_in = 0;
+	fd_in = STDIN_FILENO;
+	fd_out = STDOUT_FILENO;
 	temp = shell->tok_lst;
 	while (temp)
 	{
@@ -209,11 +213,17 @@ void execution(t_mshell *shell)
 			}
 			else if (temp->next && (temp->next->type = HEREDOC))
 			{
-				temp = temp->next;
-				if (temp->next)
+				if (temp->next->next)
 				{
-					heredoc(temp->next->content);
-					temp = temp->next;
+					ft_printf("in heredoc case, temp = %s\n\n", temp->content);
+
+					fd_in = open("temp.heredoc", O_RDWR | O_CREAT, 0666);
+					heredoc(temp->next->next->content, fd_in);
+					temp->content = ft_strjoin(strjoin_free_first(temp->content, " "), "temp.heredoc");
+					exec_forwarding(temp, shell, fd_in, fd_out);
+					free(temp->content);
+					temp->content = ft_strdup("rm -rf temp.heredoc");
+					exec_forwarding(temp, shell, fd_in, fd_out);
 				}
 			}
 			else
@@ -221,23 +231,31 @@ void execution(t_mshell *shell)
 				fd_out = 1;
 				fd_in = 0;
 			}
-			if (fd_out != 1)
+			if (fd_out != STDOUT_FILENO)
 			{
 				while (temp->next && temp->next->type != CMD)
 					temp = temp->next;
 			}
 			if (fd_in != STDIN_FILENO)
 			{
-				while (temp->next && temp->next->type != CMD)
+				while (temp->next && (temp->next->type != CMD && temp->next->type != PIPE))
 					temp = temp->next;
 			}
-			if (temp->next && temp->next->type == PIPE)
+
+			ft_printf("before PIPE -> temp = %s\n\n", temp->content);
+
+			if (temp && temp->next && temp->next->type == PIPE)
 			{
 				fd_out = get_final_out(temp);
 				handle_pipes(shell, &temp, fd_in, fd_out);
 			}
 			else
-				exec_forwarding(temp, shell, fd_in, fd_out);
+			{
+				if (temp->type != CMD)
+					temp = temp->next;
+				if (temp)
+					exec_forwarding(temp, shell, fd_in, fd_out);
+			}
 		}
 		if (temp)
 			temp = temp->next;

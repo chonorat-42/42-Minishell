@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	heredoc(char *delimiter)
+void	heredoc(char *delimiter, int fd_in)
 {
 	char	*line;
 	char	*result;
@@ -23,7 +23,7 @@ void	heredoc(char *delimiter)
 		line = readline(">");
 		if (!strcmp(line, delimiter))
 		{
-			ft_dprintf(1, "%s", result);
+			ft_dprintf(fd_in, "%s", result);
 			return ;
 		}
 		else
