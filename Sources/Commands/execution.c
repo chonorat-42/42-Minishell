@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern int g_status;
+
 char *get_exec(char *cmd)
 {
 	size_t	j;
@@ -79,7 +81,8 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd)
 				free(temp);
 		}
 	}
-	
+	g_status = 127;
+	write(shell->p_status[1], &g_status, sizeof(int));
 	return (ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell->cmd_count, cmd_arr[0]), exit(1));
 }
 
@@ -134,6 +137,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 		temp->cmd_arr = ft_split(temp->content, ' ');
 		if (!temp->cmd_arr)
 			return (free_struct(shell), exit(1));
+		pipe(shell->p_status);
 		child = fork();
 		if (child == -1)
 			return(free_struct(shell), exit(2));
@@ -141,6 +145,9 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 			bin_exec(shell, temp->cmd_arr, fd_out);
 		else
 			waitpid(child, NULL, 0);
+		read(shell->p_status[0], &g_status, sizeof(int));
+		close(shell->p_status[0]);
+		close(shell->p_status[1]);
 		if (temp->cmd_arr)
 			free_arr(temp->cmd_arr);
 		temp->cmd_arr = NULL;

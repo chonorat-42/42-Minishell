@@ -35,7 +35,7 @@ remake parsing
 3) Expand
 */
 
-int	g_status = 0;
+int	g_status;
 
 void	init_shell(t_mshell *shell)
 {
@@ -49,6 +49,7 @@ void	init_shell(t_mshell *shell)
 	shell->cmd_count = 0;
 	shell->p_status[0] = 0;
 	shell->p_status[1] = 0;
+	g_status = 0;
 }
 
 int main(int argc, char **argv, char **envp)

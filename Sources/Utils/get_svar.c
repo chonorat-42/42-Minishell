@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/09/19 15:10:40 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:39:44 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,5 @@ void	get_svar(t_mshell *shell)
 	create_envp_list(shell, &status);
 	free(status.name);
 	free(status.content);
+	g_status = 0;
 }

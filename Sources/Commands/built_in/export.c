@@ -6,11 +6,13 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 15:08:23 by chonorat          #+#    #+#             */
-/*   Updated: 2023/09/19 15:15:16 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:36:55 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../Includes/minishell.h"
+
+extern int g_status;
 
 static int	add_to_export(t_envp **temp, t_envp *env_cell)
 {
@@ -107,13 +109,21 @@ static void	sort_env(t_mshell *shell)
 static int	check_var(char *cmd, int index)
 {
 	if (is_ws(cmd[index]))
-		return (ft_dprintf(2,"minishell: export: `%s': not a valid identifier\n", &cmd[index + 1]), 0);
+	{
+		g_status = 128;
+		ft_dprintf(2,"minishell: export: `%s': not a valid identifier\n", &cmd[index + 1]);
+		return (0);
+	}
 	while (index > 0 && !is_ws(cmd[index]))
 	{
 		if (ft_isalnum(cmd[index]) || is_char_in_set(cmd[index], "_"))
 			index--;
 		else
-			return (ft_dprintf(2,"minishell: export: `%s': not a valid identifier\n", &cmd[7]), 0);
+		{
+			g_status = 128;
+			ft_dprintf(2,"minishell: export: `%s': not a valid identifier\n", &cmd[7]);
+			return (0);
+		}
 	}
 	return (1);
 }
