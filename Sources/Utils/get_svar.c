@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_shellvar.c                                     :+:      :+:    :+:   */
+/*   get_svar.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/09/14 18:18:57 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:10:40 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern int g_status;
 
-void	get_shellvar(t_mshell *shell)
+void	get_svar(t_mshell *shell)
 {
 	t_var	status;
 

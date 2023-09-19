@@ -42,14 +42,12 @@ char	*get_path(char *cmd)
 	return (res);
 }
 
-void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd)
+void bin_exec(t_mshell *shell, char **cmd_arr, int fd)
 {
 	size_t	j;
 	char	*temp;
 	char	*exec;
 	char	**exec_split;
-
-	(void) envp;
 
 	if (fd != 1)
 		dup2(fd, STDOUT_FILENO);
@@ -140,7 +138,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 		if (child == -1)
 			return(free_struct(shell), exit(2));
 		if (!child)
-			bin_exec(shell, temp->cmd_arr, shell->menvp, fd_out);
+			bin_exec(shell, temp->cmd_arr, fd_out);
 		else
 			waitpid(child, NULL, 0);
 		if (temp->cmd_arr)

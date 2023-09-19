@@ -24,7 +24,7 @@ void	get_input_loop(t_mshell *shell)
 			return (free_struct(shell), exit(2));
 		if (shell->input[0])
 			add_history(shell->input);
-		get_shellvar(shell);
+		get_svar(shell);
 		parsing(shell);
 		tokenizer(shell);
 		manage_quotes(&shell->tok_lst);

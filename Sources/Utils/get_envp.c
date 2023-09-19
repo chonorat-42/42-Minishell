@@ -86,9 +86,6 @@ void	get_envp(t_mshell *shell, char **envp)
 	t_var	new;
 
 	j = 0;
-	shell->menvp = NULL;
-	shell->envp = NULL;
-	shell->cmd = NULL;
 	while (envp[j])
 	{
 		new.name = ft_substr(envp[j], 0, find_char_index(envp[j], '='));

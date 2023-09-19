@@ -20,7 +20,7 @@
 - export (diff export env ?) DONE
 - readline a la place de GNL DONE
 
-- $? IN_WORK
+- $? WORK_IN_PROGRESS
 
 - gerer simple quotes echo
 - factorisation + cleaning
@@ -37,6 +37,20 @@ remake parsing
 
 int	g_status = 0;
 
+void	init_shell(t_mshell *shell)
+{
+	shell->input = NULL;
+	shell->cmd = NULL;
+	shell->paths = NULL;
+	shell->current_loc = NULL;
+	shell->tok_lst = NULL;
+	shell->envp = NULL;
+	shell->export = NULL;
+	shell->cmd_count = 0;
+	shell->p_status[0] = 0;
+	shell->p_status[1] = 0;
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	t_mshell	shell;
@@ -44,6 +58,7 @@ int main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (argc != 1)
 		return (ft_printf("Error\nMinishell does not take arguments\n"), 1);
+	init_shell(&shell);
 	sig_handler();
 	get_envp(&shell, envp);
 	get_paths(&shell);

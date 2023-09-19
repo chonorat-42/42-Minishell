@@ -68,10 +68,9 @@ typedef struct s_mshell
 {
 	char		*input;
 	char		**cmd;
-	size_t		envp_size;
-	char		**menvp;
 	char		**paths;
 	char		*current_loc;
+	int			p_status[2];
 	size_t		cmd_count;
 	t_tokens	*tok_lst;
 	t_envp		*envp;
@@ -85,7 +84,7 @@ void		print_arr(char **arr);
 void		print_lst(t_list *lst);
 void		free_struct(t_mshell *shell);
 void		free_arr(char **arr);
-void 		bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd);
+void 		bin_exec(t_mshell *shell, char **cmd_arr, int fd);
 void		echo_case(char *prompt, int fd);
 void		env_case(t_mshell *shell, int fd);
 char		*get_cmd_arguments(char *prompt);
@@ -125,6 +124,6 @@ void		print_export(t_envp *export);
 void		create_export(t_mshell *shell);
 int			var_exist(t_mshell *shell, char *var);
 
-void		get_shellvar(t_mshell *shell);
+void		get_svar(t_mshell *shell);
 
 #endif

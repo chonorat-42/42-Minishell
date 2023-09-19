@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 15:08:23 by chonorat          #+#    #+#             */
-/*   Updated: 2023/09/14 17:14:59 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/09/19 15:15:16 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static int	add_to_export(t_envp **temp, t_envp *env_cell)
 	if (!var_cell->var.content)
 		return (free(var_cell->var.name), free(var_cell), 0);
 	var_cell->var.readable = 1;
-	if (ft_strncmp(var_cell->var.name, "_", ft_strlen(var_cell->var.name)) == 0)
+	if (ft_strncmp(var_cell->var.name, "_", ft_strlen(var_cell->var.name)) == 0 ||
+			ft_strncmp(var_cell->var.name, "?", ft_strlen(var_cell->var.name)) == 0)
 		var_cell->var.readable = 0;
 	if ((*temp)->prev)
 		(*temp)->prev->next = var_cell;
@@ -54,7 +55,8 @@ static int	add_to_end(t_envp **temp, t_envp *env_cell)
 			return (free(cell->var.name), free(cell), 0);
 	}
 	cell->var.readable = 1;
-	if (ft_strncmp(cell->var.name, "_", ft_strlen(cell->var.name)) == 0)
+	if (ft_strncmp(cell->var.name, "_", ft_strlen(cell->var.name)) == 0 ||
+			ft_strncmp(cell->var.name, "?", ft_strlen(cell->var.name)) == 0)
 		cell->var.readable = 0;
 	(*temp)->next = cell;
 	cell->next = NULL;
