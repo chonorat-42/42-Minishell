@@ -12,10 +12,11 @@
 
 #include "minishell.h"
 
-void	heredoc(char *delimiter)
+void	heredoc(char *delimiter, int fd_in, t_envp *envp)
 {
 	char	*line;
 	char	*result;
+	char	*temp;
 
 	result = NULL;
 	while (1)
@@ -23,12 +24,25 @@ void	heredoc(char *delimiter)
 		line = readline(">");
 		if (!strcmp(line, delimiter))
 		{
-			ft_dprintf(1, "%s", result);
+			ft_dprintf(fd_in, "%s", result);
+			free(result);
+			if (line)
+				free(line);
 			return ;
 		}
 		else
 		{
-			line = strjoin_free_first(line, "\n");
+			if (find_char_index(line, '$') >= 0)
+			{
+				if (check_after_dollar(line))
+				{
+    				temp = expand_envvar(line, envp);
+					free(line);
+				}
+			}
+			else
+				temp = ft_strdup(line);
+			line = strjoin_free_first(temp, "\n");
 			if (result)
 				result = strjoin_free_both(result, line);
 			else

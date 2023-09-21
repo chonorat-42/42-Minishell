@@ -50,7 +50,6 @@ void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd_in, int fd_ou
 	char	**exec_split;
 
 	(void) envp;
-
 	if (fd_out != 1)
 		dup2(fd_out, STDOUT_FILENO);
 	if (fd_in != 0)
@@ -118,6 +117,8 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 {
 	pid_t	child;
 
+	// ft_printf("in exec forwarding, temp->content = %s\n\n", temp->content);
+
 	if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
 		echo_case(temp->content, fd_out);
 	else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
@@ -173,6 +174,32 @@ int	get_final_out(t_tokens *lst)
 	return (1);
 }
 
+void	free_single_token(t_tokens *node)
+{
+	free(node->content);
+	free(node);
+}
+
+void	remove_next_token(t_tokens **lst)
+{
+	t_tokens *next;
+
+	if ((*lst)->next)
+		next = (*lst)->next->next;
+	else
+		next = NULL;
+	if ((*lst)->next && (*lst)->next->next)
+		(*lst)->next->next->prev = *lst;
+	free_single_token((*lst)->next);
+	(*lst)->next = next;
+}
+
+void	remove_heredoc_tkn(t_tokens **lst)
+{
+	while ((*lst)->next && ((*lst)->next->type == HEREDOC || (*lst)->next->type == HEREDEL))
+		remove_next_token(lst);
+}
+
 void execution(t_mshell *shell)
 {
 	t_tokens	*temp;
@@ -180,7 +207,8 @@ void execution(t_mshell *shell)
 	int			fd_out;
 
 	shell->cmd_count++;
-	fd_in = 0;
+	fd_in = STDIN_FILENO;
+	fd_out = STDOUT_FILENO;
 	temp = shell->tok_lst;
 	while (temp)
 	{
@@ -207,13 +235,33 @@ void execution(t_mshell *shell)
 				if (fd_in == -1)
 						return (free_struct(shell), exit(4));
 			}
-			else if (temp->next && (temp->next->type = HEREDOC))
+			else if (temp->next && (temp->next->type == HEREDOC))
 			{
-				temp = temp->next;
-				if (temp->next)
+				if (temp->next->next)
 				{
-					heredoc(temp->next->content);
-					temp = temp->next;
+					fd_in = open("/tmp/temp.heredoc", O_RDWR | O_CREAT, 0666);
+					heredoc(temp->next->next->content, fd_in, shell->envp);
+					temp->content = ft_strjoin(strjoin_free_first(temp->content, " "), "/tmp/temp.heredoc");
+					remove_heredoc_tkn(&temp);
+					if (temp->next && temp->next->type == PIPE)
+					{
+						handle_pipes(shell, &temp, 0, fd_out);
+						temp->content = ft_strdup("rm -rf /tmp/temp.heredoc");
+						temp->next = NULL;
+						exec_forwarding(temp, shell, fd_in, fd_out);
+						free(temp->content);
+						temp = temp->next;
+					}
+					else
+					{
+						exec_forwarding(temp, shell, fd_in, fd_out);
+						free(temp->content);
+						temp->content = ft_strdup("rm -rf /tmp/temp.heredoc");
+						exec_forwarding(temp, shell, fd_in, fd_out);
+						free(temp->content);
+						close(fd_in);
+					}
+					close(fd_in);
 				}
 			}
 			else
@@ -221,23 +269,30 @@ void execution(t_mshell *shell)
 				fd_out = 1;
 				fd_in = 0;
 			}
-			if (fd_out != 1)
-			{
-				while (temp->next && temp->next->type != CMD)
-					temp = temp->next;
-			}
+			// if (fd_out != STDOUT_FILENO)
+			// {
+			// 	while (temp->next && temp->next->type != CMD)
+			// 		temp = temp->next;
+			// }
 			if (fd_in != STDIN_FILENO)
 			{
-				while (temp->next && temp->next->type != CMD)
+				while (temp && temp->next && (temp->next->type != CMD && temp->next->type != PIPE))
 					temp = temp->next;
 			}
-			if (temp->next && temp->next->type == PIPE)
+			if (temp && temp->next && temp->next->type == PIPE)
 			{
 				fd_out = get_final_out(temp);
 				handle_pipes(shell, &temp, fd_in, fd_out);
 			}
 			else
-				exec_forwarding(temp, shell, fd_in, fd_out);
+			{
+				if (temp && temp->type != CMD)
+					temp = temp->next;
+				if (temp)
+				{
+					exec_forwarding(temp, shell, fd_in, fd_out);
+				}
+			}
 		}
 		if (temp)
 			temp = temp->next;
@@ -246,4 +301,6 @@ void execution(t_mshell *shell)
 		ft_free_tokens(&shell->tok_lst);
 	if (shell->input)
 		free(shell->input);
+	// dup2(STDIN_FILENO, 0);
+	// dup2(STDOUT_FILENO, 1);
 }
