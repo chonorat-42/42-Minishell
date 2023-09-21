@@ -235,28 +235,30 @@ void execution(t_mshell *shell)
 				if (fd_in == -1)
 						return (free_struct(shell), exit(4));
 			}
-			else if (temp->next && (temp->next->type = HEREDOC))
+			else if (temp->next && (temp->next->type == HEREDOC))
 			{
 				if (temp->next->next)
 				{
-					fd_in = open("temp.heredoc", O_RDWR | O_CREAT, 0666);
-					heredoc(temp->next->next->content, fd_in);
-					temp->content = ft_strjoin(strjoin_free_first(temp->content, " "), "temp.heredoc");
+					fd_in = open("/tmp/temp.heredoc", O_RDWR | O_CREAT, 0666);
+					heredoc(temp->next->next->content, fd_in, shell->envp);
+					temp->content = ft_strjoin(strjoin_free_first(temp->content, " "), "/tmp/temp.heredoc");
 					remove_heredoc_tkn(&temp);
 					if (temp->next && temp->next->type == PIPE)
 					{
-						handle_pipes(shell, &temp, fd_in, fd_out);
-						temp->content = ft_strdup("rm -rf temp.heredoc");
+						handle_pipes(shell, &temp, 0, fd_out);
+						temp->content = ft_strdup("rm -rf /tmp/temp.heredoc");
 						temp->next = NULL;
 						exec_forwarding(temp, shell, fd_in, fd_out);
+						free(temp->content);
 						temp = temp->next;
 					}
 					else
 					{
 						exec_forwarding(temp, shell, fd_in, fd_out);
 						free(temp->content);
-						temp->content = ft_strdup("rm -rf temp.heredoc");
+						temp->content = ft_strdup("rm -rf /tmp/temp.heredoc");
 						exec_forwarding(temp, shell, fd_in, fd_out);
+						free(temp->content);
 						close(fd_in);
 					}
 					close(fd_in);
@@ -267,11 +269,11 @@ void execution(t_mshell *shell)
 				fd_out = 1;
 				fd_in = 0;
 			}
-			if (fd_out != STDOUT_FILENO)
-			{
-				while (temp->next && temp->next->type != CMD)
-					temp = temp->next;
-			}
+			// if (fd_out != STDOUT_FILENO)
+			// {
+			// 	while (temp->next && temp->next->type != CMD)
+			// 		temp = temp->next;
+			// }
 			if (fd_in != STDIN_FILENO)
 			{
 				while (temp && temp->next && (temp->next->type != CMD && temp->next->type != PIPE))
@@ -299,6 +301,6 @@ void execution(t_mshell *shell)
 		ft_free_tokens(&shell->tok_lst);
 	if (shell->input)
 		free(shell->input);
-	dup2(STDIN_FILENO, 0);
-	dup2(STDOUT_FILENO, 1);
+	// dup2(STDIN_FILENO, 0);
+	// dup2(STDOUT_FILENO, 1);
 }

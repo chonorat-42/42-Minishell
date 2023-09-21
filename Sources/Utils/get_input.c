@@ -14,7 +14,7 @@
 
 void	get_input_loop(t_mshell *shell)
 {
-	shell->input = NULL;
+	// shell->input = NULL;
 	while (1)
 	{
 		shell->input = readline("\033[1mminishell@42\033[0m:~\033[0;32m$\033[0m ");
@@ -27,7 +27,7 @@ void	get_input_loop(t_mshell *shell)
 			add_history(shell->input);
 		parsing(shell);
 		tokenizer(shell);
-		manage_quotes(&shell->tok_lst);
+		// manage_quotes(&shell->tok_lst);
 		execution(shell);
 	}
 }

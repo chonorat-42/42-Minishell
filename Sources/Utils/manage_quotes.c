@@ -86,6 +86,9 @@ void	manage_quotes(t_tokens **lst)
 		new_content = remove_quotes(tmp->content);
 		free(tmp->content);
 		tmp->content = ft_strdup(new_content);
+
+		ft_printf("in manage quotes, new content = %s\n\n", tmp->content);
+		
 		free(new_content);
 		tmp = tmp->next;
 	}

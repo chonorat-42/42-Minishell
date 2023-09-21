@@ -96,7 +96,10 @@ int 	redirect(t_mshell *shell);
 void 	struct_init(t_mshell *shell);
 void	sig_handler(void);
 int		tokenizer(t_mshell *shell);
+
 void 	execution(t_mshell *shell);
+int	get_final_out(t_tokens *lst);
+
 void	free_arr(char **arr);
 void	ft_free_tokens(t_tokens	**head);
 int		find_envvar_index(char **envp, const char *str);
@@ -108,7 +111,11 @@ char	*get_envvar_content(t_envp *envp, char *to_find);
 char	*get_builtin_opt(char *str, size_t *i);
 long int	find_char_index(char *str, int c);
 void			parsing(t_mshell *shell);
+
 int		expand(t_mshell *shell, char *cmd);
+char	*expand_envvar(char *str, t_envp *envp);
+int		check_after_dollar(char *str);
+
 int 	are_all_quotes_closed(char *str);
 char 	*get_other(char *str, size_t *i);
 void    get_envp(t_mshell *shell, char **envp);
@@ -131,7 +138,7 @@ int		var_exist(t_mshell *shell, char *var);
 
 void	get_shellvar(t_mshell *shell);
 
-void	heredoc(char *delimiter, int fd_in);
+void	heredoc(char *delimiter, int fd_in, t_envp *envp);
 
 void	print_tkns_down(t_tokens *lst);
 

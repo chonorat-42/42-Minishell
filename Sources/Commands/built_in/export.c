@@ -164,6 +164,9 @@ static int	split_var(char *var, t_var *new)
 	if (index > 0)
 	{
 		new->name = ft_substr(var, 0, index);
+
+		ft_printf("name = %s\n\n", new->name);
+
 		if (!new->name)
 			return (0);
 		new->content = ft_substr(&var[index + 1], 0, ft_strlen(&var[index + 1]));
@@ -224,11 +227,18 @@ void	export_case(t_mshell *shell, char *cmd)
 	char	*var;
 	int		index;
 
+	ft_printf("beginning of export, cmd = %s\n\n", cmd);
+
 	var_arr = ft_split(cmd, ' ');
 	var = NULL;
 	index = 1;
+
+	ft_printf("var arr :\n");
+	print_arr(var_arr);
+
 	while (var_arr[index])
 	{
+		ft_printf("in export, var_arr[i] = %s\n\n", var_arr[index]);
 		var = ft_strjoin("export ", var_arr[index]);
 		if (count_arr_size(var_arr) != 1 && is_var(var))
 			get_var(shell, var);
