@@ -53,15 +53,16 @@ void	free_envp(t_envp **head)
 	t_envp	*temp;
 	t_envp	*next;
 
+	if (!*head)
+		return ;
 	temp = *head;
 	next = NULL;
-	if (*head)
-		return ;
 	while (temp)
 	{
 		next = temp->next;
 		free(temp->var.name);
-		free(temp->var.content);
+		if (temp->var.content)
+			free(temp->var.content);
 		free(temp);
 		temp = next;
 	}

@@ -26,9 +26,9 @@ size_t  get_arr_size(char **arr)
 
 char    **copy_tab(char **envp, size_t size)
 {
-	char    **arr;
-	size_t  j;
-	size_t  k;
+	char	**arr;
+	size_t	j;
+	size_t	k;
 
 	arr = malloc(sizeof(char *) * (size + 1));
 	if (!arr)
@@ -60,10 +60,11 @@ void	create_envp_list(t_mshell *shell, t_var *var)
 		return (free_struct(shell), exit(1));
 	if (var->content)
 		new->var.content = ft_strdup(var->content);
+	else
+		new->var.content = NULL;
 	new->var.name = ft_strdup(var->name);
-	//ft_printf("%s\n", new->var.name);
 	new->var.readable = var->readable;
-	//ft_printf("%d\n", new->var.readable);
+	new->var.alterable = var->alterable;
 	if (!shell->envp)
 	{
 		shell->envp = new;
@@ -95,6 +96,7 @@ void	get_envp(t_mshell *shell, char **envp)
 		new.name = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
 		new.content = ft_substr(envp[j], find_char_index(envp[j], '=') + 1, ft_strlen(envp[j]));
 		new.readable = 1;
+		new.alterable = 1;
 		create_envp_list(shell, &new);
 		free(new.name);
 		free(new.content);
