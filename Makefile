@@ -52,6 +52,7 @@ FILES = minishell\
 		Utils/parsing\
 		Utils/export_utils\
 		Utils/expand\
+		Utils/update_envp\
 		Utils/manage_quotes
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))

@@ -86,7 +86,7 @@ void	print_arr(char **arr);
 void	print_lst(t_list *lst);
 void	free_struct(t_mshell *shell);
 void	free_arr(char **arr);
-void	bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd_in, int fd_out);
+void	bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out);
 void	echo_case(char *prompt, int fd);
 void	env_case(t_mshell *shell, int fd);
 char	*get_cmd_arguments(char *prompt);
@@ -128,6 +128,7 @@ void	create_envp_list(t_mshell *shell, t_var *var);
 int		delete_envvar(t_envp **envp, char *var, int ign_param);
 int		is_char_in_set(char c, char *set);
 
+void	update_envp(t_mshell *shell);
 void	free_envp(t_envp **head);
 
 void	export_case(t_mshell *shell, char *cmd);

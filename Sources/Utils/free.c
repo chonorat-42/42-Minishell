@@ -100,10 +100,7 @@ void	free_struct(t_mshell *shell)
 	if (shell->tok_lst)
 		ft_free_tokens(&shell->tok_lst);
 	if (shell->menvp)
-	{
-		free_atomic_arr(shell->menvp, shell->envp_size);
-		shell->menvp = NULL;
-	}
+		free_arr(shell->menvp);
 	if (shell->envp)
 		free_envp(&shell->envp);
 	if (shell->export)

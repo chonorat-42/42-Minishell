@@ -42,14 +42,13 @@ char	*get_path(char *cmd)
 	return (res);
 }
 
-void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd_in, int fd_out)
+void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 {
 	size_t	j;
 	char	*temp;
 	char	*exec;
 	char	**exec_split;
 
-	(void) envp;
 	if (fd_out != 1)
 		dup2(fd_out, STDOUT_FILENO);
 	if (fd_in != 0)
@@ -57,14 +56,14 @@ void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd_in, int fd_ou
 	j = -1;
 	get_current_location(shell);
 	temp = ft_strjoin(shell->current_loc, ft_strtrim(cmd_arr[0], "."));
-	if (execve(temp, cmd_arr, NULL) == -1)
+	if (execve(temp, cmd_arr, shell->menvp) == -1)
 		free(temp);
 	if (ft_strchr(cmd_arr[0], '/'))
 	{
 		exec = get_exec(cmd_arr[0]);
 		exec_split = ft_split(exec, ' ');
 		temp = ft_strjoin(get_path(cmd_arr[0]), exec);
-		if (execve(temp, exec_split, NULL) == -1)
+		if (execve(temp, exec_split, shell->menvp) == -1)
 		{
 			free(exec);
 			free_arr(exec_split);
@@ -78,7 +77,7 @@ void bin_exec(t_mshell *shell, char **cmd_arr, char **envp, int fd_in, int fd_ou
 			temp = ft_strjoin(shell->paths[j], cmd_arr[0]);
 			if (!temp)
 				return (exit(2));
-			if (execve(temp, cmd_arr, NULL) == -1)
+			if (execve(temp, cmd_arr, shell->menvp) == -1)
 				free(temp);
 		}
 	}
@@ -142,7 +141,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 		if (child == -1)
 			return(free_struct(shell), exit(2));
 		if (!child)
-			bin_exec(shell, temp->cmd_arr, shell->menvp, fd_in, fd_out);
+			bin_exec(shell, temp->cmd_arr, fd_in, fd_out);
 		else
 			waitpid(child, NULL, 0);
 		if (temp->cmd_arr)
