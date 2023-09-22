@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../Includes/minishell.h"
+#include "minishell.h"
 
 static int	add_to_export(t_envp **temp, t_envp *env_cell)
 {
@@ -22,9 +22,15 @@ static int	add_to_export(t_envp **temp, t_envp *env_cell)
 	var_cell->var.name = ft_strdup(env_cell->var.name);
 	if (!var_cell->var.name)
 		return (free(var_cell), 0);
-	var_cell->var.content = ft_strdup(env_cell->var.content);
-	if (!var_cell->var.content)
-		return (free(var_cell->var.name), free(var_cell), 0);
+	if (env_cell->var.content)
+	{
+		var_cell->var.content = ft_strdup(env_cell->var.content);
+		if (!var_cell->var.content)
+			return (free(var_cell->var.name), free(var_cell), 0);
+	}
+	else
+		var_cell->var.content = NULL;
+	var_cell->var.alterable = 1;
 	var_cell->var.readable = 1;
 	if (ft_strncmp(var_cell->var.name, "_", ft_strlen(var_cell->var.name)) == 0)
 		var_cell->var.readable = 0;
@@ -53,6 +59,7 @@ static int	add_to_end(t_envp **temp, t_envp *env_cell)
 		if (!cell->var.content)
 			return (free(cell->var.name), free(cell), 0);
 	}
+	cell->var.alterable = 1;
 	cell->var.readable = 1;
 	if (ft_strncmp(cell->var.name, "_", ft_strlen(cell->var.name)) == 0)
 		cell->var.readable = 0;
@@ -92,9 +99,11 @@ static void	sort_env(t_mshell *shell)
 {
 	t_envp	*temp;
 
-	temp = shell->envp;
 	if (shell->envp)
-		create_export(shell);
+		create_export(&shell->export, shell->envp);
+	else
+		return ;
+	temp = shell->envp->next;
 	while (temp)
 	{
 		get_pos(shell, temp);
@@ -102,37 +111,22 @@ static void	sort_env(t_mshell *shell)
 	}
 }
 
-static int	check_var(char *cmd, int index)
-{
-	if (is_ws(cmd[index]))
-		return (ft_dprintf(2,"minishell: export: `%s': not a valid identifier\n", &cmd[index + 1]), 0);
-	while (index > 0 && !is_ws(cmd[index]))
-	{
-		if (ft_isalnum(cmd[index]) || is_char_in_set(cmd[index], "_"))
-			index--;
-		else
-			return (ft_dprintf(2,"minishell: export: `%s': not a valid identifier\n", &cmd[7]), 0);
-	}
-	return (1);
-}
-
 static int	is_var(char *cmd)
 {
 	int	index;
-	int	equal_sign;
 
-	index = 0;
-	equal_sign = 0;
+	index = 7;
 	if (!is_ws(cmd[6]))
 		return (0);
+	if (!ft_isalpha(cmd[7]) && !is_char_in_set(cmd[index], "_"))
+		return (ft_dprintf(2, "minishell: export: `%s': not a valid identifier\n", &cmd[7]), 0);
+	index++;
 	while (cmd[index])
 	{
 		if (cmd[index] == '=')
-		{
-			equal_sign = check_var(cmd, index - 1);
-			if (!equal_sign)
-				return (0);
-		}
+			return (1);
+		else if (!ft_isalnum(cmd[index]) && !is_char_in_set(cmd[index], "_"))
+			return (ft_dprintf(2, "minishell: export: `%s': not a valid identifier\n", &cmd[7]), 0);
 		index++;
 	}
 	return (1);
@@ -236,9 +230,11 @@ void	export_case(t_mshell *shell, char *cmd)
 		free(var);
 		var = NULL;
 	}
-	sort_env(shell);
 	if (count_arr_size(var_arr) == 1 && ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
+	{
+		sort_env(shell);
 		print_export(shell->export);
-	if (shell->export)
 		free_envp(&shell->export);
+	}
+	free_arr(var_arr);
 }

@@ -125,7 +125,7 @@ void	free_envp(t_envp **head);
 
 void	export_case(t_mshell *shell, char *cmd);
 void	print_export(t_envp *export);
-void	create_export(t_mshell *shell);
+int		create_export(t_envp **export, t_envp *envp);
 void	free_export(t_envp **export);
 int		var_exist(t_mshell *shell, char *var);
 

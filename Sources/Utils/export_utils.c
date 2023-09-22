@@ -46,21 +46,23 @@ void	print_export(t_envp *export)
 	}
 }
 
-void	create_export(t_mshell *shell)
+int	create_export(t_envp **export, t_envp *envp)
 {
-	shell->export = malloc(sizeof(t_envp));
-	if (!shell->export)
+	*export = malloc(sizeof(t_envp));
+	if (!*export)
+		return (0);
+	(*export)->var.name = ft_strdup(envp->var.name);
+	(*export)->var.content = ft_strdup(envp->var.content);
+	if (!(*export)->var.name || !(*export)->var.content)
+		return (0);
+	(*export)->var.readable = 1;
+	(*export)->var.alterable = 1;
+	if (ft_strncmp((*export)->var.name, "_", ft_strlen((*export)->var.name)) == 0)
 	{
-		free_struct(shell);
-		exit(1);
+		(*export)->var.readable = 0;
+		(*export)->var.alterable = 0;
 	}
-	shell->export->var.name = ft_strdup(shell->envp->var.name);
-	shell->export->var.content = ft_strdup(shell->envp->var.content);
-	if (!shell->export->var.name || !shell->export->var.content)
-		return (free_struct(shell), exit(1));
-	shell->export->var.readable = 1;
-	if (ft_strncmp(shell->export->var.name, "_", ft_strlen(shell->export->var.name)) == 0)
-		shell->export->var.readable = 0;
-	shell->export->prev = NULL;
-	shell->export->next = NULL;
+	(*export)->prev = NULL;
+	(*export)->next = NULL;
+	return (1);
 }
