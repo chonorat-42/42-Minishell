@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern int	g_status;
+
 char *get_cmd_arguments(char *prompt)
 {
 	char *result;
@@ -53,28 +55,27 @@ int cd_case(t_mshell *shell, char *cmd)
 	if (cmd[i] && get_builtin_opt(cmd, &i))
 	{
 		ft_dprintf(STDERR_FILENO, "Error\nCd command does not take any option\n");
-		return (1);
+		return (g_status = 128, 1);
 	}
 	if (ft_strlen(cmd) == 2)
 	{
 		temp = get_envvar_content(shell->envp, "HOME");
 		if (temp && !temp[0])
-			return (ft_printf("Error/nPath to HOME could not be found\n"), 2);
+			return (ft_printf("Error/nPath to HOME could not be found\n"), g_status = 126, 2);
 	}
 	else
 		temp = get_cmd_arguments(cmd);
 	if (!temp)
-		return (3);
+		return (g_status = 1, 3);
 	str = ft_strtrim(temp, "\n\t\v\f\r ");
 	free(temp);
 	if (!str)
-		return (3);
+		return (g_status = 1, 3);
 	result = chdir(str);
 	if (result != 0)
 	{
 		ft_printf("minishell: %d: can't cd to %s\n", shell->cmd_count, str);
-		free(str);
-		return (3);
+		return (free(str), g_status = 1, 3);
 	}
 	free(str);
 	return (0);
