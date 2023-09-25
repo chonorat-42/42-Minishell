@@ -10,6 +10,7 @@
 
 # Executables
 *.out
+minishell
 
 # Temp files
 *.swp

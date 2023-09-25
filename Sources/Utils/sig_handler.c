@@ -25,15 +25,10 @@ static void	get_sig(int signum, siginfo_t *info, void *context)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-		g_status = 128 + SIGINT;
 	}
 	else if (signum == SIGQUIT)
-	{
-		rl_on_new_line();
-		rl_redisplay();
-		ft_printf("  \b\b");
-		g_status = 128 + SIGQUIT;
-	}
+		ft_printf("\b\b  \b\b");
+	g_status = 128 + signum;
 }
 
 void	sig_handler(void)
