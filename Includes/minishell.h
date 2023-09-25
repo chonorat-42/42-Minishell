@@ -26,6 +26,9 @@
 # define HEREDEL 11
 # define MAX_SIZE 100
 
+# define MAX_LL "9223372036854775807"
+# define MIN_LL "-9223372036854775808"
+
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
@@ -137,6 +140,8 @@ void		print_export(t_envp *export);
 int			create_export(t_envp **export, t_envp *envp);
 void		free_export(t_envp **export);
 int			var_exist(t_mshell *shell, char *var);
+
+void		exit_case(t_mshell *shell, char *cmd);
 
 void		get_svar(t_mshell *shell);
 

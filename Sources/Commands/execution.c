@@ -124,8 +124,8 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 		echo_case(temp->content, fd_out);
 	else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
 		cd_case(shell, temp->content);
-	else if (!ft_strcmp(temp->content, "exit"))
-		return (ft_putendl_fd("exit", 1), free_struct(shell), exit(shell->exit_status));
+	else if (!ft_strncmp(temp->content, "exit", 4))
+		exit_case(shell, temp->content);
 	else if (!ft_strcmp(temp->content, "env"))
 		env_case(shell, fd_out);
 	else if (!ft_strncmp(temp->content, "unset", 5) && is_ws(temp->content[5]))
