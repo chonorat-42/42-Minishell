@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern int g_status;
+
 char *get_exec(char *cmd)
 {
 	size_t	j;
@@ -76,13 +78,13 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 		{
 			temp = ft_strjoin(shell->paths[j], cmd_arr[0]);
 			if (!temp)
-				return (exit(2));
+				exit(1);
 			if (execve(temp, cmd_arr, shell->menvp) == -1)
 				free(temp);
 		}
 	}
-	
-	return (ft_dprintf(STDERR_FILENO, "Command '%s' not found\n", cmd_arr[0]), exit(1));
+	ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell->cmd_count, cmd_arr[0]);
+	exit(127);
 }
 
 char *get_cmd(char *str, size_t *i)
@@ -123,7 +125,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 	else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
 		cd_case(shell, temp->content);
 	else if (!ft_strcmp(temp->content, "exit"))
-		return (ft_putendl_fd("exit", 1), free_struct(shell), exit(0));
+		return (ft_putendl_fd("exit", 1), free_struct(shell), exit(shell->exit_status));
 	else if (!ft_strcmp(temp->content, "env"))
 		env_case(shell, fd_out);
 	else if (!ft_strncmp(temp->content, "unset", 5) && is_ws(temp->content[5]))
@@ -143,7 +145,11 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 		if (!child)
 			bin_exec(shell, temp->cmd_arr, fd_in, fd_out);
 		else
-			waitpid(child, NULL, 0);
+			waitpid(child, &g_status, 0);
+		if (WIFEXITED(g_status))
+			g_status = WEXITSTATUS(g_status);
+		else if (WIFSIGNALED(g_status))
+			g_status = WTERMSIG(g_status);
 		if (temp->cmd_arr)
 			free_arr(temp->cmd_arr);
 		temp->cmd_arr = NULL;

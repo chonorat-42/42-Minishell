@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern int	g_status;
+
 void	get_input_loop(t_mshell *shell)
 {
 	while (1)
@@ -24,6 +26,7 @@ void	get_input_loop(t_mshell *shell)
 		}
 		if (shell->input[0])
 			add_history(shell->input);
+		get_svar(shell);
 		update_envp(shell);
 		parsing(shell);
 		tokenizer(shell);

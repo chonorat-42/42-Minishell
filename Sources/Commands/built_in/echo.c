@@ -12,17 +12,19 @@
 
 #include "minishell.h"
 
-char *get_builtin_opt(char *str, size_t *i)
+char	*get_builtin_opt(char *str, size_t *i)
 {
 	size_t j;
 	char *result;
 
-	if (str[(*i)] != '-')
+	while (str[*i] && is_ws(str[*i]))
+		(*i)++;
+	if (str[*i] != '-' || (str[*i] == '-' && is_ws(str[*i + 1])))
 		return (NULL);
 	j = *i + 1;
 	while (str[j] && str[j] != ' ')
 		j++;
-	result = ft_substr(str, (*i), j - (*i));
+	result = ft_substr(str, *i, j - *i);
 	if (!result)
 		return ("0");
 	*i = j;
@@ -31,30 +33,28 @@ char *get_builtin_opt(char *str, size_t *i)
 
 void	echo_case(char *prompt, int fd)
 {
-	char *option;
-	size_t i;
+	char	*option;
+	int		opt;
+	size_t	i;
+
 	i = 5;
+	opt = 0;
 	option = get_builtin_opt(prompt, &i);
 	if (option)
 	{
-		if (ft_strcmp(option, "-n"))
+		if (ft_strncmp(option, "-n", ft_strlen(option)) == 0)
 		{
-			ft_printf("%s", option);
-			while (prompt[i] && is_ws(prompt[i]))
+			opt = 1;
+			while (prompt[i] && !is_ws(prompt[i]))
 				i++;
 		}
 	}
 	while (prompt[i] && is_ws(prompt[i]))
 		i++;
-	while(prompt[i])
-	{
-		write(fd, &prompt[i], 1);
-		i++;
-	}
-	if (option)
-	{
-		ft_dprintf(fd, "$");
-		free(option);
-	}
-	ft_dprintf(fd, "\n");
+	if (prompt[i] && opt)
+		ft_putstr_fd(&prompt[i], fd);
+	else if (prompt[i] && !opt)
+		ft_putendl_fd(&prompt[i], fd);
+	if (opt)
+		return (free(option));
 }

@@ -35,6 +35,8 @@ remake parsing
 3) Expand
 */
 
+int	g_status;
+
 void	init_shell(t_mshell *shell)
 {
 	shell->input = NULL;
@@ -46,6 +48,8 @@ void	init_shell(t_mshell *shell)
 	shell->envp = NULL;
 	shell->export = NULL;
 	shell->cmd_count = 0;
+	shell->exit_status = 0;
+	g_status = 0;
 }
 
 int main(int argc, char **argv, char **envp)
@@ -60,4 +64,5 @@ int main(int argc, char **argv, char **envp)
 	get_envp(&shell, envp);
 	get_paths(&shell);
 	get_input_loop(&shell);
+	return (shell.exit_status);
 }
