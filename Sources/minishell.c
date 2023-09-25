@@ -64,5 +64,5 @@ int main(int argc, char **argv, char **envp)
 	get_envp(&shell, envp);
 	get_paths(&shell);
 	get_input_loop(&shell);
-	return (g_status);
+	return (shell.exit_status);
 }
