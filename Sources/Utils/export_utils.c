@@ -57,7 +57,8 @@ int	create_export(t_envp **export, t_envp *envp)
 		return (0);
 	(*export)->var.readable = 1;
 	(*export)->var.alterable = 1;
-	if (ft_strncmp((*export)->var.name, "_", ft_strlen((*export)->var.name)) == 0)
+	if (ft_strncmp((*export)->var.name, "_", ft_strlen((*export)->var.name)) == 0 ||
+			ft_strncmp((*export)->var.name, "?", ft_strlen((*export)->var.name)) == 0)
 	{
 		(*export)->var.readable = 0;
 		(*export)->var.alterable = 0;

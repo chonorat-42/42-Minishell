@@ -34,7 +34,8 @@ static int	add_to_export(t_envp **temp, t_envp *env_cell)
 		var_cell->var.content = NULL;
 	var_cell->var.alterable = 1;
 	var_cell->var.readable = 1;
-	if (ft_strncmp(var_cell->var.name, "_", ft_strlen(var_cell->var.name)) == 0)
+	if (ft_strncmp(var_cell->var.name, "_", ft_strlen(var_cell->var.name)) == 0 ||
+			ft_strncmp(var_cell->var.name, "?", ft_strlen(var_cell->var.name)) == 0)
 		var_cell->var.readable = 0;
 	if ((*temp)->prev)
 		(*temp)->prev->next = var_cell;
@@ -63,7 +64,8 @@ static int	add_to_end(t_envp **temp, t_envp *env_cell)
 	}
 	cell->var.alterable = 1;
 	cell->var.readable = 1;
-	if (ft_strncmp(cell->var.name, "_", ft_strlen(cell->var.name)) == 0)
+	if (ft_strncmp(cell->var.name, "_", ft_strlen(cell->var.name)) == 0 ||
+			ft_strncmp(cell->var.name, "?", ft_strlen(cell->var.name)) == 0)
 		cell->var.readable = 0;
 	(*temp)->next = cell;
 	cell->next = NULL;
@@ -117,15 +119,14 @@ static int	is_var(char *cmd)
 {
 	int	index;
 
-	index = 7;
 	if (!is_ws(cmd[6]))
 		return (0);
-	if (!ft_isalpha(cmd[7]) && !is_char_in_set(cmd[index], "_"))
+	if (!ft_isalpha(cmd[7]) && !is_char_in_set(cmd[7], "_"))
 	{
 		g_status = 1;
 		return (ft_dprintf(2, "minishell: export: `%s': not a valid identifier\n", &cmd[7]), 0);
 	}
-	index++;
+	index = 8;
 	while (cmd[index])
 	{
 		if (cmd[index] == '=')
