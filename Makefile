@@ -42,6 +42,7 @@ FILES = minishell\
 		Commands/built_in/unset\
 		Commands/built_in/export\
 		Commands/built_in/pwd\
+		Commands/built_in/exit\
 		Utils/free\
 		Utils/get_envp\
 		Utils/get_paths\
