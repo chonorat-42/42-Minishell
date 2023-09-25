@@ -154,7 +154,9 @@ void print_tkns_down(t_tokens *lst)
 	{
 		ft_printf("content = %s\n", temp->content);
 		ft_printf("type = %d\n", temp->type);
-		ft_printf("position = %d\n\n", temp->position);
+		ft_printf("position = %d\n", temp->position);
+		ft_printf("fd_in = %d\n", temp->fd_in);
+		ft_printf("fd_out = %d\n\n", temp->fd_out);
 		temp = temp->next;
 	}
 }
@@ -237,7 +239,462 @@ int is_sep(char c)
 	return (0);
 }
 
-int tokenizer(t_mshell *shell)
+void	move_to_next_quote(char *str, size_t *i, char c)
+{
+	(*i)++;
+	while (str[(*i)] && str[(*i)] != c)
+		(*i)++;
+}
+
+void	split_on_pipes(t_mshell *shell, char *str)
+{
+	size_t	i;
+	size_t	j;
+	char	c;
+
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (is_char_in_set(str[i], "\'\""))
+		{
+			c = str[i];
+			move_to_next_quote(str, &i, c);
+		}
+		else if (is_char_in_set(str[i], "|"))
+		{
+			create_token(shell, i, j);
+			j = i;
+			i++;
+			create_token(shell, i, j);
+			i++;
+			j = i;
+		}
+		i++;
+	}
+	create_token(shell, i, j);
+}
+
+char	*get_next_word(char *str)
+{
+	size_t	i;
+	size_t	j;
+	char	*res;
+
+	i = 0;
+	while (str[i] && is_ws(str[i]) && is_char_in_set(str[i], "\'\""))
+		i++;
+	j = i;
+	while (str[i] && (!is_ws(str[i]) && !is_char_in_set(str[i], "\'\"")))
+		i++;
+	res = ft_substr(str, j, i - j);
+	return (res);
+	
+}
+
+void	get_fd_out(t_tokens **tok)
+{
+	size_t	i;
+	size_t	j;
+	char	c;
+	char	*redir;
+	char	*outfile;
+
+	i = 0;
+	outfile = NULL;
+	while ((*tok)->content[i])
+	{
+		if (is_char_in_set((*tok)->content[i], "\'\""))
+		{
+			c = (*tok)->content[i];
+			move_to_next_quote((*tok)->content, &i, c);
+		}
+		else if ((*tok)->content[i] == '>')
+		{
+			j = i;
+			while ((*tok)->content[i] == '>')
+				i++;
+			redir = ft_substr((*tok)->content, j, i - j);
+			j = i;
+			i++;
+			outfile = get_next_word(&(*tok)->content[i]);
+		}
+		i++;
+	}
+	if (outfile && !ft_strcmp(redir, ">"))
+		(*tok)->fd_out = open(outfile, O_CREAT | O_RDWR, 0666);
+	
+	else if (outfile && !ft_strcmp(redir, ">>"))
+		(*tok)->fd_out = open(outfile, O_APPEND | O_RDWR, 0666);
+
+	else
+		(*tok)->fd_out = 1;
+}
+
+void	get_fd_in(t_tokens **tok)
+{
+	size_t	i;
+	size_t	j;
+	char	c;
+	char	*redir;
+	char	*infile;
+
+	i = 0;
+	infile = NULL;
+	while ((*tok)->content[i])
+	{
+		if (is_char_in_set((*tok)->content[i], "\'\""))
+		{
+			c = (*tok)->content[i];
+			move_to_next_quote((*tok)->content, &i, c);
+		}
+		else if ((*tok)->content[i] == '<')
+		{
+			j = i;
+			while ((*tok)->content[i] == '<')
+				i++;
+			redir = ft_substr((*tok)->content, j, i - j);
+			j = i;
+			i++;
+			infile = get_next_word(&(*tok)->content[i]);
+		}
+		i++;
+	}
+	if (infile && !ft_strcmp(redir, "<"))
+		(*tok)->fd_in = open(infile, O_RDWR);
+	else
+		(*tok)->fd_in = 0;
+}
+
+void	get_fds(t_tokens *lst)
+{
+	t_tokens	*tmp;
+	tmp = lst;
+	while (tmp)
+	{
+		get_fd_in(&tmp);
+		get_fd_out(&tmp);
+		tmp = tmp->next;
+	}
+}
+
+void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
+{
+	t_dlist	*new;
+	t_dlist *temp;
+
+	new = malloc(sizeof(t_dlist));
+	new->next = NULL;
+	new->content = ft_substr(str, j, i - j);
+	if (!*lst)
+	{
+		*lst = new;
+		new->prev = NULL;
+	}
+	else
+	{
+		temp = *lst;
+		while(temp->next)
+			temp = temp->next;
+		temp->next = new;
+		new->prev = temp;
+	}
+}
+
+void	next_word_end_index(char *str, size_t *i)
+{
+	while (str[(*i)] && is_ws(str[(*i)]))
+		(*i)++;
+	while (str[(*i)] && !is_ws(str[(*i)]))
+		(*i)++;
+}
+
+void	print_dlist(t_dlist	*lst)
+{
+	t_dlist	*temp;
+
+	temp = lst;
+	while (temp)
+	{
+		ft_printf("%s\n", temp->content);
+		temp = temp->next;
+	}
+	ft_printf("\n");
+}
+
+void	remove_fd_lst(t_dlist **lst, char c)
+{
+	t_dlist *temp;
+	t_dlist	*to_delete;
+	t_dlist	*to_delete2;
+
+	ft_printf("GOT IN PROBLEMATIC remove fd lst\n\n");
+
+	temp = *lst;
+	while (temp->next)
+	{
+		if (temp->content[0] == c)
+		{
+			to_delete = temp;
+			to_delete2 = temp->next;
+			temp = to_delete2->next;
+			if (to_delete->prev)
+				to_delete->prev->next = to_delete2->next;
+			else
+			{
+				to_delete2->next->prev = NULL;
+				*lst = to_delete2->next;
+			}
+			free(to_delete->content);
+            free(to_delete);
+            free(to_delete2->content);
+            free(to_delete2);
+			break ;
+		}
+		temp = temp->next;
+	}
+	ft_printf("End of remove fd lst, lst =\n");
+	print_dlist(*lst);
+}
+
+char	*join_dlist(t_dlist *lst)
+{
+	char	*res;
+	t_dlist	*temp;
+
+	temp = lst;
+	res = ft_strdup(temp->content);
+	res = strjoin_free_first(res, " ");
+	temp = temp->next;
+	while (temp)
+	{
+		res = strjoin_free_first(res, temp->content);
+		res = strjoin_free_first(res, " ");
+		temp = temp->next;
+	}
+	return (res);
+}
+
+char	*remove_fd(char *str, char c)
+{
+	size_t	i;
+	size_t 	j;
+	t_dlist *lst;
+	char	*res;
+	char	q;
+
+	i = 0;
+	j = 0;
+	lst = NULL;
+	while (str[i])
+	{
+		if (is_char_in_set(str[i], "\'\""))
+		{
+			q = str[i];
+			move_to_next_quote(str, &i, q);
+		}
+		else if (is_ws(str[i]))
+		{
+			split_into_dlst(&lst, str, i, j);
+			i++;
+			j = i;
+		}
+		else if (str[i] == c)
+		{
+			while (str[i] == c)
+				i++;
+			split_into_dlst(&lst, str, i, j);
+			i++;
+			j = i;
+			next_word_end_index(str, &i);
+			split_into_dlst(&lst, str, i, j);
+			i++;
+			j = i;
+		}
+		i++;
+	}
+	split_into_dlst(&lst, str, i, j);
+
+	ft_printf("in remove fd, AFTER CREATING WHOLE LIST, LIST =\n");
+	print_dlist(lst);
+
+	remove_fd_lst(&lst, c);
+	res = join_dlist(lst);
+
+	return (res);
+}
+
+void	remove_redirect(t_tokens *lst)
+{
+	t_tokens	*temp;
+
+	temp = lst;
+	while (temp)
+	{
+		if (temp->fd_in != STDIN_FILENO)
+			temp->content = remove_fd(temp->content, '<');
+		if (temp->fd_out != STDOUT_FILENO)
+			temp->content = remove_fd(temp->content, '>');
+		temp = temp->next;
+	}
+}
+
+void	split_words_into_lst(t_dlist **lst, char *str)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (is_char_in_set(str[i], "\'\""))
+			move_to_next_quote(str, &i, str[i]);
+		if (is_ws(str[i]))
+		{
+			split_into_dlst(lst, str, i, j);
+			i++;
+			j = i;
+		}
+		i++;
+	}
+	split_into_dlst(lst, str, i, j);
+	ft_printf("in split into words list, FINAL :\n");
+	print_dlist(*lst);
+}
+
+void	lst_remove_quotes(t_dlist **lst)
+{
+	t_dlist *temp;
+	char	*res;
+
+	temp = *lst;
+	while (temp)
+	{
+		res = remove_quotes(temp->content);
+		free(temp->content);
+		temp->content = ft_strdup(res);
+		ft_free_null(res);
+		temp = temp->next;
+	}
+	if (res)
+		free(res);
+}
+
+size_t	dlst_size(t_dlist *lst)
+{
+	size_t	res;
+	t_dlist	*temp;
+
+	res = 0;
+	temp = lst;
+	while (temp)
+	{
+		res++;
+		temp = temp->next;
+	}
+	return (res);
+}
+
+char	**list_into_arr(t_dlist *lst)
+{
+	char	**res;
+	t_dlist	*temp;
+	size_t	size;
+	size_t	j;
+
+	temp = lst;
+	size = dlst_size(lst);
+	res = malloc(sizeof(char *) * (size + 1));
+	res[size] = NULL;
+	j = 0;
+	while (j < size)
+	{
+		res[j] = ft_strdup(temp->content);
+		j++;
+		temp = temp->next;
+	}
+	return (res);
+}
+
+void	print_arrays_in_list(t_tokens *lst)
+{
+	t_tokens	*temp;
+
+	temp = lst;
+	while (temp)
+	{
+		print_arr(temp->cmd_arr);
+		ft_printf("\n");
+		temp = temp->next;
+	}
+}
+
+void	create_cmd_arr(t_tokens **tk_lst)
+{
+	t_tokens	*temp;
+	t_dlist		*dlist;
+
+	dlist = NULL;
+	temp = *tk_lst;
+		while (temp)
+		{
+			split_words_into_lst(&dlist, temp->content);
+			lst_remove_quotes(&dlist);
+
+			ft_printf("LIST FORMAT : after remove quotes, lst =\n");
+			print_dlist(dlist);
+
+			temp->cmd_arr = list_into_arr(dlist);
+
+			temp = temp->next;
+		}
+		ft_printf("ARRAY FORMAT : all arrays of tokens :\n");
+		print_arrays_in_list(*tk_lst);
+}
+
+void	print_lst_arr(t_tokens *lst)
+{
+	t_tokens	*temp;
+
+	temp = lst;
+	while (temp)
+	{
+		ft_printf("array from \"%s\" : \n", temp->content);
+		print_arr(temp->cmd_arr);
+		ft_printf("\n");
+		temp = temp->next;
+	}
+}
+
+int	tokenizer(t_mshell *shell)
+{
+	// size_t	i;
+	// size_t	j;
+
+	shell->tok_lst = NULL;
+	split_on_pipes(shell, shell->input);
+
+	ft_printf("split on pipes done\n\n");
+
+	get_fds(shell->tok_lst);
+
+	ft_printf("get fds done\n\n");
+
+	remove_redirect(shell->tok_lst);
+
+	ft_printf("_____________FINAL TKNS LIST__________\n");
+	print_tkns_down(shell->tok_lst);
+	ft_printf("_______________________________________\n");
+
+	create_cmd_arr(&shell->tok_lst);
+
+	// print_lst_arr(shell->tok_lst);
+
+	return (0);
+}
+
+int tokenizerC(t_mshell *shell)
 {
 	size_t	i;
 	size_t	j;

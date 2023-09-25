@@ -59,11 +59,20 @@ typedef struct s_tokens
 {
 	char 	*content;
 	char	**cmd_arr;
+	int		fd_in;
+	int		fd_out;
 	int  	type;
 	int		position;
 	struct s_tokens *prev;
 	struct s_tokens *next;
 }			t_tokens;
+
+typedef struct s_dlist
+{
+	char			*content;
+	struct s_dlist	*prev;
+	struct s_dlist	*next;
+}			t_dlist;
 
 typedef struct s_mshell
 {
@@ -142,5 +151,7 @@ void	get_shellvar(t_mshell *shell);
 void	heredoc(char *delimiter, int fd_in, t_envp *envp);
 
 void	print_tkns_down(t_tokens *lst);
+
+char	*remove_quotes(char	*str);
 
 #endif
