@@ -25,7 +25,7 @@ void	exit_case(t_mshell *shell, char *cmd)
 		value_str = get_exit(cmd);
 		if (!only_digit(value_str))
 		{
-			ft_printf("minishell: exit: %s : numeric argument required\n", &cmd[5]);
+			ft_printf("minishell: exit: %s: numeric argument required\n", &cmd[5]);
 			exit_value = 2;
 		}
 		else
