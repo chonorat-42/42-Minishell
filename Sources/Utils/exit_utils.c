@@ -58,7 +58,7 @@ char	*get_exit(char *cmd)
 
 	index = 5;
 	exit = NULL;
-	while (cmd[index] && cmd[index] == '0')
+	while (cmd[index + 1] && cmd[index] == '0')
 		index++;
 	if (cmd[index])
 		exit = ft_strdup(&cmd[index]);
