@@ -55,6 +55,13 @@ typedef struct s_envp
 	struct s_envp	*prev;
 }				t_envp;
 
+typedef struct s_dlist
+{
+	char			*content;
+	struct s_dlist	*prev;
+	struct s_dlist	*next;
+}			t_dlist;
+
 typedef struct s_tokens
 {
 	char 	*content;
@@ -63,16 +70,10 @@ typedef struct s_tokens
 	int		fd_out;
 	int  	type;
 	int		position;
+	t_dlist	*dlst;
 	struct s_tokens *prev;
 	struct s_tokens *next;
 }			t_tokens;
-
-typedef struct s_dlist
-{
-	char			*content;
-	struct s_dlist	*prev;
-	struct s_dlist	*next;
-}			t_dlist;
 
 typedef struct s_mshell
 {

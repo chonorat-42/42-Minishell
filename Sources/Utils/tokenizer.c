@@ -89,7 +89,22 @@ int str_is_ws(char *str)
 	return (1);
 }
 
-void give_type(t_tokens **lst)
+void	give_type(t_tokens **lst)
+{
+	t_tokens	*temp;
+
+	temp = *lst;
+	while (temp)
+	{
+		if (temp->content[0] == '|')
+			temp->type = PIPE;
+		else
+			temp->type = CMD;
+		temp = temp->next;
+	}
+}
+
+void give_typeB(t_tokens **lst)
 {
 	t_tokens *temp;
 	temp = *lst;
@@ -267,10 +282,14 @@ void	split_on_pipes(t_mshell *shell, char *str)
 			j = i;
 			i++;
 			create_token(shell, i, j);
-			i++;
 			j = i;
+			i++;
 		}
-		i++;
+		else
+		{
+			i++;
+		}
+		
 	}
 	create_token(shell, i, j);
 }
@@ -301,6 +320,7 @@ void	get_fd_out(t_tokens **tok)
 	char	*outfile;
 
 	i = 0;
+	redir = NULL;
 	outfile = NULL;
 	while ((*tok)->content[i])
 	{
@@ -316,7 +336,8 @@ void	get_fd_out(t_tokens **tok)
 				i++;
 			redir = ft_substr((*tok)->content, j, i - j);
 			j = i;
-			i++;
+			while(is_ws((*tok)->content[i]))
+				i++;
 			outfile = get_next_word(&(*tok)->content[i]);
 		}
 		i++;
@@ -329,8 +350,10 @@ void	get_fd_out(t_tokens **tok)
 
 	else
 		(*tok)->fd_out = 1;
-	free(redir);
-	free(outfile);
+	if (redir)
+		free(redir);
+	if (outfile)
+		free(outfile);
 }
 
 void	get_fd_in(t_tokens **tok)
@@ -342,6 +365,7 @@ void	get_fd_in(t_tokens **tok)
 	char	*infile;
 
 	i = 0;
+	redir = NULL;
 	infile = NULL;
 	while ((*tok)->content[i])
 	{
@@ -357,17 +381,23 @@ void	get_fd_in(t_tokens **tok)
 				i++;
 			redir = ft_substr((*tok)->content, j, i - j);
 			j = i;
-			i++;
+			while(is_ws((*tok)->content[i]))
+				i++;
 			infile = get_next_word(&(*tok)->content[i]);
 		}
 		i++;
 	}
 	if (infile && !ft_strcmp(redir, "<"))
 		(*tok)->fd_in = open(infile, O_RDWR);
+	/*HEREDOC TO ADD*/
+	// else if (outfile && !ft_strcmp(redir, ">>"))
+	// 	(*tok)->fd_out = open(outfile, O_APPEND | O_RDWR, 0666);
 	else
-		(*tok)->fd_in = 0;
-	free(redir);
-	free(infile);
+		(*tok)->fd_in = 1;
+	if (redir)
+		free(redir);
+	if (infile)
+		free(infile);
 }
 
 void	get_fds(t_tokens *lst)
@@ -386,10 +416,12 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 {
 	t_dlist	*new;
 	t_dlist *temp;
+	char	*brut;
 
 	new = malloc(sizeof(t_dlist));
 	new->next = NULL;
-	new->content = ft_substr(str, j, i - j);
+	brut = ft_substr(str, j, i - j);
+	new->content = ft_strtrim(brut, " \n\t");
 	if (!*lst)
 	{
 		*lst = new;
@@ -432,8 +464,6 @@ void	remove_fd_lst(t_dlist **lst, char c)
 	t_dlist	*to_delete;
 	t_dlist	*to_delete2;
 
-	ft_printf("GOT IN PROBLEMATIC remove fd lst\n\n");
-
 	temp = *lst;
 	while (temp->next)
 	{
@@ -457,8 +487,6 @@ void	remove_fd_lst(t_dlist **lst, char c)
 		}
 		temp = temp->next;
 	}
-	ft_printf("End of remove fd lst, lst =\n");
-	print_dlist(*lst);
 }
 
 char	*join_dlist(t_dlist *lst)
@@ -473,7 +501,8 @@ char	*join_dlist(t_dlist *lst)
 	while (temp)
 	{
 		res = strjoin_free_first(res, temp->content);
-		res = strjoin_free_first(res, " ");
+		if (temp->next)
+			res = strjoin_free_first(res, " ");
 		temp = temp->next;
 	}
 	return (res);
@@ -500,33 +529,34 @@ char	*remove_fd(char *str, char c)
 		else if (is_ws(str[i]))
 		{
 			split_into_dlst(&lst, str, i, j);
-			i++;
+			while (is_ws(str[i]))
+				i++;
 			j = i;
 		}
 		else if (str[i] == c)
 		{
+			split_into_dlst(&lst, str, i, j);
+			j = i;
 			while (str[i] == c)
 				i++;
+			//get the redirection
 			split_into_dlst(&lst, str, i, j);
-			i++;
+			while (is_ws(str[i]))
+				i++;
 			j = i;
 			next_word_end_index(str, &i);
 			split_into_dlst(&lst, str, i, j);
-			i++;
+			while (is_ws(str[i]))
+				i++;
 			j = i;
 		}
 		else
 			i++;
 	}
 	split_into_dlst(&lst, str, i, j);
-
-	ft_printf("in remove fd, AFTER CREATING WHOLE LIST, LIST =\n");
-	print_dlist(lst);
-
 	remove_fd_lst(&lst, c);
 	res = join_dlist(lst);
 	free_dlist(&lst);
-
 	return (res);
 }
 
@@ -552,6 +582,8 @@ void	split_words_into_lst(t_dlist **lst, char *str)
 
 	i = 0;
 	j = 0;
+	if (!str)
+		return ;
 	while (str[i])
 	{
 		if (is_char_in_set(str[i], "\'\""))
@@ -559,14 +591,13 @@ void	split_words_into_lst(t_dlist **lst, char *str)
 		if (is_ws(str[i]))
 		{
 			split_into_dlst(lst, str, i, j);
-			i++;
+				while (str[i + 1] && is_ws(str[i + 1]))
+				i++;
 			j = i;
 		}
 		i++;
 	}
 	split_into_dlst(lst, str, i, j);
-	ft_printf("in split into words list, FINAL :\n");
-	print_dlist(*lst);
 }
 
 void	lst_remove_quotes(t_dlist **lst)
@@ -574,7 +605,6 @@ void	lst_remove_quotes(t_dlist **lst)
 	t_dlist *temp;
 	char	*res;
 
-	res = NULL;
 	temp = *lst;
 	while (temp)
 	{
@@ -638,55 +668,45 @@ void	print_arrays_in_list(t_tokens *lst)
 void	create_cmd_arr(t_tokens **tk_lst)
 {
 	t_tokens	*temp;
-	t_dlist		*dlist;
+	char		*to_trim;
 
-	dlist = NULL;
 	temp = *tk_lst;
 		while (temp)
 		{
-			split_words_into_lst(&dlist, temp->content);
-			lst_remove_quotes(&dlist);
-
-			ft_printf("LIST FORMAT : after remove quotes, lst =\n");
-			print_dlist(dlist);
-
-			temp->cmd_arr = list_into_arr(dlist);
-
+			temp->dlst = NULL;
+			to_trim = ft_strtrim(temp->content, " \n\t\b");
+			temp->content = ft_strdup(to_trim);
+			free(to_trim);
+			split_words_into_lst(&temp->dlst, temp->content);
+			//lst_remove_quotes(&temp->dlst);
+			temp->cmd_arr = list_into_arr(temp->dlst);
+			free_dlist(&temp->dlst);
 			temp = temp->next;
 		}
-		ft_printf("ARRAY FORMAT : all arrays of tokens :\n");
-		print_arrays_in_list(*tk_lst);
-		free_dlist(&dlist);
 }
 
 void	print_lst_arr(t_tokens *lst)
 {
 	t_tokens	*temp;
+	size_t		i;
 
+	i = 1;
 	temp = lst;
 	while (temp)
 	{
-		ft_printf("array from \"%s\" : \n", temp->content);
+		ft_printf("array %d from \"%s\" : \n", i, temp->content);
 		print_arr(temp->cmd_arr);
 		ft_printf("\n");
 		temp = temp->next;
+		i++;
 	}
 }
 
 int	tokenizer(t_mshell *shell)
 {
-	// size_t	i;
-	// size_t	j;
-
 	shell->tok_lst = NULL;
 	split_on_pipes(shell, shell->input);
-
-	ft_printf("split on pipes done\n\n");
-
 	get_fds(shell->tok_lst);
-
-	ft_printf("get fds done\n\n");
-
 	remove_redirect(shell->tok_lst);
 
 	ft_printf("_____________FINAL TKNS LIST__________\n");
@@ -694,8 +714,9 @@ int	tokenizer(t_mshell *shell)
 	ft_printf("_______________________________________\n");
 
 	create_cmd_arr(&shell->tok_lst);
-
-	// print_lst_arr(shell->tok_lst);
+	ft_printf("ALL ARRAYS IN THE LIST :\n");
+	print_lst_arr(shell->tok_lst);
+	give_type(&shell->tok_lst);
 
 	return (0);
 }
