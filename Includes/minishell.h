@@ -154,4 +154,6 @@ void	print_tkns_down(t_tokens *lst);
 
 char	*remove_quotes(char	*str);
 
+void	free_dlist(t_dlist **head);
+
 #endif

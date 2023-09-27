@@ -329,6 +329,8 @@ void	get_fd_out(t_tokens **tok)
 
 	else
 		(*tok)->fd_out = 1;
+	free(redir);
+	free(outfile);
 }
 
 void	get_fd_in(t_tokens **tok)
@@ -364,6 +366,8 @@ void	get_fd_in(t_tokens **tok)
 		(*tok)->fd_in = open(infile, O_RDWR);
 	else
 		(*tok)->fd_in = 0;
+	free(redir);
+	free(infile);
 }
 
 void	get_fds(t_tokens *lst)
@@ -511,7 +515,8 @@ char	*remove_fd(char *str, char c)
 			i++;
 			j = i;
 		}
-		i++;
+		else
+			i++;
 	}
 	split_into_dlst(&lst, str, i, j);
 
@@ -520,6 +525,7 @@ char	*remove_fd(char *str, char c)
 
 	remove_fd_lst(&lst, c);
 	res = join_dlist(lst);
+	free_dlist(&lst);
 
 	return (res);
 }
@@ -568,17 +574,16 @@ void	lst_remove_quotes(t_dlist **lst)
 	t_dlist *temp;
 	char	*res;
 
+	res = NULL;
 	temp = *lst;
 	while (temp)
 	{
 		res = remove_quotes(temp->content);
-		free(temp->content);
+		ft_free_null(temp->content);
 		temp->content = ft_strdup(res);
 		ft_free_null(res);
 		temp = temp->next;
 	}
-	if (res)
-		free(res);
 }
 
 size_t	dlst_size(t_dlist *lst)
@@ -651,6 +656,7 @@ void	create_cmd_arr(t_tokens **tk_lst)
 		}
 		ft_printf("ARRAY FORMAT : all arrays of tokens :\n");
 		print_arrays_in_list(*tk_lst);
+		free_dlist(&dlist);
 }
 
 void	print_lst_arr(t_tokens *lst)
