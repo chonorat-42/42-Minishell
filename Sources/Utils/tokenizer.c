@@ -393,7 +393,7 @@ void	get_fd_in(t_tokens **tok)
 	// else if (outfile && !ft_strcmp(redir, ">>"))
 	// 	(*tok)->fd_out = open(outfile, O_APPEND | O_RDWR, 0666);
 	else
-		(*tok)->fd_in = 1;
+		(*tok)->fd_in = 0;
 	if (redir)
 		free(redir);
 	if (infile)
@@ -422,6 +422,7 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 	new->next = NULL;
 	brut = ft_substr(str, j, i - j);
 	new->content = ft_strtrim(brut, " \n\t");
+	free(brut);
 	if (!*lst)
 	{
 		*lst = new;
@@ -702,6 +703,18 @@ void	print_lst_arr(t_tokens *lst)
 	}
 }
 
+void	free_tokens_dlist(t_tokens **lst)
+{
+	t_tokens	*temp;
+
+	temp = *lst;
+	while (temp)
+	{
+		free_dlist(&temp->dlst);
+		temp = temp->next;
+	}
+}
+
 int	tokenizer(t_mshell *shell)
 {
 	shell->tok_lst = NULL;
@@ -716,6 +729,7 @@ int	tokenizer(t_mshell *shell)
 	create_cmd_arr(&shell->tok_lst);
 	ft_printf("ALL ARRAYS IN THE LIST :\n");
 	print_lst_arr(shell->tok_lst);
+	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
 
 	return (0);
