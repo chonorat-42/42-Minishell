@@ -30,6 +30,23 @@ void	free_arr(char **arr)
 	free(arr);
 }
 
+void	free_dlist(t_dlist **head)
+{
+	t_dlist	*temp;
+
+	if (!*head)
+		return ;
+	while (*head)
+	{
+		if ((*head)->content)
+			free((*head)->content);
+		temp = *head;
+		*head = temp->next;
+		free(temp);
+	}
+
+}
+
 void	ft_free_tokens(t_tokens	**head)
 {
 	t_tokens	*temp;

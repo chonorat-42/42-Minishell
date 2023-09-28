@@ -114,7 +114,40 @@ char *get_cmd(char *str, size_t *i)
 	return (result);
 }
 
-void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
+void	exec_forwarding(t_tokens *temp, t_mshell *shell)
+{
+	pid_t	child;
+
+	if (!ft_strcmp(temp->cmd_arr[0], "echo"))
+		echo_case(temp->content, temp->fd_out);
+	else if (!ft_strcmp(temp->cmd_arr[0], "cd"))
+		cd_case(shell, temp->content);
+	else if (!ft_strcmp(temp->cmd_arr[0], "exit"))
+		return (ft_putendl_fd("exit", 1), free_struct(shell), exit(0));
+	else if (!ft_strcmp(temp->cmd_arr[0], "env"))
+		env_case(shell, temp->fd_out);
+	else if (!ft_strcmp(temp->cmd_arr[0], "unset"))
+		unset_case(shell, temp->content);
+	else if (!ft_strcmp(temp->content, "pwd"))
+		pwd_case(shell, temp->fd_out);
+	else if (!ft_strcmp(temp->content, "export"))
+		export_case(shell, temp->content);
+	else
+	{
+		child = fork();
+		if (child == -1)
+			return(free_struct(shell), exit(2));
+		if (!child)
+			bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
+		else
+			waitpid(child, NULL, 0);
+		if (temp->cmd_arr)
+			free_arr(temp->cmd_arr);
+		temp->cmd_arr = NULL;
+	}	
+}
+
+void	exec_forwardingB(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
 {
 	pid_t	child;
 
@@ -205,107 +238,126 @@ void	remove_heredoc_tkn(t_tokens **lst)
 		remove_next_token(lst);
 }
 
-void execution(t_mshell *shell)
+void	execution(t_mshell *shell)
 {
 	t_tokens	*temp;
-	int 		fd_in;
-	int			fd_out;
 
-	shell->cmd_count++;
-	fd_in = STDIN_FILENO;
-	fd_out = STDOUT_FILENO;
 	temp = shell->tok_lst;
 	while (temp)
 	{
-		if (temp->type == CMD)
+		if (temp->next && temp->next->type == PIPE)
 		{
-			if (temp->next && (temp->next->type == APPEND || temp->next->type == RCHEVRON))
-			{
-				if (temp->next->next)
-				{
-					if (temp->next->type == RCHEVRON)
-						fd_out = open(temp->next->next->content, O_RDWR | O_CREAT, 0666);
-					else
-						fd_out = open(temp->next->next->content, O_RDWR | O_APPEND, 0666);
-					if (fd_out == -1)
-						return (free_struct(shell), exit(4));
-				}
-			}
-			else if (temp->next && (temp->next->type == LCHEVRON))
-			{
-				if (temp->next->next)
-				{
-					fd_in = open(temp->next->next->content, O_RDONLY);
-				}
-				if (fd_in == -1)
-						return (free_struct(shell), exit(4));
-			}
-			else if (temp->next && (temp->next->type == HEREDOC))
-			{
-				if (temp->next->next)
-				{
-					fd_in = open("/tmp/temp.heredoc", O_RDWR | O_CREAT, 0666);
-					heredoc(temp->next->next->content, fd_in, shell->envp);
-					temp->content = ft_strjoin(strjoin_free_first(temp->content, " "), "/tmp/temp.heredoc");
-					remove_heredoc_tkn(&temp);
-					if (temp->next && temp->next->type == PIPE)
-					{
-						handle_pipes(shell, &temp, 0, fd_out);
-						temp->content = ft_strdup("rm -rf /tmp/temp.heredoc");
-						temp->next = NULL;
-						exec_forwarding(temp, shell, fd_in, fd_out);
-						free(temp->content);
-						temp = temp->next;
-					}
-					else
-					{
-						exec_forwarding(temp, shell, fd_in, fd_out);
-						free(temp->content);
-						temp->content = ft_strdup("rm -rf /tmp/temp.heredoc");
-						exec_forwarding(temp, shell, fd_in, fd_out);
-						free(temp->content);
-						close(fd_in);
-					}
-					close(fd_in);
-				}
-			}
-			else
-			{
-				fd_out = 1;
-				fd_in = 0;
-			}
-			// if (fd_out != STDOUT_FILENO)
-			// {
-			// 	while (temp->next && temp->next->type != CMD)
-			// 		temp = temp->next;
-			// }
-			if (fd_in != STDIN_FILENO)
-			{
-				while (temp && temp->next && (temp->next->type != CMD && temp->next->type != PIPE))
-					temp = temp->next;
-			}
-			if (temp && temp->next && temp->next->type == PIPE)
-			{
-				fd_out = get_final_out(temp);
-				handle_pipes(shell, &temp, fd_in, fd_out);
-			}
-			else
-			{
-				if (temp && temp->type != CMD)
-					temp = temp->next;
-				if (temp)
-				{
-					exec_forwarding(temp, shell, fd_in, fd_out);
-				}
-			}
+			handle_pipes(shell, &temp, temp->fd_in, temp->fd_out);
 		}
-		if (temp)
-			temp = temp->next;
+		else
+		{
+			exec_forwarding(temp, shell);
+		}
+		temp = temp->next;
 	}
-	if (shell->tok_lst)
-		ft_free_tokens(&shell->tok_lst);
-	if (shell->input)
-		free(shell->input);
-	// dup2(STDIN_FILENO, 0);
-	// dup2(STDOUT_FILENO, 1);
 }
+
+// void executionB(t_mshell *shell)
+// {
+// 	t_tokens	*temp;
+// 	int 		fd_in;
+// 	int			fd_out;
+
+// 	shell->cmd_count++;
+// 	fd_in = STDIN_FILENO;
+// 	fd_out = STDOUT_FILENO;
+// 	temp = shell->tok_lst;
+// 	while (temp)
+// 	{
+// 		if (temp->type == CMD)
+// 		{
+// 			if (temp->next && (temp->next->type == APPEND || temp->next->type == RCHEVRON))
+// 			{
+// 				if (temp->next->next)
+// 				{
+// 					if (temp->next->type == RCHEVRON)
+// 						fd_out = open(temp->next->next->content, O_RDWR | O_CREAT, 0666);
+// 					else
+// 						fd_out = open(temp->next->next->content, O_RDWR | O_APPEND, 0666);
+// 					if (fd_out == -1)
+// 						return (free_struct(shell), exit(4));
+// 				}
+// 			}
+// 			else if (temp->next && (temp->next->type == LCHEVRON))
+// 			{
+// 				if (temp->next->next)
+// 				{
+// 					fd_in = open(temp->next->next->content, O_RDONLY);
+// 				}
+// 				if (fd_in == -1)
+// 						return (free_struct(shell), exit(4));
+// 			}
+// 			else if (temp->next && (temp->next->type == HEREDOC))
+// 			{
+// 				if (temp->next->next)
+// 				{
+// 					fd_in = open("/tmp/temp.heredoc", O_RDWR | O_CREAT, 0666);
+// 					heredoc(temp->next->next->content, fd_in, shell->envp);
+// 					temp->content = ft_strjoin(strjoin_free_first(temp->content, " "), "/tmp/temp.heredoc");
+// 					remove_heredoc_tkn(&temp);
+// 					if (temp->next && temp->next->type == PIPE)
+// 					{
+// 						handle_pipes(shell, &temp, 0, fd_out);
+// 						temp->content = ft_strdup("rm -rf /tmp/temp.heredoc");
+// 						temp->next = NULL;
+// 						exec_forwarding(temp, shell, fd_in, fd_out);
+// 						free(temp->content);
+// 						temp = temp->next;
+// 					}
+// 					else
+// 					{
+// 						exec_forwarding(temp, shell, fd_in, fd_out);
+// 						free(temp->content);
+// 						temp->content = ft_strdup("rm -rf /tmp/temp.heredoc");
+// 						exec_forwarding(temp, shell, fd_in, fd_out);
+// 						free(temp->content);
+// 						close(fd_in);
+// 					}
+// 					close(fd_in);
+// 				}
+// 			}
+// 			else
+// 			{
+// 				fd_out = 1;
+// 				fd_in = 0;
+// 			}
+// 			// if (fd_out != STDOUT_FILENO)
+// 			// {
+// 			// 	while (temp->next && temp->next->type != CMD)
+// 			// 		temp = temp->next;
+// 			// }
+// 			if (fd_in != STDIN_FILENO)
+// 			{
+// 				while (temp && temp->next && (temp->next->type != CMD && temp->next->type != PIPE))
+// 					temp = temp->next;
+// 			}
+// 			if (temp && temp->next && temp->next->type == PIPE)
+// 			{
+// 				fd_out = get_final_out(temp);
+// 				handle_pipes(shell, &temp, fd_in, fd_out);
+// 			}
+// 			else
+// 			{
+// 				if (temp && temp->type != CMD)
+// 					temp = temp->next;
+// 				if (temp)
+// 				{
+// 					exec_forwarding(temp, shell, fd_in, fd_out);
+// 				}
+// 			}
+// 		}
+// 		if (temp)
+// 			temp = temp->next;
+// 	}
+// 	if (shell->tok_lst)
+// 		ft_free_tokens(&shell->tok_lst);
+// 	if (shell->input)
+// 		free(shell->input);
+// 	// dup2(STDIN_FILENO, 0);
+// 	// dup2(STDOUT_FILENO, 1);
+// }

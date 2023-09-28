@@ -28,6 +28,7 @@ void	heredoc(char *delimiter, int fd_in, t_envp *envp)
 			free(result);
 			if (line)
 				free(line);
+			close(fd_in);
 			return ;
 		}
 		else
