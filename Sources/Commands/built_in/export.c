@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern int	g_status;
+
 static int	add_to_export(t_envp **temp, t_envp *env_cell)
 {
 	t_envp	*var_cell;
@@ -32,7 +34,8 @@ static int	add_to_export(t_envp **temp, t_envp *env_cell)
 		var_cell->var.content = NULL;
 	var_cell->var.alterable = 1;
 	var_cell->var.readable = 1;
-	if (ft_strncmp(var_cell->var.name, "_", ft_strlen(var_cell->var.name)) == 0)
+	if (ft_strncmp(var_cell->var.name, "_", ft_strlen(var_cell->var.name)) == 0 ||
+			ft_strncmp(var_cell->var.name, "?", ft_strlen(var_cell->var.name)) == 0)
 		var_cell->var.readable = 0;
 	if ((*temp)->prev)
 		(*temp)->prev->next = var_cell;
@@ -61,7 +64,8 @@ static int	add_to_end(t_envp **temp, t_envp *env_cell)
 	}
 	cell->var.alterable = 1;
 	cell->var.readable = 1;
-	if (ft_strncmp(cell->var.name, "_", ft_strlen(cell->var.name)) == 0)
+	if (ft_strncmp(cell->var.name, "_", ft_strlen(cell->var.name)) == 0 ||
+			ft_strncmp(cell->var.name, "?", ft_strlen(cell->var.name)) == 0)
 		cell->var.readable = 0;
 	(*temp)->next = cell;
 	cell->next = NULL;
@@ -115,18 +119,23 @@ static int	is_var(char *cmd)
 {
 	int	index;
 
-	index = 7;
 	if (!is_ws(cmd[6]))
 		return (0);
-	if (!ft_isalpha(cmd[7]) && !is_char_in_set(cmd[index], "_"))
+	if (!ft_isalpha(cmd[7]) && !is_char_in_set(cmd[7], "_"))
+	{
+		g_status = 1;
 		return (ft_dprintf(2, "minishell: export: `%s': not a valid identifier\n", &cmd[7]), 0);
-	index++;
+	}
+	index = 8;
 	while (cmd[index])
 	{
 		if (cmd[index] == '=')
 			return (1);
 		else if (!ft_isalnum(cmd[index]) && !is_char_in_set(cmd[index], "_"))
+		{
+			g_status = 1;
 			return (ft_dprintf(2, "minishell: export: `%s': not a valid identifier\n", &cmd[7]), 0);
+		}
 		index++;
 	}
 	return (1);
@@ -158,9 +167,6 @@ static int	split_var(char *var, t_var *new)
 	if (index > 0)
 	{
 		new->name = ft_substr(var, 0, index);
-
-		ft_printf("name = %s\n\n", new->name);
-
 		if (!new->name)
 			return (0);
 		new->content = ft_substr(&var[index + 1], 0, ft_strlen(&var[index + 1]));
@@ -221,18 +227,11 @@ void	export_case(t_mshell *shell, char *cmd)
 	char	*var;
 	int		index;
 
-	ft_printf("beginning of export, cmd = %s\n\n", cmd);
-
 	var_arr = ft_split(cmd, ' ');
 	var = NULL;
 	index = 1;
-
-	ft_printf("var arr :\n");
-	print_arr(var_arr);
-
 	while (var_arr[index])
 	{
-		ft_printf("in export, var_arr[i] = %s\n\n", var_arr[index]);
 		var = ft_strjoin("export ", var_arr[index]);
 		if (count_arr_size(var_arr) != 1 && is_var(var))
 			get_var(shell, var);

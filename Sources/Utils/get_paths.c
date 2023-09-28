@@ -60,7 +60,7 @@ char	*get_envvar_content(t_envp *envp, char *to_find)
 	char	*result;
 
 	temp = envp;
-	while (temp->next)
+	while (temp)
 	{
 		if (!ft_strcmp(to_find, temp->var.name))
 		{
@@ -121,7 +121,7 @@ char	*get_envp_content(t_envp *envp, char *to_find)
 	char	*res;
 
 	temp = envp;
-	while (temp->next)
+	while (temp)
 	{
 		if (!ft_strcmp(to_find, temp->var.name))
 		{
@@ -137,7 +137,6 @@ void	get_paths(t_mshell *shell)
 {
 	char *paths;
 
-	shell->export = NULL;
 	paths = get_envp_content(shell->envp, "PATH");
 	if (fix_paths(paths, shell))
 		return (free_struct(shell));

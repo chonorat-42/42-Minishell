@@ -26,6 +26,9 @@
 # define HEREDEL 11
 # define MAX_SIZE 100
 
+# define MAX_LL "9223372036854775807"
+# define MIN_LL "-9223372036854775808"
+
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
@@ -83,42 +86,43 @@ typedef struct s_mshell
 	char		**menvp;
 	char		**paths;
 	char		*current_loc;
+	int			exit_status;
 	size_t		cmd_count;
 	t_tokens	*tok_lst;
 	t_envp		*envp;
 	t_envp		*export;
-}		t_mshell;
+}				t_mshell;
 
 void		sig_handler(void);
-void	get_paths(t_mshell *shell);
-size_t	count_arr_size(char **arr);
-void	print_arr(char **arr);
-void	print_lst(t_list *lst);
-void	free_struct(t_mshell *shell);
-void	free_arr(char **arr);
-void	bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out);
-void	echo_case(char *prompt, int fd);
-void	env_case(t_mshell *shell, int fd);
-char	*get_cmd_arguments(char *prompt);
-int 	cd_case(t_mshell *shell, char *cmd);
-void	pwd_case(t_mshell *shell, int fd);
-int 	redirect(t_mshell *shell);
-void 	struct_init(t_mshell *shell);
-void	sig_handler(void);
-int		tokenizer(t_mshell *shell);
+void		get_paths(t_mshell *shell);
+size_t		count_arr_size(char **arr);
+void		print_arr(char **arr);
+void		print_lst(t_list *lst);
+void		free_struct(t_mshell *shell);
+void		free_arr(char **arr);
+void		bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out);
+void		echo_case(char *prompt, int fd);
+void		env_case(t_mshell *shell, int fd);
+char		*get_cmd_arguments(char *prompt);
+int 		cd_case(t_mshell *shell, char *cmd);
+void		pwd_case(t_mshell *shell, int fd);
+int 		redirect(t_mshell *shell);
+void 		struct_init(t_mshell *shell);
+void		sig_handler(void);
+int			tokenizer(t_mshell *shell);
 
-void 	execution(t_mshell *shell);
-int	get_final_out(t_tokens *lst);
+void		execution(t_mshell *shell);
+int			get_final_out(t_tokens *lst);
 
-void	free_arr(char **arr);
-void	ft_free_tokens(t_tokens	**head);
-int		find_envvar_index(char **envp, const char *str);
-int		is_ws(char c);
-void	unset_case(t_mshell *shell, char *str);
-void	get_current_location(t_mshell *shell);
-void	manage_quotes(t_tokens **lst);
-char	*get_envvar_content(t_envp *envp, char *to_find);
-char	*get_builtin_opt(char *str, size_t *i);
+void		free_arr(char **arr);
+void		ft_free_tokens(t_tokens	**head);
+int			find_envvar_index(char **envp, const char *str);
+int			is_ws(char c);
+void		unset_case(t_mshell *shell, char *str);
+void		get_current_location(t_mshell *shell);
+void		manage_quotes(t_tokens **lst);
+char		*get_envvar_content(t_envp *envp, char *to_find);
+char		*get_builtin_opt(char *str, size_t *i);
 long int	find_char_index(char *str, int c);
 void			parsing(t_mshell *shell);
 
@@ -147,7 +151,12 @@ int		create_export(t_envp **export, t_envp *envp);
 void	free_export(t_envp **export);
 int		var_exist(t_mshell *shell, char *var);
 
-void	get_shellvar(t_mshell *shell);
+void		exit_case(t_mshell *shell, char *cmd);
+long long	ll_atoi(const char *str);
+int			only_digit(char *cmd);
+char		*get_exit(char *cmd);
+
+void		get_svar(t_mshell *shell);
 
 void	heredoc(char *delimiter, int fd_in, t_envp *envp);
 

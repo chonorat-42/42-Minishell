@@ -42,10 +42,12 @@ FILES = minishell\
 		Commands/built_in/unset\
 		Commands/built_in/export\
 		Commands/built_in/pwd\
+		Commands/built_in/exit\
 		Utils/free\
 		Utils/get_envp\
 		Utils/get_paths\
 		Utils/get_input\
+		Utils/get_svar\
 		Utils/resources\
 		Utils/tokenizer\
 		Utils/sig_handler\
@@ -53,6 +55,7 @@ FILES = minishell\
 		Utils/export_utils\
 		Utils/expand\
 		Utils/update_envp\
+		Utils/exit_utils\
 		Utils/manage_quotes
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))

@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern int	g_status;
+
 static void	get_sig(int signum, siginfo_t *info, void *context)
 {
 	(void)info;
@@ -23,14 +25,10 @@ static void	get_sig(int signum, siginfo_t *info, void *context)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-		//ft_printf("\033[1mminishell@42\033[0m:~\033[0;31m$\033[0m ");
 	}
 	if (signum == SIGQUIT)
-	{
-		rl_on_new_line();
-		rl_redisplay();
-		ft_printf("  \b\b");
-	}
+		ft_printf("\b\b  \b\b");
+	g_status = 128 + signum;
 }
 
 void	sig_handler(void)
