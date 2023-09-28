@@ -131,7 +131,7 @@ char 	*get_other(char *str, size_t *i);
 void    get_envp(t_mshell *shell, char **envp);
 void    get_input_loop(t_mshell *shell);
 void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);
-void	exec_forwarding(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out);
+void	exec_forwarding(t_tokens *temp, t_mshell *shell);
 void	get_current_location(t_mshell *shell);
 void	print_env(t_envp *lst);
 void	create_envp_list(t_mshell *shell, t_var *var);

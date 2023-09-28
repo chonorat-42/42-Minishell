@@ -30,6 +30,9 @@ size_t	count_successive_pipes(t_tokens *temp)
 		else
 			return (res);
 	}
+	
+	ft_printf("number of successive pipes : %d\n\n", res);
+
 	return (res);
 }
 
@@ -50,7 +53,7 @@ void	create_child(int fd_in, int fd_out, t_tokens *temp, t_mshell *shell)
 			dup2(fd_out, 1);
 			close(fd_out);
 		}
-		exec_forwarding(temp, shell, 0, 1);
+		exec_forwarding(temp, shell);
 		waitpid(pid, NULL, 0);
 		exit(0);
 	}
@@ -91,11 +94,11 @@ void	create_child(int fd_in, int fd_out, t_tokens *temp, t_mshell *shell)
 void	fork_pipes(size_t pipes_nbr, t_tokens **temp, int fd_in, t_mshell *shell, int fd_out)
 {
 	size_t	i;
-	int		final_out;
+	// int		final_out;
 	int		pipefd[2];
 
 	(void)fd_out;
-	final_out = get_final_out(*temp);
+	// final_out = get_final_out(*temp);
 	i = 0;
 	while (i < pipes_nbr)
 	{
@@ -109,7 +112,7 @@ void	fork_pipes(size_t pipes_nbr, t_tokens **temp, int fd_in, t_mshell *shell, i
 	}
 	// if (fd_in != 0)
 	// 	dup2(fd_in, 0);
-	exec_forwarding(*temp, shell, fd_in, final_out);
+	exec_forwarding(*temp, shell);
 }
 
 void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out)

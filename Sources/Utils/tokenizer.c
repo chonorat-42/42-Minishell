@@ -304,7 +304,7 @@ char	*get_next_word(char *str)
 	while (str[i] && is_ws(str[i]) && is_char_in_set(str[i], "\'\""))
 		i++;
 	j = i;
-	while (str[i] && (!is_ws(str[i]) && !is_char_in_set(str[i], "\'\"")))
+	while (str[i] && (!is_ws(str[i]) && !is_char_in_set(str[i], "\'\"<>")))
 		i++;
 	res = ft_substr(str, j, i - j);
 	return (res);
@@ -356,7 +356,106 @@ void	get_fd_out(t_tokens **tok)
 		free(outfile);
 }
 
-void	get_fd_in(t_tokens **tok)
+char	*get_first_word(char *str)
+{
+	size_t	i;
+	size_t	j;
+	char	*res;
+
+	i = 0;
+	while (str[i] && is_ws(str[i]))
+		i++;
+	j = i;
+	while (str[i] && !is_ws(str[i]))
+		i++;
+	res = ft_substr(str, j, i - j);
+	return (res);
+}
+
+// char	*get_before_heredoc(char *str, )
+
+// char *get_after_heredoc(char *str, char *eof)
+// {
+// 	size_t	i;
+// 	char	*substr_infile;
+// 	char	*res;
+
+// 	i = 0;
+// 	substr_infile = (ft_strnstr(str, eof, ft_strlen(str)));
+// 	ft_printf("substr infile = %s\n\n", substr_infile);
+// 	while (is_ws(substr_infile[i]))
+// 		i++;
+// 	res = ft_substr(substr_infile, i, ft_strlen(substr_infile));
+// 	free(substr_infile);
+// 	return (res);
+// }
+
+void	delete_heredoc(t_tokens **tok)
+{
+	size_t	i;
+	size_t	j;
+	char	*before;
+	char	*after;
+	char	*result;
+
+	i = 0;
+	j = 0;
+	while ((*tok)->content[i])
+	{
+		if (is_char_in_set((*tok)->content[i], "\'\""))
+			move_to_next_quote((*tok)->content, &i, (*tok)->content[i]);
+		else if ((*tok)->content[i] == '<' && (*tok)->content[i + 1] == '<')
+		{
+			if (i == 0)
+				before = ft_strdup("");
+			else
+				before = ft_substr((*tok)->content, j, i - j);
+			while ((*tok)->content[i] == '<')
+				i++;
+			while (is_ws((*tok)->content[i]))
+				i++;
+			while ((*tok)->content[i] && !is_ws((*tok)->content[i]) && !is_char_in_set((*tok)->content[i], "<>\'\""))
+				i++;
+			if (!(*tok)->content[i])
+				after = ft_strdup("");
+			else
+				after = ft_substr((*tok)->content, i, ft_strlen((*tok)->content));
+		}
+		else
+			i++;
+	}
+	if (before[0] && after[0])
+	{
+		result = strjoin_free_first(before, " ");
+		result = strjoin_free_both(before, after);
+		free((*tok)->content);
+		(*tok)->content = ft_strdup(result);
+		free(result);
+		return ;
+	}
+	else if (!before[0] && after[0])
+	{
+		free((*tok)->content);
+		(*tok)->content = ft_strdup(after);
+	}
+	else
+	{
+		free((*tok)->content);
+		(*tok)->content = ft_strdup(before);
+	}
+	ft_printf("in delete heredoc, new content = %s\n\n", ((*tok)->content));
+}
+void	expand_into_heredoc(t_tokens **tok)
+{
+	char	*heredoc;
+
+	heredoc = ft_strdup("< /tmp/temp.heredoc");
+	delete_heredoc(tok);
+	(*tok)->content = strjoin_free_first((*tok)->content, " ");
+	(*tok)->content = strjoin_free_both((*tok)->content, heredoc);
+}
+
+void	get_fd_in(t_tokens **tok, t_envp *envp)
 {
 	size_t	i;
 	size_t	j;
@@ -389,9 +488,14 @@ void	get_fd_in(t_tokens **tok)
 	}
 	if (infile && !ft_strcmp(redir, "<"))
 		(*tok)->fd_in = open(infile, O_RDWR);
-	/*HEREDOC TO ADD*/
-	// else if (outfile && !ft_strcmp(redir, ">>"))
-	// 	(*tok)->fd_out = open(outfile, O_APPEND | O_RDWR, 0666);
+	else if (infile && !ft_strcmp(redir, "<<"))
+	{
+		(*tok)->fd_in = open("/tmp/temp.heredoc", O_RDWR | O_CREAT, 0666);
+		heredoc(infile, (*tok)->fd_in, envp);
+		(*tok)->fd_in = 0;
+		expand_into_heredoc(tok);
+		get_fd_in(tok, envp);
+	}
 	else
 		(*tok)->fd_in = 0;
 	if (redir)
@@ -400,13 +504,13 @@ void	get_fd_in(t_tokens **tok)
 		free(infile);
 }
 
-void	get_fds(t_tokens *lst)
+void	get_fds(t_tokens *lst, t_envp *envp)
 {
 	t_tokens	*tmp;
 	tmp = lst;
 	while (tmp)
 	{
-		get_fd_in(&tmp);
+		get_fd_in(&tmp, envp);
 		get_fd_out(&tmp);
 		tmp = tmp->next;
 	}
@@ -558,6 +662,7 @@ char	*remove_fd(char *str, char c)
 	remove_fd_lst(&lst, c);
 	res = join_dlist(lst);
 	free_dlist(&lst);
+	free(str);
 	return (res);
 }
 
@@ -719,18 +824,22 @@ int	tokenizer(t_mshell *shell)
 {
 	shell->tok_lst = NULL;
 	split_on_pipes(shell, shell->input);
-	get_fds(shell->tok_lst);
+	get_fds(shell->tok_lst, shell->envp);
 	remove_redirect(shell->tok_lst);
 
-	ft_printf("_____________FINAL TKNS LIST__________\n");
-	print_tkns_down(shell->tok_lst);
-	ft_printf("_______________________________________\n");
+	// ft_printf("_____________FINAL TKNS LIST__________\n");
+	// print_tkns_down(shell->tok_lst);
+	// ft_printf("_______________________________________\n");
 
 	create_cmd_arr(&shell->tok_lst);
-	ft_printf("ALL ARRAYS IN THE LIST :\n");
-	print_lst_arr(shell->tok_lst);
+	// ft_printf("ALL ARRAYS IN THE LIST :\n");
+	// print_lst_arr(shell->tok_lst);
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
+
+	// ft_printf("_____________FINAL TKNS LIST, after give type__________\n");
+	// print_tkns_down(shell->tok_lst);
+	// ft_printf("_______________________________________\n");
 
 	return (0);
 }
