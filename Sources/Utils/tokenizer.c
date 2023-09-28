@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 int lst_type_missing(t_tokens **lst)
 {
 	t_tokens *temp;
@@ -101,50 +100,6 @@ void	give_type(t_tokens **lst)
 		else
 			temp->type = CMD;
 		temp = temp->next;
-	}
-}
-
-void give_typeB(t_tokens **lst)
-{
-	t_tokens *temp;
-	temp = *lst;
-
-	while (temp)
-	{
-		if (!ft_strcmp(temp->content, "|"))
-			temp->type = (int)PIPE;
-		else if (!ft_strcmp(temp->content, ">>"))
-			temp->type = (int)APPEND;
-		else if (!ft_strcmp(temp->content, ">"))
-			temp->type = (int)RCHEVRON;
-		else if (!ft_strcmp(temp->content, "<<"))
-			temp->type = (int)HEREDOC;
-		else if (!ft_strcmp(temp->content, "<"))
-			temp->type = (int)LCHEVRON;
-		temp = temp->next;
-	}
-	temp = *lst;
-	while (lst_type_missing(lst))
-	{
-		while (temp)
-		{
-			if (temp->type == 0)
-			{
-				if (temp->prev && (temp->prev->type == RCHEVRON || temp->prev->type == APPEND))
-					temp->type = OUTFILE;
-				else if (temp->prev && (temp->prev->type == LCHEVRON))
-					temp->type = INFILE;
-				else if (temp->prev && (temp->prev->type == HEREDOC))
-					temp->type = HEREDEL;
-				else if (temp->content[0] == '\'' || temp->content[0] == '\"')
-					temp->type = STRING;
-				else if ((temp->next && temp->next->type == PIPE) || (temp->prev && temp->prev->type == PIPE))
-					temp->type = CMD;
-				else
-					temp->type = CMD;
-			}
-			temp = temp->next;
-		}
 	}
 }
 
@@ -286,10 +241,7 @@ void	split_on_pipes(t_mshell *shell, char *str)
 			i++;
 		}
 		else
-		{
 			i++;
-		}
-		
 	}
 	create_token(shell, i, j);
 }
@@ -308,7 +260,6 @@ char	*get_next_word(char *str)
 		i++;
 	res = ft_substr(str, j, i - j);
 	return (res);
-	
 }
 
 void	get_fd_out(t_tokens **tok)
@@ -372,24 +323,6 @@ char	*get_first_word(char *str)
 	return (res);
 }
 
-// char	*get_before_heredoc(char *str, )
-
-// char *get_after_heredoc(char *str, char *eof)
-// {
-// 	size_t	i;
-// 	char	*substr_infile;
-// 	char	*res;
-
-// 	i = 0;
-// 	substr_infile = (ft_strnstr(str, eof, ft_strlen(str)));
-// 	ft_printf("substr infile = %s\n\n", substr_infile);
-// 	while (is_ws(substr_infile[i]))
-// 		i++;
-// 	res = ft_substr(substr_infile, i, ft_strlen(substr_infile));
-// 	free(substr_infile);
-// 	return (res);
-// }
-
 void	delete_heredoc(t_tokens **tok)
 {
 	size_t	i;
@@ -443,7 +376,6 @@ void	delete_heredoc(t_tokens **tok)
 		free((*tok)->content);
 		(*tok)->content = ft_strdup(before);
 	}
-	ft_printf("in delete heredoc, new content = %s\n\n", ((*tok)->content));
 }
 void	expand_into_heredoc(t_tokens **tok)
 {
@@ -826,137 +758,125 @@ int	tokenizer(t_mshell *shell)
 	split_on_pipes(shell, shell->input);
 	get_fds(shell->tok_lst, shell->envp);
 	remove_redirect(shell->tok_lst);
-
-	// ft_printf("_____________FINAL TKNS LIST__________\n");
-	// print_tkns_down(shell->tok_lst);
-	// ft_printf("_______________________________________\n");
-
 	create_cmd_arr(&shell->tok_lst);
-	// ft_printf("ALL ARRAYS IN THE LIST :\n");
-	// print_lst_arr(shell->tok_lst);
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
-
-	// ft_printf("_____________FINAL TKNS LIST, after give type__________\n");
-	// print_tkns_down(shell->tok_lst);
-	// ft_printf("_______________________________________\n");
-
 	return (0);
 }
 
-int tokenizerC(t_mshell *shell)
-{
-	size_t	i;
-	size_t	j;
-	char	c;
+// int tokenizerC(t_mshell *shell)
+// {
+// 	size_t	i;
+// 	size_t	j;
+// 	char	c;
 
-	i = 0;
-	j = 0;
-	shell->tok_lst = NULL;
-	while (shell->input[i])
-	{
-		while (shell->input[i] && !is_sep(shell->input[i]))
-			i++;
-		if (create_token(shell, i, j) == 1)
-			return (1);
-		if (is_sep(shell->input[i]))
-		{
-			if (is_char_in_set(shell->input[i], "<"))
-			{
-				j = i;
-				while (shell->input[i] == '<')
-					i++;
-				create_token(shell, i, j);
-				j = i;
-				i++;
-				while (shell->input[i] && !is_ws(shell->input[i]))
-				{
-					/*skips chars between quotes*/
-					if (is_char_in_set(shell->input[i], "\'\""))
-					{
-						c = shell->input[i];
-						while (shell->input[i] && shell->input[i] != c)
-							i++;
-						i++;
-					}
-					i++;
-				}
-				create_token(shell, i, j);
-				j = i;
-			}
-			else
-			{
-				j = i;
-				while (shell->input[i] && is_sep(shell->input[i]))
-					i++;
-				if (create_token(shell, i, j) == 1)
-					return (1);
-			}
-		}
-		else
-		{
-			j = i;
-			while (shell->input[i] && !is_sep(shell->input[i]))
-			{
-				if (is_char_in_set(shell->input[i], "\'\""))
-				{
-					c = shell->input[i];
-					while (shell->input[i] && shell->input[i] != c)
-						i++;
-					i++;
-				}
-			}
-			if (create_token(shell, i, j) == 1)
-				return (1);
-		}
-		j = i;
-		if (shell->input[i])
-			i++;
-	}
-	give_type(&shell->tok_lst);
-	return (0);
-}
+// 	i = 0;
+// 	j = 0;
+// 	shell->tok_lst = NULL;
+// 	while (shell->input[i])
+// 	{
+// 		while (shell->input[i] && !is_sep(shell->input[i]))
+// 			i++;
+// 		if (create_token(shell, i, j) == 1)
+// 			return (1);
+// 		if (is_sep(shell->input[i]))
+// 		{
+// 			if (is_char_in_set(shell->input[i], "<"))
+// 			{
+// 				j = i;
+// 				while (shell->input[i] == '<')
+// 					i++;
+// 				create_token(shell, i, j);
+// 				j = i;
+// 				i++;
+// 				while (shell->input[i] && !is_ws(shell->input[i]))
+// 				{
+// 					/*skips chars between quotes*/
+// 					if (is_char_in_set(shell->input[i], "\'\""))
+// 					{
+// 						c = shell->input[i];
+// 						while (shell->input[i] && shell->input[i] != c)
+// 							i++;
+// 						i++;
+// 					}
+// 					i++;
+// 				}
+// 				create_token(shell, i, j);
+// 				j = i;
+// 			}
+// 			else
+// 			{
+// 				j = i;
+// 				while (shell->input[i] && is_sep(shell->input[i]))
+// 					i++;
+// 				if (create_token(shell, i, j) == 1)
+// 					return (1);
+// 			}
+// 		}
+// 		else
+// 		{
+// 			j = i;
+// 			while (shell->input[i] && !is_sep(shell->input[i]))
+// 			{
+// 				if (is_char_in_set(shell->input[i], "\'\""))
+// 				{
+// 					c = shell->input[i];
+// 					while (shell->input[i] && shell->input[i] != c)
+// 						i++;
+// 					i++;
+// 				}
+// 			}
+// 			if (create_token(shell, i, j) == 1)
+// 				return (1);
+// 		}
+// 		j = i;
+// 		if (shell->input[i])
+// 			i++;
+// 	}
+// 	give_type(&shell->tok_lst);
+// 	return (0);
+// }
 
-int tokenizerB(t_mshell *shell)
-{
-	size_t	i;
-	size_t	j;
+// int tokenizerB(t_mshell *shell)
+// {
+// 	size_t	i;
+// 	size_t	j;
 
-	i = 0;
-	j = 0;
+// 	i = 0;
+// 	j = 0;
 
-	shell->tok_lst = NULL;
-	while (shell->input[i])
-	{
-		while (shell->input[i] && !is_sep(shell->input[i]))
-			i++;
-		if (create_token(shell, i, j) == 1)
-			return (1);
-		if (is_sep(shell->input[i]))
-		{
-			if (shell->input[i] == '\'' || shell->input[i] == '\"')
-			{
-				j = i;
-				i = next_quote(shell->input, j, shell->input[i]);
-				if (shell->input[i] == '\0')
-					return (ft_printf("Error\nUnclosed quotes"), 1);
-				i++;
-				create_token(shell, i, j);
-			}
-			else
-			{
-				j = i;
-				while (shell->input[i] && is_sep(shell->input[i]))
-					i++;
-				if (create_token(shell, i, j) == 1)
-					return (1);
-			}
-		}
-		j = i;
-		if (shell->input[i])
-			i++;
-	}
-	give_type(&shell->tok_lst);
-	print_tkns_down(shell->tok_lst);
-	return (0);
-}
+// 	shell->tok_lst = NULL;
+// 	while (shell->input[i])
+// 	{
+// 		while (shell->input[i] && !is_sep(shell->input[i]))
+// 			i++;
+// 		if (create_token(shell, i, j) == 1)
+// 			return (1);
+// 		if (is_sep(shell->input[i]))
+// 		{
+// 			if (shell->input[i] == '\'' || shell->input[i] == '\"')
+// 			{
+// 				j = i;
+// 				i = next_quote(shell->input, j, shell->input[i]);
+// 				if (shell->input[i] == '\0')
+// 					return (ft_printf("Error\nUnclosed quotes"), 1);
+// 				i++;
+// 				create_token(shell, i, j);
+// 			}
+// 			else
+// 			{
+// 				j = i;
+// 				while (shell->input[i] && is_sep(shell->input[i]))
+// 					i++;
+// 				if (create_token(shell, i, j) == 1)
+// 					return (1);
+// 			}
+// 		}
+// 		j = i;
+// 		if (shell->input[i])
+// 			i++;
+// 	}
+// 	give_type(&shell->tok_lst);
+// 	print_tkns_down(shell->tok_lst);
+// 	return (0);
+// }
