@@ -140,7 +140,11 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 		if (!child)
 			bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
 		else
-			waitpid(child, NULL, 0);
+			waitpid(child, &g_status, 0);
+		if (WIFEXITED(g_status))
+			g_status = WEXITSTATUS(g_status);
+		else if (WIFSIGNALED(g_status))
+			g_status = WTERMSIG(g_status);
 		if (temp->cmd_arr)
 			free_arr(temp->cmd_arr);
 		temp->cmd_arr = NULL;
@@ -263,6 +267,8 @@ void	execution(t_mshell *shell)
 			exec_forwarding(temp, shell);
 		temp = temp->next;
 	}
+	free(shell->input);
+	ft_free_tokens(&shell->tok_lst);
 }
 
 // void executionB(t_mshell *shell)
