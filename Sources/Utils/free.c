@@ -28,6 +28,7 @@ void	free_arr(char **arr)
 		j++;
 	}
 	free(arr);
+	arr = NULL;
 }
 
 void	free_dlist(t_dlist **head)
@@ -44,7 +45,7 @@ void	free_dlist(t_dlist **head)
 		*head = temp->next;
 		free(temp);
 	}
-
+	*(head) = NULL;
 }
 
 void	ft_free_tokens(t_tokens	**head)
@@ -59,10 +60,13 @@ void	ft_free_tokens(t_tokens	**head)
 			free((*head)->content);
 		if ((*head)->cmd_arr)
 			free_arr((*head)->cmd_arr);
+		if ((*head)->dlst)
+			free_dlist(&(*head)->dlst);
 		temp = *head;
 		*head = temp->next;
 		free(temp);
 	}
+	*(head) = NULL;
 }
 
 void	free_envp(t_envp **head)

@@ -118,6 +118,9 @@ void	fork_pipes(size_t pipes_nbr, t_tokens **temp, int fd_in, t_mshell *shell, i
 void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out)
 {
 	size_t	pipes_nbr;
+
+	ft_printf("in handle pipes, fd_in = %d, fd_out = %d\n\n", fd_in, fd_out);
+
 	pipes_nbr = count_successive_pipes(*temp);
 	fork_pipes(pipes_nbr, temp, fd_in, shell, fd_out);
 }
