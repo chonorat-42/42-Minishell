@@ -22,7 +22,7 @@ void	heredoc(char *delimiter, int fd_in, t_envp *envp)
 	while (1)
 	{
 		line = readline(">");
-		if (!strcmp(line, delimiter))
+		if (!ft_strcmp(line, delimiter))
 		{
 			ft_dprintf(fd_in, "%s", result);
 			free(result);
