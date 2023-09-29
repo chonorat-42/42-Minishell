@@ -151,9 +151,9 @@ int		create_export(t_envp **export, t_envp *envp);
 void	free_export(t_envp **export);
 int		var_exist(t_mshell *shell, char *var);
 
-void		exit_case(t_mshell *shell, char *cmd);
+void		exit_case(t_mshell *shell, char **cmd);
 long long	ll_atoi(const char *str);
-int			only_digit(char *cmd);
+int			only_digit(char *cmd, char **src);
 char		*get_exit(char *cmd);
 
 void		get_svar(t_mshell *shell);

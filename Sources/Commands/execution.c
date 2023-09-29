@@ -123,7 +123,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 	else if (!ft_strcmp(temp->cmd_arr[0], "cd"))
 		cd_case(shell, temp->content);
 	else if (!ft_strcmp(temp->cmd_arr[0], "exit"))
-		return (ft_putendl_fd("exit", 1), free_struct(shell), exit(0));
+		exit_case(shell, temp->cmd_arr);
 	else if (!ft_strcmp(temp->cmd_arr[0], "env"))
 		env_case(shell, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "unset"))
