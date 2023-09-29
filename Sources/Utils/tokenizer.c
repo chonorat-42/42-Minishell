@@ -377,6 +377,7 @@ void	delete_heredoc(t_tokens **tok)
 		(*tok)->content = ft_strdup(before);
 	}
 }
+
 void	expand_into_heredoc(t_tokens **tok)
 {
 	char	*heredoc;
@@ -551,7 +552,6 @@ char	*remove_fd(char *str, char c)
 	size_t 	j;
 	t_dlist *lst;
 	char	*res;
-	char	q;
 
 	i = 0;
 	j = 0;
@@ -560,8 +560,11 @@ char	*remove_fd(char *str, char c)
 	{
 		if (is_char_in_set(str[i], "\'\""))
 		{
-			q = str[i];
-			move_to_next_quote(str, &i, q);
+			move_to_next_quote(str, &i, str[i]);
+			i++;
+			while (is_ws(str[i]))
+				i++;
+			// ft_printf("IN REMMOVE FD, str[i] = %c, str[i + 1] = %c\n\n", str[i], str[i + 1]);
 		}
 		else if (is_ws(str[i]))
 		{
@@ -764,17 +767,41 @@ void	free_tokens_dlist(t_tokens **lst)
 	}
 }
 
+void	manage_quotes_arr(t_tokens	**lst)
+{
+	size_t		i;
+	t_tokens	*temp2;
+	char		*temp;
+
+	temp2 = *lst;
+	while (temp2)
+	{
+		i = 0;
+		while (temp2->cmd_arr[i])
+		{
+			temp = remove_quotes(temp2->cmd_arr[i]);
+			free(temp2->cmd_arr[i]);
+			temp2->cmd_arr[i] = ft_strdup(temp);
+			free(temp);
+			i++;
+		}
+		temp2 = temp2->next;
+	}
+}
+
 int	tokenizer(t_mshell *shell)
 {
 	shell->tok_lst = NULL;
 	split_on_pipes(shell, shell->input);
 	get_fds(shell->tok_lst, shell->envp);
 	remove_redirect(shell->tok_lst);
+	print_tkns_down(shell->tok_lst);
 	create_cmd_arr(&shell->tok_lst);
+	manage_quotes_arr(&shell->tok_lst);
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
 
-	// print_tkns_down(shell->tok_lst);
+	print_single_token(shell->tok_lst);
 
 	return (0);
 }

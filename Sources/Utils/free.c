@@ -52,8 +52,8 @@ void	ft_free_tokens(t_tokens	**head)
 {
 	t_tokens	*temp;
 
-	if (!*head)
-		return ;
+	// if (!*head)
+	// 	return ;
 	while (*head)
 	{
 		if ((*head)->content)
@@ -66,6 +66,7 @@ void	ft_free_tokens(t_tokens	**head)
 		*head = temp->next;
 		free(temp);
 	}
+	free(*head);
 	*(head) = NULL;
 }
 
