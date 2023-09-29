@@ -594,21 +594,31 @@ char	*remove_fd(char *str, char c)
 	remove_fd_lst(&lst, c);
 	res = join_dlist(lst);
 	free_dlist(&lst);
-	free(str);
 	return (res);
 }
 
 void	remove_redirect(t_tokens *lst)
 {
 	t_tokens	*temp;
+	char		*temp_cnt;
 
 	temp = lst;
 	while (temp)
 	{
 		if (temp->fd_in != STDIN_FILENO)
-			temp->content = remove_fd(temp->content, '<');
+		{
+			temp_cnt = ft_strdup(temp->content);
+			free(temp->content);
+			temp->content = remove_fd(temp_cnt, '<');
+			ft_free_null(temp_cnt);
+		}
 		if (temp->fd_out != STDOUT_FILENO)
-			temp->content = remove_fd(temp->content, '>');
+		{
+			temp_cnt = ft_strdup(temp->content);
+			free(temp->content);
+			temp->content = remove_fd(temp_cnt, '>');
+			ft_free_null(temp_cnt);
+		}
 		temp = temp->next;
 	}
 }
@@ -676,6 +686,7 @@ char	**list_into_arr(t_dlist *lst)
 	size_t	size;
 	size_t	j;
 
+	res = NULL;
 	temp = lst;
 	size = dlst_size(lst);
 	res = malloc(sizeof(char *) * (size + 1));
@@ -713,6 +724,7 @@ void	create_cmd_arr(t_tokens **tk_lst)
 		{
 			temp->dlst = NULL;
 			to_trim = ft_strtrim(temp->content, " \n\t\b");
+			ft_free_null(temp->content);
 			temp->content = ft_strdup(to_trim);
 			free(to_trim);
 			split_words_into_lst(&temp->dlst, temp->content);
@@ -761,6 +773,9 @@ int	tokenizer(t_mshell *shell)
 	create_cmd_arr(&shell->tok_lst);
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
+
+	// print_tkns_down(shell->tok_lst);
+
 	return (0);
 }
 

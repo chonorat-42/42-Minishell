@@ -147,47 +147,47 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 	}	
 }
 
-void	exec_forwardingB(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
-{
-	pid_t	child;
+// void	exec_forwardingB(t_tokens *temp, t_mshell *shell, int fd_in, int fd_out)
+// {
+// 	pid_t	child;
 
-	// ft_printf("in exec forwarding, temp->content = %s\n\n", temp->content);
+// 	// ft_printf("in exec forwarding, temp->content = %s\n\n", temp->content);
 
-	if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
-		echo_case(temp->content, fd_out);
-	else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
-		cd_case(shell, temp->content);
-	else if (!ft_strncmp(temp->content, "exit", 4))
-		exit_case(shell, temp->content);
-	else if (!ft_strcmp(temp->content, "env"))
-		env_case(shell, fd_out);
-	else if (!ft_strncmp(temp->content, "unset", 5) && is_ws(temp->content[5]))
-		unset_case(shell, temp->content);
-	else if (!ft_strcmp(temp->content, "pwd"))
-		pwd_case(shell, fd_out);
-	else if (ft_strncmp(temp->content, "export", 6) == 0)
-		export_case(shell, temp->content);
-	else
-	{
-		temp->cmd_arr = ft_split(temp->content, ' ');
-		if (!temp->cmd_arr)
-			return (free_struct(shell), exit(1));
-		child = fork();
-		if (child == -1)
-			return(free_struct(shell), exit(2));
-		if (!child)
-			bin_exec(shell, temp->cmd_arr, fd_in, fd_out);
-		else
-			waitpid(child, &g_status, 0);
-		if (WIFEXITED(g_status))
-			g_status = WEXITSTATUS(g_status);
-		else if (WIFSIGNALED(g_status))
-			g_status = WTERMSIG(g_status);
-		if (temp->cmd_arr)
-			free_arr(temp->cmd_arr);
-		temp->cmd_arr = NULL;
-	}		
-}
+// 	if (!ft_strncmp((const char *)temp->content, "echo", 4) && ((!temp->content[4]) || (temp->content[4] && is_ws(temp->content[4]))))
+// 		echo_case(temp->content, fd_out);
+// 	else if (!ft_strncmp(temp->content, "cd", 2) && (is_ws(temp->content[2]) || !temp->content[2]))
+// 		cd_case(shell, temp->content);
+// 	else if (!ft_strncmp(temp->content, "exit", 4))
+// 		exit_case(shell, temp->content);
+// 	else if (!ft_strcmp(temp->content, "env"))
+// 		env_case(shell, fd_out);
+// 	else if (!ft_strncmp(temp->content, "unset", 5) && is_ws(temp->content[5]))
+// 		unset_case(shell, temp->content);
+// 	else if (!ft_strcmp(temp->content, "pwd"))
+// 		pwd_case(shell, fd_out);
+// 	else if (ft_strncmp(temp->content, "export", 6) == 0)
+// 		export_case(shell, temp->content);
+// 	else
+// 	{
+// 		temp->cmd_arr = ft_split(temp->content, ' ');
+// 		if (!temp->cmd_arr)
+// 			return (free_struct(shell), exit(1));
+// 		child = fork();
+// 		if (child == -1)
+// 			return(free_struct(shell), exit(2));
+// 		if (!child)
+// 			bin_exec(shell, temp->cmd_arr, fd_in, fd_out);
+// 		else
+// 			waitpid(child, &g_status, 0);
+// 		if (WIFEXITED(g_status))
+// 			g_status = WEXITSTATUS(g_status);
+// 		else if (WIFSIGNALED(g_status))
+// 			g_status = WTERMSIG(g_status);
+// 		if (temp->cmd_arr)
+// 			free_arr(temp->cmd_arr);
+// 		temp->cmd_arr = NULL;
+// 	}		
+// }
 
 int	get_final_out(t_tokens *lst)
 {
@@ -238,6 +238,15 @@ void	remove_heredoc_tkn(t_tokens **lst)
 		remove_next_token(lst);
 }
 
+void	print_single_token(t_tokens *tkn)
+{
+	ft_printf("content = %s\n", tkn->content);
+	ft_printf("cmd_arr :\n_________________\n");
+	print_arr(tkn->cmd_arr);
+	ft_printf("_________________\n");
+	ft_printf("fd_in = %d, fd_out = %d\n", tkn->fd_in, tkn->fd_out);
+}
+
 void	execution(t_mshell *shell)
 {
 	t_tokens	*temp;
@@ -247,12 +256,11 @@ void	execution(t_mshell *shell)
 	{
 		if (temp->next && temp->next->type == PIPE)
 		{
+			print_single_token(temp);
 			handle_pipes(shell, &temp, temp->fd_in, temp->fd_out);
 		}
 		else
-		{
 			exec_forwarding(temp, shell);
-		}
 		temp = temp->next;
 	}
 }

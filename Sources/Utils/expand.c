@@ -173,6 +173,7 @@ char	*expand_envvar(char *str, t_envp *envp)
 			if (!temp)
 				temp = ft_strdup("");
 			join = strjoin_free_both(join, get_envvar_content(envp, temp));
+			ft_free_null(temp);
 			if (res)
 				res = strjoin_free_first(res, join);
 			else
@@ -191,15 +192,9 @@ char	*expand_envvar(char *str, t_envp *envp)
 		}
 	}
 	if (join)
-	{
-		free(join);
-		join = NULL;
-	}
+		ft_free_null(join);
 	if (temp)
-	{
-		free(temp);
-		temp = NULL;
-	}
+		ft_free_null(temp);
 	return (res);
 }
 
