@@ -115,26 +115,24 @@ static void	sort_env(t_mshell *shell)
 	}
 }
 
-static int	is_var(char *cmd)
+static int	is_var(char *arg)
 {
 	int	index;
 
-	if (!is_ws(cmd[6]))
-		return (0);
-	if (!ft_isalpha(cmd[7]) && !is_char_in_set(cmd[7], "_"))
+	if (!ft_isalpha(arg[0]) && !is_char_in_set(arg[0], "_"))
 	{
 		g_status = 1;
-		return (ft_dprintf(2, "minishell: export: `%s': not a valid identifier\n", &cmd[7]), 0);
+		return (builtin_error("export", arg, 0), 0);
 	}
-	index = 8;
-	while (cmd[index])
+	index = 1;
+	while (arg[index])
 	{
-		if (cmd[index] == '=')
+		if (arg[index] == '=')
 			return (1);
-		else if (!ft_isalnum(cmd[index]) && !is_char_in_set(cmd[index], "_"))
+		else if (!ft_isalnum(arg[index]) && !is_char_in_set(arg[index], "_"))
 		{
 			g_status = 1;
-			return (ft_dprintf(2, "minishell: export: `%s': not a valid identifier\n", &cmd[7]), 0);
+			return (builtin_error("export", arg, 0), 0);
 		}
 		index++;
 	}
@@ -159,23 +157,23 @@ static void	add_to_env(t_mshell *shell, t_var *new)
 	free(new->name);
 }
 
-static int	split_var(char *var, t_var *new)
+static int	split_var(char *cmd, t_var *new)
 {
 	int	index;
 
-	index = find_char_index(var, '=');
+	index = find_char_index(cmd, '=');
 	if (index > 0)
 	{
-		new->name = ft_substr(var, 0, index);
+		new->name = ft_substr(cmd, 0, index);
 		if (!new->name)
 			return (0);
-		new->content = ft_substr(&var[index + 1], 0, ft_strlen(&var[index + 1]));
+		new->content = ft_substr(&cmd[index + 1], 0, ft_strlen(&cmd[index + 1]));
 		if (!new->content)
 			return (free(new->name), 0);
 	}
 	else
 	{
-		new->name = ft_strdup(var);
+		new->name = ft_strdup(cmd);
 		if (!new->name)
 			return (0);
 	}
@@ -197,53 +195,29 @@ static void	get_readable(char *var, t_var *new)
 
 static void	get_var(t_mshell *shell, char *cmd)
 {
-	int		start;
-	int		end;
-	char	*var;
 	t_var	new;
 
-	start = 0;
-	end = 1;
-	var = NULL;
-	while (cmd[start] && cmd[start] != '=')
-		start++;
-	while (!is_ws(cmd[start - 1]))
-		start--;
-	while (cmd[start + end] && !is_ws(cmd[start + end]))
-		end++;
-	var = ft_substr(cmd, start, end);
-	if (!var)
-		return (free_struct(shell), exit(1));
-	get_readable(var, &new);
-	if (!split_var(var, &new))
+	get_readable(cmd, &new);
+	if (!split_var(cmd, &new))
 		(free_struct(shell), exit(1));
-	free(var);
 	add_to_env(shell, &new);
 }
 
-void	export_case(t_mshell *shell, char *cmd)
+void	export_case(t_mshell *shell, char **cmd, int fd)
 {
-	char	**var_arr;
-	char	*var;
-	int		index;
+	int	index;
 
-	var_arr = ft_split(cmd, ' ');
-	var = NULL;
 	index = 1;
-	while (var_arr[index])
+	while (cmd[index])
 	{
-		var = ft_strjoin("export ", var_arr[index]);
-		if (count_arr_size(var_arr) != 1 && is_var(var))
-			get_var(shell, var);
+		if (is_var(cmd[index]))
+			get_var(shell, cmd[index]);
 		index++;
-		free(var);
-		var = NULL;
 	}
-	if (count_arr_size(var_arr) == 1 && ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
+	if (count_arr_size(cmd) == 1)
 	{
 		sort_env(shell);
-		print_export(shell->export);
+		print_export(shell->export, fd);
 		free_envp(&shell->export);
 	}
-	free_arr(var_arr);
 }

@@ -35,7 +35,7 @@ remake parsing
 3) Expand
 */
 
-int	g_status;
+long long	g_status;
 
 void	init_shell(t_mshell *shell)
 {

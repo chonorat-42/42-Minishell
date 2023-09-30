@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern int g_status;
+extern long long g_status;
 
 char *get_exec(char *cmd)
 {
@@ -48,6 +48,7 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 {
 	size_t	j;
 	char	*temp;
+	char	*trim;
 	char	*exec;
 	char	**exec_split;
 
@@ -57,7 +58,9 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 		dup2(fd_in, STDIN_FILENO);
 	j = -1;
 	get_current_location(shell);
-	temp = ft_strjoin(shell->current_loc, ft_strtrim(cmd_arr[0], "."));
+	trim = ft_strtrim(cmd_arr[0], ".");
+	temp = ft_strjoin(shell->current_loc, trim);
+	free(trim);
 	if (execve(temp, cmd_arr, shell->menvp) == -1)
 		free(temp);
 	if (ft_strchr(cmd_arr[0], '/'))
@@ -130,8 +133,8 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 		unset_case(shell, temp->content);
 	else if (!ft_strcmp(temp->content, "pwd"))
 		pwd_case(shell, temp->fd_out);
-	else if (!ft_strcmp(temp->content, "export"))
-		export_case(shell, temp->content);
+	else if (!ft_strcmp(temp->cmd_arr[0], "export"))
+		export_case(shell, temp->cmd_arr, temp->fd_out);
 	else
 	{
 		child = fork();
@@ -140,7 +143,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 		if (!child)
 			bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
 		else
-			waitpid(child, &g_status, 0);
+			waitpid(child, (int *)&g_status, 0);
 		if (WIFEXITED(g_status))
 			g_status = WEXITSTATUS(g_status);
 		else if (WIFSIGNALED(g_status))
