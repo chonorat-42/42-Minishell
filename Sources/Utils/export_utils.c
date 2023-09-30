@@ -26,21 +26,21 @@ int	var_exist(t_mshell *shell, char *var)
 	return (0);
 }
 
-void	print_export(t_envp *export)
+void	print_export(t_envp *export, int fd)
 {
 	while (export)
 	{
 		if (export->var.readable == 1)
 		{
-			ft_putstr_fd("declare -x ", 1);
-			ft_putstr_fd(export->var.name, 1);
+			ft_putstr_fd("declare -x ", fd);
+			ft_putstr_fd(export->var.name, fd);
 			if (export->var.content)
 			{
-				ft_putstr_fd("=\"", 1);
-				ft_putstr_fd(export->var.content, 1);
-				ft_putstr_fd("\"", 1);
+				ft_putstr_fd("=\"", fd);
+				ft_putstr_fd(export->var.content, fd);
+				ft_putstr_fd("\"", fd);
 			}
-			ft_putchar_fd('\n', 1);
+			ft_putchar_fd('\n', fd);
 		}
 		export = export->next;
 	}

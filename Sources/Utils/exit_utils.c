@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 23:31:39 by chonorat          #+#    #+#             */
-/*   Updated: 2023/09/30 00:23:52 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/09/30 14:41:34 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,42 +51,44 @@ long long	ll_atoi(const char *str)
 	return (value * sign);
 }
 
-char	*get_exit(char *cmd)
+static int	get_exit(char *arg, int *index)
 {
-	int		index;
-	char	*exit;
+	int	negative;
 
-	index = 0;
-	exit = NULL;
-	while (cmd[index + 1] && cmd[index] == '0')
-		index++;
-	if (cmd[index])
-		exit = ft_strdup(&cmd[index]);
-	return (exit);
+	negative = 0;
+	if (arg[*index] == '-')
+	{
+		negative = 1;
+		(*index)++;
+	}
+	while (arg[*index + 1] && arg[*index] == '0')
+		(*index)++;
+	return (negative);
 }
 
-int	only_digit(char *cmd, char **src)
+int	only_digit(char *arg)
 {
 	int	index;
+	int	negative;
+	int	value;
 
 	index = 0;
-	if (cmd[index] == '-' && src[1][0] == '-')
-		index++;
-	else if (cmd[index] == '-' && src[1][0] != '-')
-		return (free(cmd), cmd = NULL, 0);
-	while (cmd[index])
+	negative = get_exit(arg, &index);
+	value = index;
+	while (arg[index])
 	{
-		if (!ft_isdigit(cmd[index]))
-			return (free(cmd), cmd = NULL, 0);
+		if (!ft_isdigit(arg[index]))
+			return (0);
 		index++;
 	}
-	if ((ft_strlen(cmd) > 20))
-		return (free(cmd), cmd = NULL, 0);
-	if (ft_strlen(cmd) == 19)
-		if (ft_strncmp(cmd, MAX_LL, 19) > 0)
-			return (free(cmd), cmd = NULL, 0);
-	if (ft_strlen(cmd) == 20)
-		if (ft_strncmp(cmd, MIN_LL, 20) > 0)
-			return (free(cmd), cmd = NULL, 0);
-	return (free(cmd), cmd = NULL, 1);
+	if ((ft_strlen(&arg[value]) >= 20))
+		return (0);
+	if (ft_strlen(&arg[value]) == 19)
+	{
+		if (ft_strncmp(&arg[value], MAX_LL, 19) > 0 && !negative)
+			return (0);
+		else if (ft_strncmp(&arg[value], MIN_LL, 19) > 0 && negative)
+			return (0);
+	}
+	return (1);
 }

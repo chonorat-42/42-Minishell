@@ -27,7 +27,7 @@
 # define MAX_SIZE 100
 
 # define MAX_LL "9223372036854775807"
-# define MIN_LL "-9223372036854775808"
+# define MIN_LL "9223372036854775808"
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -145,16 +145,17 @@ int		is_char_in_set(char c, char *set);
 void	update_envp(t_mshell *shell);
 void	free_envp(t_envp **head);
 
-void	export_case(t_mshell *shell, char *cmd);
-void	print_export(t_envp *export);
+void	export_case(t_mshell *shell, char **cmd, int fd);
+void	print_export(t_envp *export, int fd);
 int		create_export(t_envp **export, t_envp *envp);
 void	free_export(t_envp **export);
 int		var_exist(t_mshell *shell, char *var);
 
 void		exit_case(t_mshell *shell, char **cmd);
 long long	ll_atoi(const char *str);
-int			only_digit(char *cmd, char **src);
-char		*get_exit(char *cmd);
+int			only_digit(char *arg);
+
+void		builtin_error(char *cmd, char *arg, int error);
 
 void		get_svar(t_mshell *shell);
 
