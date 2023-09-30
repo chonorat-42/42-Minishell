@@ -122,7 +122,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 	pid_t	child;
 
 	if (!ft_strcmp(temp->cmd_arr[0], "echo"))
-		echo_case(temp->content, temp->fd_out);
+		echo_case(temp->cmd_arr, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "cd"))
 		cd_case(shell, temp->content);
 	else if (!ft_strcmp(temp->cmd_arr[0], "exit"))

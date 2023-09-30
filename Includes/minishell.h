@@ -101,7 +101,7 @@ void		print_lst(t_list *lst);
 void		free_struct(t_mshell *shell);
 void		free_arr(char **arr);
 void		bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out);
-void		echo_case(char *prompt, int fd);
+void		echo_case(char **cmd, int fd);
 void		env_case(t_mshell *shell, int fd);
 char		*get_cmd_arguments(char *prompt);
 int 		cd_case(t_mshell *shell, char *cmd);

@@ -42,7 +42,9 @@ char *get_cmd_arguments(char *prompt)
 
 int cd_case(t_mshell *shell, char *cmd)
 {
-	char *temp;
+	(void)shell;
+	(void)cmd;
+	/*char *temp;
 	char *str;
 	int result;
 	size_t i;
@@ -52,6 +54,7 @@ int cd_case(t_mshell *shell, char *cmd)
 	while (cmd[i] && !is_ws(cmd[i]))
 		i++;
 	i++;
+	
 	if (cmd[i] && get_builtin_opt(cmd, &i))
 	{
 		ft_dprintf(STDERR_FILENO, "Error\nCd command does not take any option\n");
@@ -77,6 +80,6 @@ int cd_case(t_mshell *shell, char *cmd)
 		ft_printf("minishell: %d: can't cd to %s\n", shell->cmd_count, str);
 		return (free(str), g_status = 1, 3);
 	}
-	free(str);
+	free(str);*/
 	return (0);
 }
