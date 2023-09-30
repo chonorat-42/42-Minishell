@@ -12,49 +12,42 @@
 
 #include "minishell.h"
 
-char	*get_builtin_opt(char *str, size_t *i)
+static void	get_option(char **cmd, int *option, int *index)
 {
-	size_t j;
-	char *result;
-
-	while (str[*i] && is_ws(str[*i]))
-		(*i)++;
-	if (str[*i] != '-' || (str[*i] == '-' && is_ws(str[*i + 1])))
-		return (NULL);
-	j = *i + 1;
-	while (str[j] && str[j] != ' ')
-		j++;
-	result = ft_substr(str, *i, j - *i);
-	if (!result)
-		return ("0");
-	*i = j;
-	return (result);
+	while (cmd[*index])
+	{
+		if (ft_strncmp(cmd[*index], "-n", ft_strlen(cmd[*index])) == 0
+				&& cmd[*index][0] != '\0')
+		{
+			(*index)++;
+			*option = 1;
+		}
+		else
+			break ;
+	}
 }
 
-void	echo_case(char *prompt, int fd)
+void	echo_case(char **cmd, int fd)
 {
-	char	*option;
-	int		opt;
-	size_t	i;
+	int	option;
+	int	index;
+	int	printed;
+	int	arg_count;
 
-	i = 5;
-	opt = 0;
-	option = get_builtin_opt(prompt, &i);
-	if (option)
+	index = 1;
+	printed = 0;
+	option = 0;
+	arg_count = count_arr_size(cmd);
+	get_option(cmd, &option, &index);
+	while (index < arg_count)
 	{
-		if (ft_strncmp(option, "-n", ft_strlen(option)) == 0)
-		{
-			opt = 1;
-			while (prompt[i] && !is_ws(prompt[i]))
-				i++;
-		}
+		if (printed)
+			ft_putchar_fd(' ', fd);
+		if (cmd[index])
+			ft_putstr_fd(cmd[index], fd);
+		printed = 1;
+		index++;
 	}
-	while (prompt[i] && is_ws(prompt[i]))
-		i++;
-	if (prompt[i] && opt)
-		ft_putstr_fd(&prompt[i], fd);
-	else if (prompt[i] && !opt)
-		ft_putendl_fd(&prompt[i], fd);
-	if (opt)
-		return (free(option));
+	if (!option)
+		ft_putchar_fd('\n', fd);
 }
