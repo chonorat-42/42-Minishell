@@ -782,7 +782,7 @@ void	create_cmd_arr(t_tokens **tk_lst)
 			// ft_free_null(temp->content);
 			// temp->content = ft_strdup(to_trim);
 			// free(to_trim);
-			split_words_into_lst(&temp->dlst, temp->content);
+			// split_words_into_lst(&temp->dlst, temp->content);
 			temp->cmd_arr = list_into_arr(temp->dlst);
 			free_dlist(&temp->dlst);
 			temp = temp->next;
@@ -849,9 +849,6 @@ void	get_redir(char *str, size_t *i, t_dlist **lst)
 	j = *i;
 	while (str[(*i)] && !is_ws(str[(*i)]) && !is_char_in_set(str[(*i)],"<>"))
 		(*i)++;
-
-	ft_printf("REDIR = %s\n\n", ft_substr(str, j, *i-j));
-
 	split_into_dlst(lst, str, *i, j);
 }
 
