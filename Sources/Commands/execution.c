@@ -260,7 +260,7 @@ void	execution(t_mshell *shell)
 	{
 		if (temp->next && temp->next->type == PIPE)
 		{
-			print_single_token(temp);
+			// print_single_token(temp);
 			handle_pipes(shell, &temp, temp->fd_in, temp->fd_out);
 		}
 		else
