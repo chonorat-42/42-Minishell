@@ -130,7 +130,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 	else if (!ft_strcmp(temp->cmd_arr[0], "env"))
 		env_case(shell, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "unset"))
-		unset_case(shell, temp->content);
+		unset_case(shell, temp->cmd_arr);
 	else if (!ft_strcmp(temp->content, "pwd"))
 		pwd_case(shell, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "export"))

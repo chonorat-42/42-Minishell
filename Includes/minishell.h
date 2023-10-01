@@ -118,7 +118,7 @@ void		free_arr(char **arr);
 void		ft_free_tokens(t_tokens	**head);
 int			find_envvar_index(char **envp, const char *str);
 int			is_ws(char c);
-void		unset_case(t_mshell *shell, char *str);
+void		unset_case(t_mshell *shell, char **cmd);
 void		get_current_location(t_mshell *shell);
 void		manage_quotes(t_tokens **lst);
 char		*get_envvar_content(t_envp *envp, char *to_find);
