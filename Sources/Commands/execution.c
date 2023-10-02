@@ -85,9 +85,10 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 			if (execve(temp, cmd_arr, shell->menvp) == -1)
 				free(temp);
 		}
+		show_error(cmd_arr[0], "EXEC", 1);
 	}
-	ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell->cmd_count, cmd_arr[0]);
-	exit(127);
+	else
+		show_error(cmd_arr[0], "EXEC", 2);
 }
 
 char *get_cmd(char *str, size_t *i)

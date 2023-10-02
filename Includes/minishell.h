@@ -156,6 +156,7 @@ long long	ll_atoi(const char *str);
 int			only_digit(char *arg);
 
 void		builtin_error(char *cmd, char *arg, int error);
+void		show_error(char *cmd, char *type, int error);
 
 void		get_svar(t_mshell *shell);
 
