@@ -23,9 +23,8 @@ void	pwd_case(t_mshell *shell, int fd)
 {
 	get_current_location(shell);
 	if (shell->current_loc[0])
-		ft_dprintf(fd, "%s\n", shell->current_loc);
-	else
-		ft_dprintf(fd, "\n");
+		ft_dprintf(fd, "%s", shell->current_loc);
+	ft_dprintf(fd, "\n");
 	if (shell->current_loc)
 		free(shell->current_loc);
 }
