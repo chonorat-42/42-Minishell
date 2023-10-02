@@ -12,19 +12,24 @@
 
 #include "minishell.h"
 
-void env_case(t_mshell *shell, int fd)
+void env_case(t_mshell *shell, char **cmd, int fd)
 {
 	t_envp	*temp;
 
 	temp = shell->envp;
-	while (temp)
+	if (shell->paths)
 	{
-		if (temp->var.readable == 1)
+		while (temp)
 		{
-			ft_putstr_fd(temp->var.name, fd);
-			ft_putchar_fd('=', fd);
-			ft_putendl_fd(temp->var.content, fd);
+			if (temp->var.readable == 1)
+			{
+				ft_putstr_fd(temp->var.name, fd);
+				ft_putchar_fd('=', fd);
+				ft_putendl_fd(temp->var.content, fd);
+			}
+			temp = temp->next;
 		}
-		temp = temp->next;
 	}
+	else
+		show_error(cmd[0], "EXEC", 2);
 }
