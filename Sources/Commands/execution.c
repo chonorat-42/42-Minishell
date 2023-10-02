@@ -89,6 +89,7 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 	}
 	else
 		show_error(cmd_arr[0], "EXEC", 2);
+	exit(127);
 }
 
 char *get_cmd(char *str, size_t *i)
@@ -129,7 +130,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 	else if (!ft_strcmp(temp->cmd_arr[0], "exit"))
 		exit_case(shell, temp->cmd_arr);
 	else if (!ft_strcmp(temp->cmd_arr[0], "env"))
-		env_case(shell, temp->fd_out);
+		env_case(shell, temp->cmd_arr, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "unset"))
 		unset_case(shell, temp->cmd_arr);
 	else if (!ft_strcmp(temp->content, "pwd"))

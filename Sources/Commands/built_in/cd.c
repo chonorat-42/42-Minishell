@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern int	g_status;
+extern long long	g_status;
 
 char *get_cmd_arguments(char *prompt)
 {
