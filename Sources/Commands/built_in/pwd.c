@@ -26,5 +26,8 @@ void	pwd_case(t_mshell *shell, int fd)
 		ft_dprintf(fd, "%s", shell->current_loc);
 	ft_dprintf(fd, "\n");
 	if (shell->current_loc)
+	{
 		free(shell->current_loc);
+		shell->current_loc = NULL;
+	}
 }
