@@ -20,3 +20,6 @@ minishell
 
 # VS_Code files
 .vscode/
+
+# valgrind
+valgrind_ignore_leaks.txt
