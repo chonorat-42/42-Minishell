@@ -85,9 +85,10 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 			if (execve(temp, cmd_arr, shell->menvp) == -1)
 				free(temp);
 		}
+		show_error(cmd_arr[0], "EXEC", 1);
 	}
-	ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell->cmd_count, cmd_arr[0]);
-	exit(127);
+	else
+		show_error(cmd_arr[0], "EXEC", 2);
 }
 
 char *get_cmd(char *str, size_t *i)
@@ -130,7 +131,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 	else if (!ft_strcmp(temp->cmd_arr[0], "env"))
 		env_case(shell, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "unset"))
-		unset_case(shell, temp->content);
+		unset_case(shell, temp->cmd_arr);
 	else if (!ft_strcmp(temp->content, "pwd"))
 		pwd_case(shell, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "export"))

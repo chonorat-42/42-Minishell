@@ -193,8 +193,6 @@ char	*expand_envvar(char *str, t_envp *envp)
 	}
 	if (join)
 		ft_free_null(join);
-	if (temp)
-		ft_free_null(temp);
 	return (res);
 }
 
@@ -269,7 +267,7 @@ int	expand(t_mshell *shell, char *cmd)
 
 	temp = NULL;
     if (!are_all_quotes_closed(cmd))
-		return (ft_printf("Error\nUnclosed quotes\n"), 1);
+		return (show_error(NULL, "QUOTES", 0), 1);
     if (find_char_index(cmd, '$') >= 0)
 	{
 		if (check_after_dollar(cmd))

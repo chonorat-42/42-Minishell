@@ -33,37 +33,28 @@ int	delete_envvar(t_envp **envp, char *var, int ign_param)
 			else
 				temp->next = NULL;
 			free(temp);
-			return (0);
+			return (1);
 		}
 		temp = temp->next;
 	}
-	return (1);
+	return (0);
 }
 
-void	unset_case(t_mshell *shell, char *str)
+void	unset_case(t_mshell *shell, char **cmd)
 {
-	char	*var;
-	char	**to_unset;
-	size_t	i;
-	
-	var = ft_substr(str, 6, ft_strlen(str));
-	if (!var)
-		return (free_struct(shell), exit(11));
-	to_unset = ft_split(var, ' ');
-	if (!to_unset)
-		return (free(var), free_struct(shell), exit(12));
-	i = 0;
-	while (to_unset[i])
+	int	index;
+
+	index = 1;
+	while (cmd[index])
 	{
-		if  (!delete_envvar(&shell->envp, to_unset[i], 0))
+		if (delete_envvar(&shell->envp, cmd[index], 0))
 		{
-			if (!ft_strcmp(to_unset[i], "PATH"))
+			if (ft_strncmp(cmd[index], "PATH", ft_strlen(cmd[index])) == 0)
 			{
 				free_arr(shell->paths);
 				shell->paths = NULL;
 			}
 		}
-		i++;
+		index++;
 	}
-	return (free(var), free_arr(to_unset));
 }

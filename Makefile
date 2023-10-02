@@ -56,6 +56,7 @@ FILES = minishell\
 		Utils/expand\
 		Utils/update_envp\
 		Utils/builtin_error\
+		Utils/show_error\
 		Utils/exit_utils\
 		Utils/manage_quotes
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
