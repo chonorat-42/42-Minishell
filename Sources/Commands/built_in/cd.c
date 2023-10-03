@@ -24,6 +24,8 @@ void cd_case(t_mshell *shell, char **cmd)
 	{
 		if (arg_count > 2)
 			return (builtin_error(cmd[0], cmd[1], 3));
+		if (cmd[1][0] == '\0')
+			return ;
 		if (chdir(cmd[1]))
 			builtin_error(cmd[0], cmd[1], 1);
 	}
