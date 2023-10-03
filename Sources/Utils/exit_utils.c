@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 23:31:39 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/03 13:09:07 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/03 14:43:07 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ static int	get_exit(char *arg, int *index)
 	int	negative;
 
 	negative = 0;
+	if (arg[*index] == '\0')
+		return (negative);
 	if (arg[*index] == '-')
 	{
 		negative = 1;
@@ -83,6 +85,8 @@ int	only_digit(char *arg)
 			return (0);
 		index++;
 	}
+	if (arg[index] == '\0')
+		return (0);
 	if ((ft_strlen(&arg[value]) >= 20))
 		return (0);
 	if (ft_strlen(&arg[value]) == 19)
