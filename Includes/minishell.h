@@ -101,7 +101,6 @@ void		print_lst(t_list *lst);
 void		free_struct(t_mshell *shell);
 void		free_arr(char **arr);
 void		bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out);
-char		*get_cmd_arguments(char *prompt);
 int 		redirect(t_mshell *shell);
 void 		struct_init(t_mshell *shell);
 void		sig_handler(void);
@@ -127,31 +126,31 @@ void		manage_quotes(t_tokens **lst);
 char		*get_envvar_content(t_envp *envp, char *to_find);
 char		*get_builtin_opt(char *str, size_t *i);
 long int	find_char_index(char *str, int c);
-void			parsing(t_mshell *shell);
+void		parsing(t_mshell *shell);
 
-int		expand(t_mshell *shell, char *cmd);
-char	*expand_envvar(char *str, t_envp *envp);
-int		check_after_dollar(char *str);
+int			expand(t_mshell *shell, char *cmd);
+char		*expand_envvar(char *str, t_envp *envp);
+int			check_after_dollar(char *str);
 
-int 	are_all_quotes_closed(char *str);
-char 	*get_other(char *str, size_t *i);
-void    get_envp(t_mshell *shell, char **envp);
-void    get_input_loop(t_mshell *shell);
-void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);
-void	exec_forwarding(t_tokens *temp, t_mshell *shell);
-void	get_current_location(t_mshell *shell);
-void	print_env(t_envp *lst);
-void	create_envp_list(t_mshell *shell, t_var *var);
-int		delete_envvar(t_envp **envp, char *var, int ign_param);
-int		is_char_in_set(char c, char *set);
+int			are_all_quotes_closed(char *str);
+char 		*get_other(char *str, size_t *i);
+void		get_envp(t_mshell *shell, char **envp);
+void		get_input_loop(t_mshell *shell);
+void		handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);
+void		exec_forwarding(t_tokens *temp, t_mshell *shell);
+void		get_current_location(t_mshell *shell);
+void		print_env(t_envp *lst);
+void		create_envp_list(t_mshell *shell, t_var *var);
+int			delete_envvar(t_envp **envp, char *var, int ign_param);
+int			is_char_in_set(char c, char *set);
 
-void	update_envp(t_mshell *shell);
-void	free_envp(t_envp **head);
+void		update_envp(t_mshell *shell);
+void		free_envp(t_envp **head);
 
-void	print_export(t_envp *export, int fd);
-int		create_export(t_envp **export, t_envp *envp);
-void	free_export(t_envp **export);
-int		var_exist(t_mshell *shell, char *var);
+void		print_export(t_envp *export, int fd);
+int			create_export(t_envp **export, t_envp *envp);
+void		free_export(t_envp **export);
+int			var_exist(t_mshell *shell, char *var);
 
 long long	ll_atoi(const char *str);
 int			only_digit(char *arg);
@@ -161,15 +160,15 @@ void		show_error(char *cmd, char *type, int error);
 
 void		get_svar(t_mshell *shell);
 
-void	heredoc(char *delimiter, int fd_in, t_envp *envp);
+void		heredoc(char *delimiter, int fd_in, t_envp *envp);
 
-void	print_tkns_down(t_tokens *lst);
+void		print_tkns_down(t_tokens *lst);
 
-char	*remove_quotes(char	*str);
+char		*remove_quotes(char	*str);
 
-void	free_dlist(t_dlist **head);
+void		free_dlist(t_dlist **head);
 
-void	print_single_token(t_tokens *tkn);
+void		print_single_token(t_tokens *tkn);
 
 
 #endif
