@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 13:17:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/03 12:40:33 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/03 16:50:11 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,7 @@ void	builtin_error(char *cmd, char *arg, int error)
 		return (exit_error(arg, error));
 	else if (ft_strcmp(cmd, "cd") == 0)
 		return (cd_error(arg, error));
+	else if (ft_strcmp(cmd, "unset") == 0)
+		return (g_status = 1, 
+			(void)ft_dprintf(2, "`%s': not a valid identifier\n", arg));
 }
