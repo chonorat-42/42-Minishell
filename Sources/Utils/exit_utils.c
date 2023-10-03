@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 23:31:39 by chonorat          #+#    #+#             */
-/*   Updated: 2023/09/30 14:41:34 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:09:07 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ static int	get_exit(char *arg, int *index)
 		negative = 1;
 		(*index)++;
 	}
+	else if (arg[*index] == '+')
+		(*index)++;
 	while (arg[*index + 1] && arg[*index] == '0')
 		(*index)++;
 	return (negative);
