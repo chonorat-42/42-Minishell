@@ -127,7 +127,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 	if (!ft_strcmp(temp->cmd_arr[0], "echo"))
 		echo_case(temp->cmd_arr, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "cd"))
-		cd_case(shell, temp->content);
+		cd_case(shell, temp->cmd_arr);
 	else if (!ft_strcmp(temp->cmd_arr[0], "exit"))
 		exit_case(shell, temp->cmd_arr);
 	else if (!ft_strcmp(temp->cmd_arr[0], "env"))

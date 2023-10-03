@@ -12,12 +12,28 @@
 
 #include "minishell.h"
 
+static int	is_option(char *arg)
+{
+	int	index;
+
+	index = 0;
+	if (arg[index] != '-')
+		return (0);
+	index++;
+	while (arg[index])
+	{
+		if (arg[index] != 'n')
+			return (0);
+		index++;
+	}
+	return (1);
+}
+
 static void	get_option(char **cmd, int *option, int *index)
 {
 	while (cmd[*index])
 	{
-		if (ft_strncmp(cmd[*index], "-n", ft_strlen(cmd[*index])) == 0
-				&& cmd[*index][0] != '\0')
+		if (is_option(cmd[*index]) && cmd[*index][0] != '\0')
 		{
 			(*index)++;
 			*option = 1;
