@@ -40,46 +40,18 @@ char *get_cmd_arguments(char *prompt)
 	return (result);
 }
 
-int cd_case(t_mshell *shell, char *cmd)
+void cd_case(t_mshell *shell, char **cmd)
 {
-	(void)shell;
-	(void)cmd;
-	/*char *temp;
-	char *str;
-	int result;
-	size_t i;
+	char	*home;
 
-	shell->cmd_count++;
-	i = 0;
-	while (cmd[i] && !is_ws(cmd[i]))
-		i++;
-	i++;
-	
-	if (cmd[i] && get_builtin_opt(cmd, &i))
-	{
-		ft_dprintf(STDERR_FILENO, "Error\nCd command does not take any option\n");
-		return (g_status = 128, 1);
-	}
-	if (ft_strlen(cmd) == 2)
-	{
-		temp = get_envvar_content(shell->envp, "HOME");
-		if (temp && !temp[0])
-			return (ft_printf("Error/nPath to HOME could not be found\n"), g_status = 126, 2);
-	}
+	if (count_arr_size(cmd) > 1)
+		if (chdir(cmd[1]))
+			builtin_error(cmd[0], cmd[1], 1);
 	else
-		temp = get_cmd_arguments(cmd);
-	if (!temp)
-		return (g_status = 1, 3);
-	str = ft_strtrim(temp, "\n\t\v\f\r ");
-	free(temp);
-	if (!str)
-		return (g_status = 1, 3);
-	result = chdir(str);
-	if (result != 0)
 	{
-		ft_printf("minishell: %d: can't cd to %s\n", shell->cmd_count, str);
-		return (free(str), g_status = 1, 3);
+		home = get_envvar_content(shell->envp, "HOME");
+		if (!home[0])
+			return (free(home), builtin_error(cmd[0], cmd[1], 2));
+		
 	}
-	free(str);*/
-	return (0);
 }

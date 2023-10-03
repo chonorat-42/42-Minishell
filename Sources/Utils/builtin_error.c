@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 13:17:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/09/30 14:49:37 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/02 18:36:37 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ static void	exit_error(char *arg, int error)
 	}
 }
 
+static void	cd_error(char *arg, int error)
+{
+	if (error == 1)
+		ft_dprintf(2, "%s: No such file or directory\n", arg);
+}
+
 void	builtin_error(char *cmd, char *arg, int error)
 {
 	(void)error;
@@ -34,4 +40,6 @@ void	builtin_error(char *cmd, char *arg, int error)
 			(void)ft_dprintf(2, "`%s': not a valid identifier\n", arg));
 	else if (ft_strcmp(cmd, "exit") == 0)
 		return (exit_error(arg, error));
+	else if (ft_strcmp(cmd, "cd") == 0)
+		return (cd_error(arg, error));
 }
