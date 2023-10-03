@@ -40,6 +40,22 @@ int	delete_envvar(t_envp **envp, char *var, int ign_param)
 	return (0);
 }
 
+static int	check_var(char *cmd, char *arg)
+{
+	int	index;
+
+	if (!ft_isalpha(arg[0]) && !is_char_in_set(arg[0], "_"))
+		return (builtin_error(cmd, arg, 1), 0);
+	index = 1;
+	while (arg[index])
+	{
+		if (!ft_isalnum(arg[index]) && !is_char_in_set(arg[index], "_"))
+			return (builtin_error(cmd, arg, 1), 0);
+		index++;
+	}
+	return (1);
+}
+
 void	unset_case(t_mshell *shell, char **cmd)
 {
 	int	index;
@@ -47,12 +63,15 @@ void	unset_case(t_mshell *shell, char **cmd)
 	index = 1;
 	while (cmd[index])
 	{
-		if (delete_envvar(&shell->envp, cmd[index], 0))
+		if (check_var(cmd[0], cmd[index]))
 		{
-			if (ft_strncmp(cmd[index], "PATH", ft_strlen(cmd[index])) == 0)
+			if (delete_envvar(&shell->envp, cmd[index], 0))
 			{
-				free_arr(shell->paths);
-				shell->paths = NULL;
+				if (ft_strncmp(cmd[index], "PATH", ft_strlen(cmd[index])) == 0)
+				{
+					free_arr(shell->paths);
+					shell->paths = NULL;
+				}
 			}
 		}
 		index++;
