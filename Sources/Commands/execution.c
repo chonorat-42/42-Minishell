@@ -53,9 +53,17 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 	char	**exec_split;
 
 	if (fd_out != 1)
+	{
 		dup2(fd_out, STDOUT_FILENO);
+		close(fd_out);
+	}
 	if (fd_in != 0)
+	{
 		dup2(fd_in, STDIN_FILENO);
+		close(fd_in);
+	}
+		
+	
 	j = -1;
 	get_current_location(shell);
 	trim = ft_strtrim(cmd_arr[0], ".");
@@ -91,6 +99,10 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 		show_error(cmd_arr[0], "EXEC", 2);
 	free_struct(shell);
 	exit(127);
+	if (fd_out != 1)
+		close(fd_out);
+	if (fd_in != 0)
+		close(fd_in);
 }
 
 char *get_cmd(char *str, size_t *i)
@@ -266,7 +278,7 @@ void	execution(t_mshell *shell)
 	{
 		if (temp->next && temp->next->type == PIPE)
 		{
-			print_single_token(temp);
+			// print_single_token(temp);
 			handle_pipes(shell, &temp, temp->fd_in, temp->fd_out);
 		}
 		else

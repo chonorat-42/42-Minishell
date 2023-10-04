@@ -50,10 +50,21 @@ char    **copy_tab(char **envp, size_t size)
 	return (arr);
 }
 
+void	t_envp_addback(t_envp **envp, t_envp **new)
+{
+	t_envp *temp;
+
+	temp = *envp;
+	while(temp->next)
+		temp = temp->next;
+	(*new)->prev = temp;
+	temp->next = *new;
+	(*new)->next = NULL;
+}
+
 void	create_envp_list(t_mshell *shell, t_var *var)
 {
 	t_envp	*new;
-	t_envp	*temp;
 
 	new = malloc(sizeof(t_envp));
 	if (!new)
@@ -72,14 +83,7 @@ void	create_envp_list(t_mshell *shell, t_var *var)
 		new->prev = NULL;
 	}
 	else
-	{
-		temp = shell->envp;
-		while(temp->next)
-			temp = temp->next;
-		new->prev = temp;
-		temp->next = new;
-		new->next = NULL;
-	}
+		t_envp_addback(&shell->envp, &new);
 }
 
 void	get_envp(t_mshell *shell, char **envp)
@@ -91,7 +95,8 @@ void	get_envp(t_mshell *shell, char **envp)
 	while (envp[j])
 	{
 		new.name = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
-		new.content = ft_substr(envp[j], find_char_index(envp[j], '=') + 1, ft_strlen(envp[j]));
+		new.content = ft_substr(envp[j], find_char_index(envp[j], '=') + 1,
+				ft_strlen(envp[j]));
 		new.readable = 1;
 		new.alterable = 1;
 		create_envp_list(shell, &new);

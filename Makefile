@@ -103,6 +103,6 @@ exec : all
 	./minishell
 
 val : all
-	valgrind --leak-check=full --show-reachable=no --track-origins=yes -s ./minishell
+	valgrind --leak-check=full --show-reachable=no --track-origins=yes -s --track-fds=yes ./minishell
 
 .PHONY: all clean fclean re exec val

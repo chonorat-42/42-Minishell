@@ -15,6 +15,8 @@
 void	ft_free_null(char *str)
 {
 	if (str)
+	{
 		free(str);
-	str = NULL;
+		str = NULL;
+	}
 }
