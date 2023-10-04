@@ -93,6 +93,19 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 	exit(127);
 }
 
+void	print_single_token(t_tokens *tkn)
+{
+	printf("%d\n", DEBUG);
+	if (DEBUG)
+	{
+		ft_printf("content = %s\n", tkn->content);
+		ft_printf("cmd_arr :\n_________________\n");
+		print_arr(tkn->cmd_arr);
+		ft_printf("_________________\n");
+		ft_printf("fd_in = %d, fd_out = %d\n", tkn->fd_in, tkn->fd_out);
+	}
+}
+
 char *get_cmd(char *str, size_t *i)
 {
 	char *result;
@@ -248,19 +261,11 @@ void	remove_heredoc_tkn(t_tokens **lst)
 		remove_next_token(lst);
 }
 
-void	print_single_token(t_tokens *tkn)
-{
-	ft_printf("content = %s\n", tkn->content);
-	ft_printf("cmd_arr :\n_________________\n");
-	print_arr(tkn->cmd_arr);
-	ft_printf("_________________\n");
-	ft_printf("fd_in = %d, fd_out = %d\n", tkn->fd_in, tkn->fd_out);
-}
-
 void	execution(t_mshell *shell)
 {
 	t_tokens	*temp;
 
+	exec_sig();
 	temp = shell->tok_lst;
 	while (temp)
 	{

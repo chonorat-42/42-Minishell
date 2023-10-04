@@ -28,9 +28,12 @@ void	print_arr(char **arr)
 {
 	int j;
 
-	j = -1;
-	while(arr[++j])
-		printf("%s\n", arr[j]);
+	if (DEBUG)
+	{
+		j = -1;
+		while(arr[++j])
+			printf("%s\n", arr[j]);
+	}
 }
 
 size_t	count_arr_size(char **arr)

@@ -30,9 +30,8 @@ size_t	count_successive_pipes(t_tokens *temp)
 		else
 			return (res);
 	}
-	
-	ft_printf("number of successive pipes : %d\n\n", res);
-
+	if (DEBUG)
+		ft_printf("number of successive pipes : %d\n\n", res);
 	return (res);
 }
 
@@ -119,8 +118,8 @@ void	handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out)
 {
 	size_t	pipes_nbr;
 
-	ft_printf("in handle pipes, fd_in = %d, fd_out = %d\n\n", fd_in, fd_out);
-
+	if (DEBUG)
+		ft_printf("in handle pipes, fd_in = %d, fd_out = %d\n\n", fd_in, fd_out);
 	pipes_nbr = count_successive_pipes(*temp);
 	fork_pipes(pipes_nbr, temp, fd_in, shell, fd_out);
 }
