@@ -52,9 +52,17 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 	char	**exec_split;
 
 	if (fd_out != 1)
+	{
 		dup2(fd_out, STDOUT_FILENO);
+		close(fd_out);
+	}
 	if (fd_in != 0)
+	{
 		dup2(fd_in, STDIN_FILENO);
+		close(fd_in);
+	}
+		
+	
 	j = -1;
 	get_current_location(shell);
 	temp = ft_strjoin(shell->current_loc, ft_strtrim(cmd_arr[0], "."));
@@ -85,6 +93,10 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 	}
 	ft_dprintf(STDERR_FILENO, "minishell: %d: %s: command not found\n", shell->cmd_count, cmd_arr[0]);
 	exit(127);
+	if (fd_out != 1)
+		close(fd_out);
+	if (fd_in != 0)
+		close(fd_in);
 }
 
 char *get_cmd(char *str, size_t *i)

@@ -154,6 +154,7 @@ char	*expand_envvar(char *str, t_envp *envp)
 	char	*join;
 	char	*res;
 
+	temp = NULL;
 	res = NULL;
 	i = 0;
 	while (str[i])
@@ -193,8 +194,6 @@ char	*expand_envvar(char *str, t_envp *envp)
 	}
 	if (join)
 		ft_free_null(join);
-	if (temp)
-		ft_free_null(temp);
 	return (res);
 }
 

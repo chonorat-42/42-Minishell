@@ -168,5 +168,7 @@ void	free_dlist(t_dlist **head);
 
 void	print_single_token(t_tokens *tkn);
 
+void	print_dlist(t_dlist	*lst);
+
 
 #endif
