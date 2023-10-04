@@ -18,8 +18,10 @@ static void	ignore_sig(int signum, siginfo_t *info, void *context)
 {
 	(void)signum;
 	(void)context;
-	if (!info->si_pid)
-		ft_printf("\b\b");
+	//ft_printf("pid: %d\n", info->si_pid);
+	//ft_printf("fd: %d\n", info->si_fd);
+	if (!info->si_fd)
+		ft_printf("\b\b  \n");
 }
 
 void	exec_sig(void)
@@ -27,16 +29,14 @@ void	exec_sig(void)
 	struct sigaction	signal;
 
 	sigemptyset(&signal.sa_mask);
-	signal.sa_flags = SA_SIGINFO;
+	signal.sa_flags = SA_RESTART | SA_SIGINFO;
 	signal.sa_sigaction = ignore_sig;
 	sigaction(SIGINT, &signal, NULL);
 	sigaction(SIGQUIT, &signal, NULL);
 }
 
-static void	get_sig(int signum, siginfo_t *info, void *context)
+static void	get_sig(int signum)
 {
-	(void)info;
-	(void)context;
 	if (signum == SIGINT)
 	{
 		ft_printf("\b\b  ");
@@ -56,7 +56,7 @@ void	sig_handler(void)
 
 	sigemptyset(&signal.sa_mask);
 	signal.sa_flags = SA_RESTART;
-	signal.sa_sigaction = get_sig;
+	signal.sa_handler = get_sig;
 	sigaction(SIGINT, &signal, NULL);
 	sigaction(SIGQUIT, &signal, NULL);
 }

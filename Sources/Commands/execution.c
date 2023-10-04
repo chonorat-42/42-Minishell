@@ -95,7 +95,6 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 
 void	print_single_token(t_tokens *tkn)
 {
-	printf("%d\n", DEBUG);
 	if (DEBUG)
 	{
 		ft_printf("content = %s\n", tkn->content);
