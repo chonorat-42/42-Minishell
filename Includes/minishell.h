@@ -29,6 +29,12 @@
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"
 
+/*			DEBUG			*/
+# ifndef DEBUG
+#  define DEBUG 0
+# endif
+/*							*/
+
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
@@ -94,6 +100,8 @@ typedef struct s_mshell
 }				t_mshell;
 
 void		sig_handler(void);
+void		exec_sig(void);
+
 void		get_paths(t_mshell *shell);
 size_t		count_arr_size(char **arr);
 void		print_arr(char **arr);
@@ -169,8 +177,5 @@ char		*remove_quotes(char	*str);
 void		free_dlist(t_dlist **head);
 
 void		print_single_token(t_tokens *tkn);
-
-void	print_dlist(t_dlist	*lst);
-
 
 #endif

@@ -18,12 +18,10 @@ void	get_input_loop(t_mshell *shell)
 {
 	while (1)
 	{
+		sig_handler();
 		shell->input = readline("\033[1mminishell@42\033[0m:~\033[0;32m$\033[0m ");
 		if (!shell->input)
-		{
-			ft_printf("readline NULL");
-			return (free_struct(shell), exit(2));
-		}
+			return (ft_printf("exit\n"), free_struct(shell), exit(0));
 		if (shell->input[0])
 			add_history(shell->input);
 		get_svar(shell);
