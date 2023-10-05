@@ -104,7 +104,7 @@ exec : all
 	./minishell
 
 val : all
-	valgrind --leak-check=full --show-reachable=no --track-origins=yes -s ./minishell
+	valgrind --leak-check=full --show-reachable=no --track-origins=yes -s --track-fds=yes ./minishell
 
 #debug: $(OBJS)
 #	$(PRINT) "${_RED}----------DEBUG----------${_END}"

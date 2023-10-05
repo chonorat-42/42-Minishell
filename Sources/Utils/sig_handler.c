@@ -14,14 +14,11 @@
 
 extern long long	g_status;
 
-static void	ignore_sig(int signum, siginfo_t *info, void *context)
+static void	ignore_sig(int signum)
 {
 	(void)signum;
-	(void)context;
-	//ft_printf("pid: %d\n", info->si_pid);
-	//ft_printf("fd: %d\n", info->si_fd);
-	if (!info->si_fd)
-		ft_printf("\b\b  \n");
+	//ft_printf("\b\b");
+	//ft_printf("\033[1mminishell@42\033[0m:~\033[0;32m$\033[0m ");
 }
 
 void	exec_sig(void)
@@ -29,8 +26,8 @@ void	exec_sig(void)
 	struct sigaction	signal;
 
 	sigemptyset(&signal.sa_mask);
-	signal.sa_flags = SA_RESTART | SA_SIGINFO;
-	signal.sa_sigaction = ignore_sig;
+	signal.sa_flags = SA_RESTART;
+	signal.sa_handler = ignore_sig;
 	sigaction(SIGINT, &signal, NULL);
 	sigaction(SIGQUIT, &signal, NULL);
 }

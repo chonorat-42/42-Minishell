@@ -33,6 +33,7 @@
 # ifndef DEBUG
 #  define DEBUG 0
 # endif
+/*							*/
 
 # include <stdlib.h>
 # include <unistd.h>

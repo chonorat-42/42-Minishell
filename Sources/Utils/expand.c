@@ -154,6 +154,7 @@ char	*expand_envvar(char *str, t_envp *envp)
 	char	*join;
 	char	*res;
 
+	temp = NULL;
 	res = NULL;
 	i = 0;
 	while (str[i])
