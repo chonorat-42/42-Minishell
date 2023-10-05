@@ -57,6 +57,7 @@ FILES = minishell\
 		Utils/expand\
 		Utils/update_envp\
 		Utils/builtin_error\
+		Utils/create_envp\
 		Utils/show_error\
 		Utils/exit_utils\
 		Utils/manage_quotes

@@ -138,6 +138,8 @@ void	get_paths(t_mshell *shell)
 	char *paths;
 
 	paths = get_envp_content(shell->envp, "PATH");
+	if (!paths)
+		return ;
 	if (fix_paths(paths, shell))
 		return (free_struct(shell));
 	free(paths);

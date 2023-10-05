@@ -24,6 +24,7 @@ void	get_input_loop(t_mshell *shell)
 			return (ft_printf("exit\n"), free_struct(shell), exit(0));
 		if (shell->input[0])
 			add_history(shell->input);
+		get_paths(shell);
 		get_svar(shell);
 		update_envp(shell);
 		parsing(shell);
