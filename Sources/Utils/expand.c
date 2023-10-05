@@ -88,7 +88,7 @@ size_t	last_envvar_char(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (is_ws(str[i]) || is_char_in_set(str[i], "\"\'="))
+		if (is_ws(str[i]) || is_char_in_set(str[i], "\"\'=$"))
 		{
 			return (i);
 		}

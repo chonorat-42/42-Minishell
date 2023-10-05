@@ -100,7 +100,7 @@ char		*send_to_line(char *stash);
 char		*stash_ready(char *stash);
 char		*read_save(int fd, char *stash);
 
-void		ft_free_null(char *str);
+void		ft_free_null(char **str);
 char		*strjoin_free_first(char *s1, char *s2);
 char		*strjoin_free_both(char *s1, char *s2);
 

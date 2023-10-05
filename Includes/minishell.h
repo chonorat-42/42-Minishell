@@ -24,7 +24,6 @@
 # define APPEND 9
 # define HEREDOC 10
 # define HEREDEL 11
-# define MAX_SIZE 100
 
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"

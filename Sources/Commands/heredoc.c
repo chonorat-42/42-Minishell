@@ -35,11 +35,10 @@ expand*/
 // 		free(join);
 // 		temp = temp->next;
 // 	}
-// 	// ft_printf("in join, res = \n%s\n", res);
 // 	return (res);
 // }
 
-// void	heredocB(char *delimiter, int fd_in, t_envp *envp)
+// void	heredoc(char *delimiter, int fd_in, t_envp *envp)
 // {
 // 	char	*line;
 // 	char	*result;
@@ -66,13 +65,15 @@ expand*/
 // 		if (check_after_dollar(join))
 // 		{
 //     		result = expand_envvar(join, envp);
-// 			ft_free_null(join);
+// 			ft_free_null(&join);
 // 		}
 // 	}
 // 	else
 // 		result = ft_strdup(join);
-// 	// ft_printf("in main. result = %s\n", result);
+// 	ft_printf("in main. result = %s, fd_in = %d\n", result, fd_in);
 // 	ft_dprintf(fd_in, "%s", result);
+// 	free(result);
+// 	free(join);
 // }
 
 void	heredoc(char *delimiter, int fd_in, t_envp *envp)
@@ -89,9 +90,8 @@ void	heredoc(char *delimiter, int fd_in, t_envp *envp)
 		if (!ft_strcmp(line, delimiter))
 		{
 			ft_dprintf(fd_in, "%s", result);
-			ft_free_null(result);
-			if (line)
-				ft_free_null(line);
+			ft_free_null(&result);
+			ft_free_null(&line);
 			close(fd_in);
 			return ;
 		}
@@ -102,7 +102,7 @@ void	heredoc(char *delimiter, int fd_in, t_envp *envp)
 				if (check_after_dollar(line))
 				{
     				temp = expand_envvar(line, envp);
-					ft_free_null(line);
+					ft_free_null(&line);
 				}
 			}
 			else
@@ -117,60 +117,60 @@ void	heredoc(char *delimiter, int fd_in, t_envp *envp)
 			else
 			{
 				result = ft_strdup(line);
-				ft_free_null(line);
-			}
-		}
-		// if (line)
-		// 	ft_free_null(line);
-	}
-}
-
-void	heredocB(char *delimiter, int fd_in, t_envp *envp)
-{
-	char	*line;
-	char	*result;
-	char	*temp;
-
-	result = NULL;
-	line = NULL;
-	while (1)	
-	{
-		line = readline(">");
-		if (!ft_strcmp(line, delimiter))
-		{
-			ft_dprintf(fd_in, "%s", result);
-			ft_free_null(result);
-			if (line)
-				ft_free_null(line);
-			close(fd_in);
-			return ;
-		}
-		else
-		{
-			if (find_char_index(line, '$') >= 0)
-			{
-				if (check_after_dollar(line))
-				{
-    				temp = expand_envvar(line, envp);
-					ft_free_null(line);
-				}
-			}
-			else
-				temp = ft_strdup(line);
-			line = strjoin_free_first(temp, "\n");
-			if (result)
-			{
-				result = strjoin_free_both(result, line);
-				result = NULL;
-				line = NULL;
-			}
-			else
-			{
-				result = ft_strdup(line);
-				ft_free_null(line);
+				ft_free_null(&line);
 			}
 		}
 		if (line)
-			ft_free_null(line);
+			ft_free_null(&line);
 	}
 }
+
+// void	heredocB(char *delimiter, int fd_in, t_envp *envp)
+// {
+// 	char	*line;
+// 	char	*result;
+// 	char	*temp;
+
+// 	result = NULL;
+// 	line = NULL;
+// 	while (1)	
+// 	{
+// 		line = readline(">");
+// 		if (!ft_strcmp(line, delimiter))
+// 		{
+// 			ft_dprintf(fd_in, "%s", result);
+// 			ft_free_null(result);
+// 			if (line)
+// 				ft_free_null(line);
+// 			close(fd_in);
+// 			return ;
+// 		}
+// 		else
+// 		{
+// 			if (find_char_index(line, '$') >= 0)
+// 			{
+// 				if (check_after_dollar(line))
+// 				{
+//     				temp = expand_envvar(line, envp);
+// 					ft_free_null(&line);
+// 				}
+// 			}
+// 			else
+// 				temp = ft_strdup(line);
+// 			line = strjoin_free_first(temp, "\n");
+// 			if (result)
+// 			{
+// 				result = strjoin_free_both(result, line);
+// 				result = NULL;
+// 				line = NULL;
+// 			}
+// 			else
+// 			{
+// 				result = ft_strdup(line);
+// 				ft_free_null(&line);
+// 			}
+// 		}
+// 		if (line)
+// 			ft_free_null(&line);
+// 	}
+// }

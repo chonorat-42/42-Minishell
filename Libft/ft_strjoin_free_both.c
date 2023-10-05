@@ -27,7 +27,7 @@ char	*strjoin_free_both(char *s1, char *s2)
 		i++;
 		j++;
 	}
-	ft_free_null(s1);
+	ft_free_null(&s1);
 	i = 0;
 	while (s2[i])
 	{
@@ -35,7 +35,7 @@ char	*strjoin_free_both(char *s1, char *s2)
 		i++;
 		j++;
 	}
-	ft_free_null(s2);
+	ft_free_null(&s2);
 	res[j] = '\0';
 	return (res);
 }

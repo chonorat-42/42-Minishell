@@ -162,7 +162,7 @@ void	split_on_pipes(t_mshell *shell, char *str)
 			i++;
 			create_token(shell, i, j, str);
 			j = i;
-			i++;
+			// i++;
 		}
 		else
 			i++;
@@ -213,7 +213,7 @@ void	heredoc_into_infile(t_dlist **lst)
 	temp->content = ft_strdup("<");
 	temp = temp->next;
 	free(temp->content);
-	temp->content = ft_strdup("/tmp/temp.heredoc");
+	temp->content = ft_strdup("/tmp/temp.heredoc2");
 }
 
 void	get_fd_in(t_tokens **tok, t_envp *envp)
@@ -241,7 +241,9 @@ void	get_fd_in(t_tokens **tok, t_envp *envp)
 			}	
 			else if (temp_dlst->content[0] == '<' && ft_strlen(temp_dlst->content) == 2)
 			{
-				temp_fd = open("/tmp/temp.heredoc", O_RDWR | O_CREAT | O_TRUNC, 0666);
+				if (has_fd)
+					close(temp_fd);
+				temp_fd = open("/tmp/temp.heredoc2", O_RDWR | O_CREAT | O_TRUNC, 0666);
 				heredoc(temp_dlst->next->content, temp_fd, envp);
 				heredoc_into_infile(&(*tok)->dlst);
 				get_fd_in(tok, envp);
@@ -341,14 +343,6 @@ void	print_dlist(t_dlist	*lst)
 	}
 	ft_printf("\n");
 }
-
-// void	free_next_two_nodes(t_dlist	**to_delete,t_dlist	**to_delete2)
-// {
-// 	free((*to_delete)->content);
-//     free(*to_delete);
-//     free((*to_delete2)->content);
-//     free(*to_delete2);
-// }
 
 void	remove_fd_lst(t_dlist **lst, char c, t_dlist **new)
 {
@@ -459,7 +453,7 @@ void	get_commands_lst(t_dlist *base, t_dlist **new)
 	}
 }
 
-void	create_cmd_arr(t_tokens **tk_lst)
+void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 {
 	t_tokens	*temp;
 	t_dlist		*new;
@@ -470,6 +464,8 @@ void	create_cmd_arr(t_tokens **tk_lst)
 			new = NULL;
 			get_commands_lst(temp->dlst, &new);
 			temp->cmd_arr = list_into_arr(new);
+			if (!temp->cmd_arr)
+				return (ft_free_tokens(tk_lst), get_input_loop(shell));
 			free_dlist(&temp->dlst);
 			free_dlist(&new);
 			temp = temp->next;
@@ -637,7 +633,7 @@ void	hdoc_add_cmd(t_mshell *shell)
 
 	to_add = readline(">");
 	split_on_pipes(shell, to_add);
-	// update_tok(shell, to_add);
+	free(to_add);
 }
 
 int	last_is_pipe(t_tokens *tok)
@@ -657,7 +653,8 @@ void	parse_tkn(t_tokens **tok, t_mshell *shell)
 	t_tokens	*temp;
 
 	temp = *tok;
-
+	if (temp->type == PIPE)
+		return (ft_printf("minishell: syntax error near unexpected token '|'\n"), ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
 	while(last_is_pipe(*tok))
 	{
 		while (temp->next)
@@ -677,8 +674,7 @@ int	tokenizer(t_mshell *shell)
 	parse_tkn(&shell->tok_lst, shell);
 	split_input_into_dlst(&shell->tok_lst, shell);
 	get_fds(&shell->tok_lst, shell->envp);
-	// remove_redirect(&shell->tok_lst);
-	create_cmd_arr(&shell->tok_lst);
+	create_cmd_arr(&shell->tok_lst, shell);
 	manage_quotes_arr(&shell->tok_lst);
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
