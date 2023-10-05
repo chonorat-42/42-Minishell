@@ -291,6 +291,11 @@ void	execution(t_mshell *shell)
 	}
 	free(shell->input);
 	ft_free_tokens(&shell->tok_lst);
+	if (shell->paths)
+	{
+		free_arr(shell->paths);
+		shell->paths = NULL;
+	}
 }
 
 // void executionB(t_mshell *shell)

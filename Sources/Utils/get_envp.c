@@ -86,22 +86,27 @@ void	create_envp_list(t_mshell *shell, t_var *var)
 		t_envp_addback(&shell->envp, &new);
 }
 
-void	get_envp(t_mshell *shell, char **envp)
+void	get_envp(t_mshell *shell, char **envp, char **argv)
 {
 	size_t	j;
 	t_var	new;
 
 	j = 0;
-	while (envp[j])
+	if (!envp[0])
+		create_envp(shell, argv);
+	else
 	{
-		new.name = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
-		new.content = ft_substr(envp[j], find_char_index(envp[j], '=') + 1,
-				ft_strlen(envp[j]));
-		new.readable = 1;
-		new.alterable = 1;
-		create_envp_list(shell, &new);
-		free(new.name);
-		free(new.content);
-		j++;
+		while (envp[j])
+		{
+			new.name = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
+			new.content = ft_substr(envp[j], find_char_index(envp[j], '=') + 1,
+					ft_strlen(envp[j]));
+			new.readable = 1;
+			new.alterable = 1;
+			create_envp_list(shell, &new);
+			free(new.name);
+			free(new.content);
+			j++;
+		}
 	}
 }
