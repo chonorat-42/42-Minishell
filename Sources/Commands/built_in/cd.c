@@ -14,6 +14,46 @@
 
 extern long long	g_status;
 
+static int	replace_content(t_envp **envp, char *name, char *new_content)
+{
+	int		index;
+	t_envp	*temp;
+
+	index = 1;
+	temp = *envp;
+	while (temp)
+	{
+		if (ft_strcmp(temp->var.name, name) == 0)
+			break ;
+		index++;
+		temp = temp->next;
+	}
+	if (temp)
+	{
+		if (temp->var.content)
+			free(temp->var.content);
+		temp->var.content = ft_strdup(new_content);
+		if (!temp->var.content)
+			return (0);
+	}
+	return (1);
+}
+
+static void	mod_pwd(t_mshell *shell)
+{
+	char	*pwd;
+	char	path[PATH_MAX];
+
+	pwd = get_envvar_content(shell->envp, "PWD");
+	if (!replace_content(&shell->envp, "OLDPWD", pwd))
+		return (free(pwd), free_struct(shell));
+	free(pwd);
+	if (!getcwd(path, PATH_MAX))
+		return (free_struct(shell), exit(2));
+	if (!replace_content(&shell->envp, "PWD", path))
+		return (free_struct(shell), exit(2));
+}
+
 void cd_case(t_mshell *shell, char **cmd)
 {
 	char	*home;
@@ -28,6 +68,8 @@ void cd_case(t_mshell *shell, char **cmd)
 			return ;
 		if (chdir(cmd[1]))
 			builtin_error(cmd[0], cmd[1], 1);
+		else
+			mod_pwd(shell);
 	}
 	else
 	{

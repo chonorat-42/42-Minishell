@@ -14,18 +14,21 @@
 
 void get_current_location(t_mshell *shell)
 {
-	shell->current_loc = getcwd(NULL, 0);
+	char	path[PATH_MAX];
+
+	shell->current_loc = getcwd(path, PATH_MAX);
+	if (!shell->current_loc)
+		return (free_struct(shell), exit(2));
 }
 
 void	pwd_case(t_mshell *shell, int fd)
 {
-	get_current_location(shell);
-	if (shell->current_loc[0])
+	char	path[PATH_MAX];
+
+	shell->current_loc = getcwd(path, PATH_MAX);
+	if (!shell->current_loc)
+		shell->current_loc = NULL;
+	else if (shell->current_loc[0])
 		ft_dprintf(fd, "%s", shell->current_loc);
 	ft_dprintf(fd, "\n");
-	if (shell->current_loc)
-	{
-		free(shell->current_loc);
-		shell->current_loc = NULL;
-	}
 }
