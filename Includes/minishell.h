@@ -136,7 +136,7 @@ int			are_all_quotes_closed(char *str);
 char 		*get_other(char *str, size_t *i);
 void		get_envp(t_mshell *shell, char **envp);
 void		get_input_loop(t_mshell *shell);
-void		handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);
+void		handle_pipes(t_mshell *shell, t_tokens **temp, int *fd_in, int *fd_out);
 void		exec_forwarding(t_tokens *temp, t_mshell *shell);
 void		get_current_location(t_mshell *shell);
 void		print_env(t_envp *lst);
@@ -170,7 +170,9 @@ void		free_dlist(t_dlist **head);
 
 void		print_single_token(t_tokens *tkn);
 
-void	print_dlist(t_dlist	*lst);
+void		print_dlist(t_dlist	*lst);
+
+void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
 
 
 #endif

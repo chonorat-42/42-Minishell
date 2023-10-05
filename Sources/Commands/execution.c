@@ -62,8 +62,6 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 		dup2(fd_in, STDIN_FILENO);
 		close(fd_in);
 	}
-		
-	
 	j = -1;
 	get_current_location(shell);
 	trim = ft_strtrim(cmd_arr[0], ".");
@@ -279,7 +277,7 @@ void	execution(t_mshell *shell)
 		if (temp->next && temp->next->type == PIPE)
 		{
 			// print_single_token(temp);
-			handle_pipes(shell, &temp, temp->fd_in, temp->fd_out);
+			handle_pipes(shell, &temp, &temp->fd_in, &temp->fd_out);
 		}
 		else
 			exec_forwarding(temp, shell);
