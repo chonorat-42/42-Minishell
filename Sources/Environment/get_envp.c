@@ -12,44 +12,6 @@
 
 #include "minishell.h"
 
-size_t  get_arr_size(char **arr)
-{
-	size_t  i;
-
-	if (!arr)
-		return (0);
-	i = 0;
-	while (arr[i])
-		i++;
-	return (i);
-}
-
-char    **copy_tab(char **envp, size_t size)
-{
-	char	**arr;
-	size_t	j;
-	size_t	k;
-
-	arr = malloc(sizeof(char *) * (size + 1));
-	if (!arr)
-		return (NULL);
-	j = 0;
-	while (j < size)
-	{
-		arr[j] = ft_strdup(envp[j]);
-		if (!arr[j])
-		{
-			k = -1;
-			while (++k < j)
-				free(arr[k]);
-			return (NULL);
-		}
-		j++;
-	}
-	arr[size] = NULL;
-	return (arr);
-}
-
 void	t_envp_addback(t_envp **envp, t_envp **new)
 {
 	t_envp *temp;

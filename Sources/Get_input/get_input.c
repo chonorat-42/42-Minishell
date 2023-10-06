@@ -29,7 +29,6 @@ void	get_input_loop(t_mshell *shell)
 		update_envp(shell);
 		parsing(shell);
 		tokenizer(shell);
-		// manage_quotes(&shell->tok_lst);
 		execution(shell);
 	}
 }
