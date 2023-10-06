@@ -148,7 +148,7 @@ int			are_all_quotes_closed(char *str);
 char 		*get_other(char *str, size_t *i);
 
 void		get_envp(t_mshell *shell, char **envp, char **argv);
-void		create_envp(t_mshell *shell, char **argv);
+void		create_envp(t_mshell *shell, char **envp, char **argv);
 
 void		get_input_loop(t_mshell *shell);
 void		handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);

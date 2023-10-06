@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 01:28:10 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/06 13:00:25 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/06 13:01:06 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static int mod_shlvl(t_mshell *shell, int shlvl)
 	lvl = ft_itoa(shlvl);
 	if (!lvl)
 		return (0);
-	ft_printf("OKTEST\n");
 	temp = shell->envp;
 	while (temp)
 	{
