@@ -12,23 +12,26 @@
 
 #include "minishell.h"
 
-void get_current_location(t_mshell *shell)
+int	get_current_location(t_mshell *shell)
 {
 	char	path[PATH_MAX];
 
 	shell->current_loc = getcwd(path, PATH_MAX);
 	if (!shell->current_loc)
-		return (free_struct(shell), exit(2));
+	{
+		ft_dprintf(2, "error retrieving current directory\n");
+		return (0);
+	}
+	return (1);
 }
 
-void	pwd_case(t_mshell *shell, int fd)
+void	pwd_case(int fd)
 {
 	char	path[PATH_MAX];
 
-	shell->current_loc = getcwd(path, PATH_MAX);
-	if (!shell->current_loc)
-		shell->current_loc = NULL;
-	else if (shell->current_loc[0])
-		ft_dprintf(fd, "%s", shell->current_loc);
+	if (!getcwd(path, PATH_MAX))
+		ft_dprintf(2, "pwd: error retrieving current directory");
+	else if (path[0])
+		ft_dprintf(fd, "%s", path);
 	ft_dprintf(fd, "\n");
 }

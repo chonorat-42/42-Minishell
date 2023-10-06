@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 13:17:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/03 16:50:11 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/06 15:57:28 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,10 @@ static void	cd_error(char *arg, int error)
 		ft_dprintf(2, "HOME not set\n");
 	if (error == 3)
 		ft_dprintf(2, "too many arguments\n");
+	if (error == 4)
+		ft_dprintf(2, "%s: Permission denied\n", arg);
+	if (error == 5)
+		ft_dprintf(2, "%s: Not a directory\n", arg);
 	g_status = 1;
 }
 

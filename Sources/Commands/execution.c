@@ -65,7 +65,8 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 		
 	
 	j = -1;
-	get_current_location(shell);
+	if (!get_current_location(shell))
+		exit(1);
 	trim = ft_strtrim(cmd_arr[0], ".");
 	temp = ft_strjoin(shell->current_loc, trim);
 	free(trim);
@@ -159,7 +160,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 	else if (!ft_strcmp(temp->cmd_arr[0], "unset"))
 		unset_case(shell, temp->cmd_arr);
 	else if (!ft_strcmp(temp->cmd_arr[0], "pwd"))
-		pwd_case(shell, temp->fd_out);
+		pwd_case(temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "export"))
 		export_case(shell, temp->cmd_arr, temp->fd_out);
 	else
