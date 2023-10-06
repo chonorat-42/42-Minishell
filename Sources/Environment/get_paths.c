@@ -12,47 +12,47 @@
 
 #include "minishell.h"
 
-long int find_char_index(char *str, int c)
-{
-	long int	i;
+// long int find_char_index(char *str, int c)
+// {
+// 	long int	i;
 
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
+// 	i = 0;
+// 	while (str[i])
+// 	{
+// 		if (str[i] == c)
+// 			return (i);
+// 		i++;
+// 	}
+// 	return (-1);
+// }
 
-int compare_strings(char *str, char *envs)
-{
-	size_t i;
+// int compare_strings(char *str, char *envs)
+// {
+// 	size_t i;
 
-	i = find_char_index(envs, '=');
-	if (ft_strlen(str) == i)
-		return (1);
-	return (0);
-}
+// 	i = find_char_index(envs, '=');
+// 	if (ft_strlen(str) == i)
+// 		return (1);
+// 	return (0);
+// }
 
-int	find_envvar_index(char **envp, const char *str)
-{
-	int		j;
-	char	*temp;
+// int	find_envvar_index(char **envp, const char *str)
+// {
+// 	int		j;
+// 	char	*temp;
 
-	if (!envp)
-		return (-1);
-	j = 0;
-	while (envp[j])
-	{
-		temp = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
-		if (!ft_strcmp(temp, str))
-				return (j);
-		j++;
-	}
-	return (-1);
-}
+// 	if (!envp)
+// 		return (-1);
+// 	j = 0;
+// 	while (envp[j])
+// 	{
+// 		temp = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
+// 		if (!ft_strcmp(temp, str))
+// 				return (j);
+// 		j++;
+// 	}
+// 	return (-1);
+// }
 
 char	*get_envvar_content(t_envp *envp, char *to_find)
 {
@@ -100,7 +100,7 @@ static int	fix_paths(char *str, t_mshell *args)
 	temp = ft_split((const char *)str, ':');
 	if (!temp)
 		return (1);
-	size = count_arr_size(temp);
+	size = ft_arr_size(temp);
 	args->paths = malloc(sizeof(char *) * (size + 1));
 	if (!args->paths)
 		return (free_arr(temp), temp = NULL, 2);

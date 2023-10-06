@@ -60,8 +60,8 @@ void	get_envp(t_mshell *shell, char **envp, char **argv)
 	{
 		while (envp[j])
 		{
-			new.name = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
-			new.content = ft_substr(envp[j], find_char_index(envp[j], '=') + 1,
+			new.name = ft_substr(envp[j], 0, ft_char_index(envp[j], '='));
+			new.content = ft_substr(envp[j], ft_char_index(envp[j], '=') + 1,
 					ft_strlen(envp[j]));
 			new.readable = 1;
 			new.alterable = 1;

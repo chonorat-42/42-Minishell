@@ -188,4 +188,6 @@ void		get_fds(t_tokens **lst, t_envp *envp);
 
 void		heredoc_into_infile(t_dlist **lst);
 
+size_t		last_envvar_char(char *str);
+
 # endif

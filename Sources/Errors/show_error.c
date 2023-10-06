@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   show_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/03 15:01:19 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/06 13:56:16 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,5 @@ void	show_error(char *cmd, char *type, int error)
 	if (ft_strcmp(type, "EXEC") == 0)
 		exec_error(cmd, error);
 	if (ft_strcmp(type, "QUOTES") == 0)
-		ft_putendl_fd("quotes are not closed", 2);
+		ft_putendl_fd("Quotes are not closed", 2);
 }

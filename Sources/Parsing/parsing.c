@@ -36,6 +36,9 @@ int	are_all_quotes_closed(char *str)
 
 void    parsing(t_mshell *shell)
 {
+	if (!are_all_quotes_closed(shell->input))
+		return (show_error(NULL, "QUOTES", 0), free(shell->input),
+				get_input_loop(shell));
     if (shell->input[0] != '\0')
 		{
 			if (expand(shell, shell->input) == 1)

@@ -19,7 +19,7 @@ void cd_case(t_mshell *shell, char **cmd)
 	char	*home;
 	int		arg_count;
 
-	arg_count = count_arr_size(cmd);
+	arg_count = ft_arr_size(cmd);
 	if (arg_count > 1)
 	{
 		if (arg_count > 2)

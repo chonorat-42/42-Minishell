@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   resources.c                                        :+:      :+:    :+:   */
+/*   ft_char_index.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/20 12:34:33 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/17 16:50:41 by chonorat         ###   ########.fr       */
+/*   Created: 2023/10/06 13:44:45 by pgouasmi          #+#    #+#             */
+/*   Updated: 2023/10/06 13:44:45 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../Includes/libft.h"
 
-void	print_arr(char **arr)
+long	ft_char_index(char *str, int c)
 {
-	int j;
+	long	i;
 
-	if (DEBUG)
+	i = 0;
+	if (!str)
+		return (-1);
+	while (str[i])
 	{
-		j = -1;
-		while(arr[++j])
-			printf("%s\n", arr[j]);
+		if (str[i] == c)
+			return (i);
+		i++;
 	}
+	return (-1);
 }

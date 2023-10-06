@@ -18,6 +18,8 @@ char	*strjoin_free_both(char *s1, char *s2)
 	size_t	j;
 	char	*res;
 
+	if (!s1 || !s2)
+		return (NULL);
 	res = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	i = 0;
 	j = 0;
@@ -27,7 +29,6 @@ char	*strjoin_free_both(char *s1, char *s2)
 		i++;
 		j++;
 	}
-	ft_free_null(&s1);
 	i = 0;
 	while (s2[i])
 	{
@@ -35,7 +36,6 @@ char	*strjoin_free_both(char *s1, char *s2)
 		i++;
 		j++;
 	}
-	ft_free_null(&s2);
 	res[j] = '\0';
-	return (res);
+	return (ft_free_null(&s1), ft_free_null(&s2), res);
 }

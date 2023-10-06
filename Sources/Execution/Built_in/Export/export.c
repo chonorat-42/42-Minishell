@@ -161,7 +161,7 @@ static int	split_var(char *cmd, t_var *new)
 {
 	int	index;
 
-	index = find_char_index(cmd, '=');
+	index = ft_char_index(cmd, '=');
 	if (index > 0)
 	{
 		new->name = ft_substr(cmd, 0, index);
@@ -188,7 +188,7 @@ static void	get_readable(char *var, t_var *new)
 	new->content = NULL;
 	new->alterable = 1;
 	new->readable = 0;
-	index = find_char_index(var, '=');
+	index = ft_char_index(var, '=');
 	if (index > 0)
 		new->readable = 1;
 }
@@ -214,7 +214,7 @@ void	export_case(t_mshell *shell, char **cmd, int fd)
 			get_var(shell, cmd[index]);
 		index++;
 	}
-	if (count_arr_size(cmd) == 1)
+	if (ft_arr_size(cmd) == 1)
 	{
 		sort_env(shell);
 		print_export(shell->export, fd);
