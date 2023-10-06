@@ -62,6 +62,8 @@ FILES = ft_isalpha\
 		ft_putstr_fd\
 		ft_putendl_fd\
 		ft_putnbr_fd\
+		ft_arr_size\
+		ft_arr_copy\
 		ft_lstnew\
 		ft_lstadd_front\
 		ft_lstsize\

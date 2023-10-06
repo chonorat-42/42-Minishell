@@ -182,4 +182,10 @@ void		print_single_token(t_tokens *tkn);
 
 void		print_dlist(t_dlist	*lst);
 
-void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
+void		split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
+
+void		get_fds(t_tokens **lst, t_envp *envp);
+
+void		heredoc_into_infile(t_dlist **lst);
+
+# endif

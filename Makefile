@@ -34,33 +34,36 @@ CLEAN_LIBFT = @make clean -C Libft
 FCLEAN_LIBFT = @make fclean -C Libft
 NORM = @norminette | awk '$$NF!="OK!" {print "$(RED)" $$0 "\033[0;0m"}'
 FILES = minishell\
-		Commands/execution\
-		Commands/pipe\
-		Commands/heredoc\
-		Commands/built_in/echo\
-		Commands/built_in/cd\
-		Commands/built_in/env\
-		Commands/built_in/unset\
-		Commands/built_in/export\
-		Commands/built_in/pwd\
-		Commands/built_in/exit\
-		Utils/free\
-		Utils/get_envp\
-		Utils/get_paths\
-		Utils/get_input\
-		Utils/get_svar\
+		Environment/get_envp\
+		Environment/get_paths\
+		Environment/create_envp\
+		Environment/get_svar\
+		Environment/update_envp\
+		Parsing/parsing\
+		Parsing/expand\
+		Parsing/manage_quotes\
+		Tokenizer/tokenizer\
+		Tokenizer/tokens_redir\
+		Tokenizer/heredoc\
+		Get_input/get_input\
+		Execution/execution\
+		Execution/pipe\
+		Execution/heredoc\
+		Execution/Built_in/echo\
+		Execution/Built_in/cd\
+		Execution/Built_in/env\
+		Execution/Built_in/unset\
+		Execution/Built_in/Export/export\
+		Execution/Built_in/Export/export_utils\
+		Execution/Built_in/pwd\
+		Execution/Built_in/Exit/exit\
+		Execution/Built_in/Exit/exit_utils\
+		Execution/Built_in/builtin_error\
+		Signals/sig_handler\
+		Errors/show_error\
+		Free/free\
 		Utils/resources\
-		Utils/tokenizer\
-		Utils/sig_handler\
-		Utils/parsing\
-		Utils/export_utils\
-		Utils/expand\
-		Utils/update_envp\
-		Utils/builtin_error\
-		Utils/create_envp\
-		Utils/show_error\
-		Utils/exit_utils\
-		Utils/manage_quotes
+
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 
@@ -73,7 +76,7 @@ $(NAME): $(OBJS)
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
 	$(DIR) Objects
-	$(DIR) Objects/Commands Objects/Utils Objects/Commands/built_in
+	$(DIR) Objects/Utils Objects/Environment Objects/Get_input Objects/Parsing Objects/Tokenizer Objects/Execution Objects/Execution/Built_in Objects/Execution/Built_in/Export Objects/Execution/Built_in/Exit Objects/Signals Objects/Errors Objects/Free
 	$(PRINT) "Compiling ${_BOLD}$<$(_END)..."
 	$(CC) -c $(CFLAGS) $< -o $@
 

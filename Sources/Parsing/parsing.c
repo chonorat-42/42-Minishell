@@ -12,6 +12,28 @@
 
 #include "minishell.h"
 
+int	are_all_quotes_closed(char *str)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (str[i])
+	{
+		if ((str[i] == '\'' || str[i] == '\"'))
+		{
+			j = i + 1;
+			while (str[j] && str[j] != str[i])
+				j++;
+			if (!str[j])
+				return (0);
+			i = j;
+		}
+		i++;
+	}
+	return (1);
+}
+
 void    parsing(t_mshell *shell)
 {
     if (shell->input[0] != '\0')
