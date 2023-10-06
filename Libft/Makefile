@@ -32,6 +32,7 @@ FILES = ft_isalpha\
 		ft_isalnum\
 		ft_isascii\
 		ft_isprint\
+		ft_isws\
 		ft_strlen\
 		ft_memset\
 		ft_bzero\

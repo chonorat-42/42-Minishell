@@ -1,41 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_utils.c                                     :+:      :+:    :+:   */
+/*   ft_is_ws.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/06 18:03:32 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/10/06 18:03:32 by pgouasmi         ###   ########.fr       */
+/*   Created: 2023/10/06 19:48:50 by pgouasmi          #+#    #+#             */
+/*   Updated: 2023/10/06 19:48:50 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../Includes/libft.h"
 
-int	is_char_in_set(char c, char *set)
+int	ft_isws(char c)
 {
-	size_t	i;
-
-	i = 0;
-	while (set[i])
-	{
-		if (c == set[i])
-			return (1);
-		i++;
-	}
+	if ((c >= 9 && c <= 13) || c == ' ')
+		return (1);
 	return (0);
-}
-
-size_t	last_envvar_char(char *str)
-{
-	size_t	i;
-
-	i = 1;
-	while (str[i])
-	{
-		if (ft_isws(str[i]) || is_char_in_set(str[i], "\"\'=$"))
-			return (i);
-		i++;
-	}
-	return (i);
 }

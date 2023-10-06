@@ -12,6 +12,18 @@
 
 #include "minishell.h"
 
+void	free_tokens_dlist(t_tokens **lst)
+{
+	t_tokens	*temp;
+
+	temp = *lst;
+	while (temp)
+	{
+		free_dlist(&temp->dlst);
+		temp = temp->next;
+	}
+}
+
 void	free_arr(char **arr)
 {
 	int j;

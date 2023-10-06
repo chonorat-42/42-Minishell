@@ -40,12 +40,16 @@ FILES = minishell\
 		Environment/get_svar\
 		Environment/update_envp\
 		Parsing/parsing\
-		Parsing/manage_quotes\
+		Parsing/Quotes/manage_quotes\
 		Parsing/Expand/expand\
 		Parsing/Expand/expand_utils\
 		Tokenizer/tokenizer\
-		Tokenizer/tokens_redir\
 		Tokenizer/heredoc\
+		Tokenizer/parse_tokens\
+		Tokenizer/prints\
+		Tokenizer/Redirections/tokens_redir\
+		Tokenizer/Redirections/tokens_dlist\
+		Tokenizer/Cmd_arrays/cmd_arr\
 		Get_input/get_input\
 		Execution/execution\
 		Execution/pipe\
@@ -77,7 +81,7 @@ $(NAME): $(OBJS)
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
 	$(DIR) Objects
-	$(DIR) Objects/Utils Objects/Environment Objects/Get_input Objects/Parsing Objects/Parsing/Expand Objects/Tokenizer Objects/Execution Objects/Execution/Built_in Objects/Execution/Built_in/Export Objects/Execution/Built_in/Exit Objects/Signals Objects/Errors Objects/Free
+	$(DIR) Objects/Utils Objects/Environment Objects/Get_input Objects/Parsing Objects/Parsing/Expand Objects/Parsing/Quotes Objects/Tokenizer Objects/Tokenizer/Redirections Objects/Tokenizer/Cmd_arrays Objects/Execution Objects/Execution/Built_in Objects/Execution/Built_in/Export Objects/Execution/Built_in/Exit Objects/Signals Objects/Errors Objects/Free
 	$(PRINT) "Compiling ${_BOLD}$<$(_END)..."
 	$(CC) -c $(CFLAGS) $< -o $@
 
