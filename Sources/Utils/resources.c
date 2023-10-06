@@ -24,6 +24,23 @@
 	}
 }*/
 
+int	history(char *input)
+{
+	int	index;
+
+	if (!input[0])
+		return (0);
+	index = 0;
+	while (input[index])
+	{
+		if (is_ws(input[index]))
+			index++;
+		else
+			return (1);
+	}
+	return (0);
+}
+
 void	print_arr(char **arr)
 {
 	int j;

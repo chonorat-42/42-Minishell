@@ -18,13 +18,13 @@ void	get_input_loop(t_mshell *shell)
 	{
 		sig_handler();
 		get_prompt(shell);
+		get_svar(shell);
 		shell->input = readline(shell->prompt);
 		if (!shell->input)
-			return (ft_printf("exit\n"), free_struct(shell), exit(0));
-		if (shell->input[0])
+			return (exit_case(shell, shell->exit));
+		if (history(shell->input))
 			add_history(shell->input);
 		get_paths(shell);
-		get_svar(shell);
 		update_envp(shell);
 		parsing(shell);
 		tokenizer(shell);

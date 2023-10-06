@@ -129,5 +129,7 @@ void	free_struct(t_mshell *shell)
 		free_envp(&shell->envp);
 	if (shell->export)
 		free_envp(&shell->export);
+	if (shell->exit)
+		free_arr(shell->exit);
 	clear_history();
 }

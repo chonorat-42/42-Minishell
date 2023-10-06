@@ -94,6 +94,7 @@ typedef struct s_mshell
 	char		**paths;
 	char		*current_loc;
 	int			exit_status;
+	char		**exit;
 	size_t		cmd_count;
 	t_tokens	*tok_lst;
 	t_envp		*envp;
@@ -105,6 +106,7 @@ void		exec_sig(void);
 
 void		get_prompt(t_mshell *shell);
 void		update_shlvl(t_mshell *shell);
+int			history(char *input);
 
 void		get_paths(t_mshell *shell);
 size_t		count_arr_size(char **arr);
