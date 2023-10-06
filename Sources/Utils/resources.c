@@ -12,6 +12,13 @@
 
 #include "minishell.h"
 
+void	move_to_next_quote(char *str, size_t *i, char c)
+{
+	(*i)++;
+	while (str[(*i)] && str[(*i)] != c)
+		(*i)++;
+}
+
 void	print_arr(char **arr)
 {
 	int j;

@@ -190,4 +190,18 @@ void		heredoc_into_infile(t_dlist **lst);
 
 size_t		last_envvar_char(char *str);
 
+void		split_on_pipes(t_mshell *shell, char *str);
+
+void		parse_tkn(t_tokens **tok, t_mshell *shell);
+
+void		split_tokens_into_dlst(t_tokens **lst, t_mshell *shell);
+
+void		manage_quotes_arr(t_tokens	**lst);
+
+void		free_tokens_dlist(t_tokens **lst);
+
+void		create_cmd_arr(t_tokens **tk_lst, t_mshell *shell);
+
+void	move_to_next_quote(char *str, size_t *i, char c);
+
 # endif

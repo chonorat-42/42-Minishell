@@ -12,6 +12,28 @@
 
 #include "minishell.h"
 
+void	manage_quotes_arr(t_tokens	**lst)
+{
+	size_t		i;
+	t_tokens	*temp2;
+	char		*temp;
+
+	temp2 = *lst;
+	while (temp2)
+	{
+		i = 0;
+		while (temp2->cmd_arr[i])
+		{
+			temp = remove_quotes(temp2->cmd_arr[i]);
+			free(temp2->cmd_arr[i]);
+			temp2->cmd_arr[i] = ft_strdup(temp);
+			free(temp);
+			i++;
+		}
+		temp2 = temp2->next;
+	}
+}
+
 char	*get_other(char *str, size_t *i)
 {
 	size_t	j;
