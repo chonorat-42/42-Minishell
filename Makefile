@@ -40,8 +40,9 @@ FILES = minishell\
 		Environment/get_svar\
 		Environment/update_envp\
 		Parsing/parsing\
-		Parsing/expand\
 		Parsing/manage_quotes\
+		Parsing/Expand/expand\
+		Parsing/Expand/expand_utils\
 		Tokenizer/tokenizer\
 		Tokenizer/tokens_redir\
 		Tokenizer/heredoc\
@@ -76,7 +77,7 @@ $(NAME): $(OBJS)
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
 	$(DIR) Objects
-	$(DIR) Objects/Utils Objects/Environment Objects/Get_input Objects/Parsing Objects/Tokenizer Objects/Execution Objects/Execution/Built_in Objects/Execution/Built_in/Export Objects/Execution/Built_in/Exit Objects/Signals Objects/Errors Objects/Free
+	$(DIR) Objects/Utils Objects/Environment Objects/Get_input Objects/Parsing Objects/Parsing/Expand Objects/Tokenizer Objects/Execution Objects/Execution/Built_in Objects/Execution/Built_in/Export Objects/Execution/Built_in/Exit Objects/Signals Objects/Errors Objects/Free
 	$(PRINT) "Compiling ${_BOLD}$<$(_END)..."
 	$(CC) -c $(CFLAGS) $< -o $@
 

@@ -53,7 +53,7 @@ void	echo_case(char **cmd, int fd)
 	index = 1;
 	printed = 0;
 	option = 0;
-	arg_count = count_arr_size(cmd);
+	arg_count = ft_arr_size(cmd);
 	get_option(cmd, &option, &index);
 	while (index < arg_count)
 	{

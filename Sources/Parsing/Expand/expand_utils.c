@@ -1,41 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   strjoin_free_first.c                               :+:      :+:    :+:   */
+/*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/03 00:06:29 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/09/03 00:06:29 by pgouasmi         ###   ########.fr       */
+/*   Created: 2023/10/06 18:03:32 by pgouasmi          #+#    #+#             */
+/*   Updated: 2023/10/06 18:03:32 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Includes/libft.h"
+#include "minishell.h"
 
-char	*strjoin_free_first(char **s1, char *s2)
+int	is_char_in_set(char c, char *set)
 {
 	size_t	i;
-	size_t	j;
-	char	*res;
 
-	if (!*s1 || !s2)
-		return (NULL);
-	res = malloc(sizeof(char) * (ft_strlen(*s1) + ft_strlen(s2) + 1));
 	i = 0;
-	j = 0;
-	while ((*s1)[i])
+	while (set[i])
 	{
-		res[j] = (*s1)[i];
+		if (c == set[i])
+			return (1);
 		i++;
-		j++;
 	}
-	i = 0;
-	while (s2[i])
+	return (0);
+}
+
+size_t	last_envvar_char(char *str)
+{
+	size_t	i;
+
+	i = 1;
+	while (str[i])
 	{
-		res[j] = s2[i];
+		if (is_ws(str[i]) || is_char_in_set(str[i], "\"\'=$"))
+			return (i);
 		i++;
-		j++;
 	}
-	res[j] = '\0';
-	return (ft_free_null(s1), res);
+	return (i);
 }

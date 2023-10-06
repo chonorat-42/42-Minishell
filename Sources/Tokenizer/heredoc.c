@@ -47,17 +47,14 @@ void	heredoc(char *delimiter, int fd_in, t_envp *envp)
 		}
 		else
 		{
-			if (find_char_index(line, '$') >= 0)
+			if (ft_char_index(line, '$') >= 0)
 			{
-				if (check_after_dollar(line))
-				{
-    				temp = expand_envvar(line, envp);
-					ft_free_null(&line);
-				}
+    			temp = expand_envvar(line, envp);
+				ft_free_null(&line);
 			}
 			else
 				temp = ft_strdup(line);
-			line = strjoin_free_first(temp, "\n");
+			line = strjoin_free_first(&temp, "\n");
 			if (result)
 			{
 				result = strjoin_free_both(result, line);

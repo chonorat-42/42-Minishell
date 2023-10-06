@@ -66,6 +66,7 @@ int			ft_putnbr_fd(int n, int fd);
 
 size_t  	ft_arr_size(char **arr);
 char    	**ft_arr_copy(char **envp, size_t size);
+long		ft_char_index(char *str, int c);
 
 t_list		*ft_lstnew(void *content);
 void		ft_lstadd_front(t_list **lst, t_list *new);
@@ -104,7 +105,7 @@ char		*stash_ready(char *stash);
 char		*read_save(int fd, char *stash);
 
 void		ft_free_null(char **str);
-char		*strjoin_free_first(char *s1, char *s2);
+char		*strjoin_free_first(char **s1, char *s2);
 char		*strjoin_free_both(char *s1, char *s2);
 
 

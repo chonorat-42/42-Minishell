@@ -209,13 +209,10 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 {
 	t_dlist	*new;
 	t_dlist *temp;
-	char	*brut;
 
 	new = malloc(sizeof(t_dlist));
 	new->next = NULL;
-	brut = ft_substr(str, j, i - j);
-	new->content = ft_strtrim(brut, " \n\t");
-	free(brut);
+	new->content = ft_substr(str, j, i - j);
 	if (!*lst)
 	{
 		*lst = new;
