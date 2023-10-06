@@ -120,8 +120,10 @@ void 		struct_init(t_mshell *shell);
 void		sig_handler(void);
 int			tokenizer(t_mshell *shell);
 
+int			check_option(t_mshell *shell, char **cmd);
+
 void		cd_case(t_mshell *shell, char **cmd);
-void		pwd_case(int fd);
+void		pwd_case(t_mshell *shell, char **cmd, int fd);
 void		echo_case(char **cmd, int fd);
 void		env_case(t_mshell *shell, char **cmd, int fd);
 void		unset_case(t_mshell *shell, char **cmd);

@@ -60,6 +60,8 @@ void	unset_case(t_mshell *shell, char **cmd)
 {
 	int	index;
 
+	if (check_option(shell, cmd))
+		return ;
 	index = 1;
 	while (cmd[index])
 	{

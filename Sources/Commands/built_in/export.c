@@ -210,6 +210,8 @@ void	export_case(t_mshell *shell, char **cmd, int fd)
 	index = 1;
 	while (cmd[index])
 	{
+		if (check_option(shell, cmd))
+			break ;
 		if (is_var(cmd[index]))
 			get_var(shell, cmd[index]);
 		index++;
