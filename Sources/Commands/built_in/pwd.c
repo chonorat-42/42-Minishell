@@ -14,9 +14,7 @@
 
 void get_current_location(t_mshell *shell)
 {
-	 shell->current_loc = getcwd(NULL, 0);
-	 if (!shell->current_loc)
-		ft_printf("PWD");
+	shell->current_loc = getcwd(NULL, 0);
 }
 
 void	pwd_case(t_mshell *shell, int fd)

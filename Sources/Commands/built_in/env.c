@@ -17,16 +17,15 @@ void env_case(t_mshell *shell, char **cmd, int fd)
 	t_envp	*temp;
 
 	(void)cmd;
-
 	temp = shell->envp;
 	while (temp)
 	{
-		// if (temp->var.readable == 1)
-		// {
+		if (temp->var.readable == 1)
+		{
 			ft_putstr_fd(temp->var.name, fd);
 			ft_putchar_fd('=', fd);
 			ft_putendl_fd(temp->var.content, fd);
-		// }
+		}
 		temp = temp->next;
 	}
 }

@@ -28,6 +28,12 @@
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"
 
+/*			DEBUG			*/
+# ifndef DEBUG
+#  define DEBUG 0
+# endif
+/*							*/
+# include <limits.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
@@ -93,6 +99,8 @@ typedef struct s_mshell
 }				t_mshell;
 
 void		sig_handler(void);
+void		exec_sig(void);
+
 void		get_paths(t_mshell *shell);
 size_t		count_arr_size(char **arr);
 void		print_arr(char **arr);
@@ -133,7 +141,10 @@ int			check_after_dollar(char *str);
 
 int			are_all_quotes_closed(char *str);
 char 		*get_other(char *str, size_t *i);
-void		get_envp(t_mshell *shell, char **envp);
+
+void		get_envp(t_mshell *shell, char **envp, char **argv);
+void		create_envp(t_mshell *shell, char **argv);
+
 void		get_input_loop(t_mshell *shell);
 void		handle_pipes(t_mshell *shell, t_tokens **temp, int *fd_in, int *fd_out);
 void		exec_forwarding(t_tokens *temp, t_mshell *shell);
@@ -172,6 +183,3 @@ void		print_single_token(t_tokens *tkn);
 void		print_dlist(t_dlist	*lst);
 
 void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
-
-
-#endif

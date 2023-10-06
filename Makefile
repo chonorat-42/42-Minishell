@@ -32,6 +32,7 @@ LIBFT = Libft/libft.a
 MAKE_LIBFT = @make -C Libft
 CLEAN_LIBFT = @make clean -C Libft
 FCLEAN_LIBFT = @make fclean -C Libft
+NORM = @norminette | awk '$$NF!="OK!" {print "$(RED)" $$0 "\033[0;0m"}'
 FILES = minishell\
 		Commands/execution\
 		Commands/pipe\
@@ -56,6 +57,7 @@ FILES = minishell\
 		Utils/expand\
 		Utils/update_envp\
 		Utils/builtin_error\
+		Utils/create_envp\
 		Utils/show_error\
 		Utils/exit_utils\
 		Utils/manage_quotes
@@ -104,5 +106,10 @@ exec : all
 
 val : all
 	valgrind --leak-check=full --show-reachable=no --track-origins=yes -s --track-fds=yes ./minishell
+
+#debug: $(OBJS)
+#	$(PRINT) "${_RED}----------DEBUG----------${_END}"
+#	$(NORM)
+#	leaks_r 
 
 .PHONY: all clean fclean re exec val

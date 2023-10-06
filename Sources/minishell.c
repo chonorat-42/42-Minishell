@@ -56,13 +56,10 @@ int main(int argc, char **argv, char **envp)
 {
 	t_mshell	shell;
 
-	(void)argv;
 	if (argc != 1)
 		return (ft_printf("Error\nMinishell does not take arguments\n"), 1);
 	init_shell(&shell);
-	sig_handler();
-	get_envp(&shell, envp);
-	get_paths(&shell);
+	get_envp(&shell, envp, argv);
 	get_input_loop(&shell);
 	return (shell.exit_status);
 }
