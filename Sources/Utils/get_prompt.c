@@ -6,11 +6,28 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 23:46:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/06 12:24:45 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/07 01:20:55 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	history(char *input)
+{
+	int	index;
+
+	if (!input[0])
+		return (0);
+	index = 0;
+	while (input[index])
+	{
+		if (ft_isws(input[index]))
+			index++;
+		else
+			return (1);
+	}
+	return (0);
+}
 
 static char	*get_directory(t_mshell *shell)
 {

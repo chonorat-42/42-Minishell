@@ -12,28 +12,44 @@
 
 #include "minishell.h"
 
+long int find_char_index(char *str, int c)
+{
+	long int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+int	find_envvar_index(char **envp, const char *str)
+{
+	int		j;
+	char	*temp;
+
+	if (!envp)
+		return (-1);
+	j = 0;
+	while (envp[j])
+	{
+		temp = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
+		if (!ft_strcmp(temp, str))
+				return (free(temp), j);
+		free(temp);
+		j++;
+	}
+	return (-1);
+}
+
 void	move_to_next_quote(char *str, size_t *i, char c)
 {
 	(*i)++;
 	while (str[(*i)] && str[(*i)] != c)
 		(*i)++;
-}
-
-int	history(char *input)
-{
-	int	index;
-
-	if (!input[0])
-		return (0);
-	index = 0;
-	while (input[index])
-	{
-		if (is_ws(input[index]))
-			index++;
-		else
-			return (1);
-	}
-	return (0);
 }
 
 void	print_arr(char **arr)
