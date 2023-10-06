@@ -88,6 +88,7 @@ typedef struct s_mshell
 {
 	char		*input;
 	char		**cmd;
+	char		*prompt;
 	size_t		envp_size;
 	char		**menvp;
 	char		**paths;
@@ -101,6 +102,9 @@ typedef struct s_mshell
 
 void		sig_handler(void);
 void		exec_sig(void);
+
+void		get_prompt(t_mshell *shell);
+void		update_shlvl(t_mshell *shell);
 
 void		get_paths(t_mshell *shell);
 size_t		count_arr_size(char **arr);

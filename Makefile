@@ -58,6 +58,8 @@ FILES = minishell\
 		Utils/update_envp\
 		Utils/builtin_error\
 		Utils/create_envp\
+		Utils/get_prompt\
+		Utils/update_shlvl\
 		Utils/show_error\
 		Utils/exit_utils\
 		Utils/manage_quotes

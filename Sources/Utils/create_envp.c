@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:20:57 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/05 16:40:55 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/05 23:55:12 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,23 @@ static void	underscore(t_mshell *shell, char **argv)
 	create_envp_list(shell, &new);
 }
 
+static void	old_pwd(t_mshell *shell)
+{
+	t_var	new;
+
+	new.name = ft_strdup("OLDPWD");
+	if (!new.name)
+		return (free_struct(shell), exit(2));
+	new.content = NULL;
+	new.readable = 0;
+	new.alterable = 1;
+	create_envp_list(shell, &new);
+}
+
 void	create_envp(t_mshell *shell, char **argv)
 {
 	pwd(shell);
 	shlvl(shell);
 	underscore(shell, argv);
+	old_pwd(shell);
 }

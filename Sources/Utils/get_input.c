@@ -12,14 +12,13 @@
 
 #include "minishell.h"
 
-extern int	g_status;
-
 void	get_input_loop(t_mshell *shell)
 {
 	while (1)
 	{
 		sig_handler();
-		shell->input = readline("\033[1mminishell@42\033[0m:~\033[0;32m$\033[0m ");
+		get_prompt(shell);
+		shell->input = readline(shell->prompt);
 		if (!shell->input)
 			return (ft_printf("exit\n"), free_struct(shell), exit(0));
 		if (shell->input[0])
@@ -29,7 +28,8 @@ void	get_input_loop(t_mshell *shell)
 		update_envp(shell);
 		parsing(shell);
 		tokenizer(shell);
-		// manage_quotes(&shell->tok_lst);
 		execution(shell);
+		if (shell->prompt)
+			free(shell->prompt);
 	}
 }

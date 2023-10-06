@@ -70,14 +70,14 @@ void cd_case(t_mshell *shell, char **cmd)
 			builtin_error(cmd[0], cmd[1], 1);
 		else
 			mod_pwd(shell);
+		return ;
 	}
+	home = get_envvar_content(shell->envp, "HOME");
+	if (!home[0])
+		return (free(home), builtin_error(cmd[0], cmd[1], 2));
+	if (chdir(home))
+		builtin_error(cmd[0], home, 1);
 	else
-	{
-		home = get_envvar_content(shell->envp, "HOME");
-		if (!home[0])
-			return (free(home), builtin_error(cmd[0], cmd[1], 2));
-		if (chdir(home))
-			builtin_error(cmd[0], home, 1);
-		free(home);
-	}
+		mod_pwd(shell);
+	free(home);
 }

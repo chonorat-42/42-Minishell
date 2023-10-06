@@ -60,6 +60,7 @@ int main(int argc, char **argv, char **envp)
 		return (ft_printf("Error\nMinishell does not take arguments\n"), 1);
 	init_shell(&shell);
 	get_envp(&shell, envp, argv);
+	update_shlvl(&shell);
 	get_input_loop(&shell);
 	return (shell.exit_status);
 }

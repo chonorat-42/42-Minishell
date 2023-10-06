@@ -60,11 +60,15 @@ char	*get_envvar_content(t_envp *envp, char *to_find)
 	char	*result;
 
 	temp = envp;
+	result = NULL;
 	while (temp)
 	{
 		if (!ft_strcmp(to_find, temp->var.name))
 		{
-			result = ft_strdup(temp->var.content);
+			if (temp->var.content)
+				result = ft_strdup(temp->var.content);
+			else
+				break ;
 			return (result);
 		}
 		temp = temp->next;
