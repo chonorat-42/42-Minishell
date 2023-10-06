@@ -88,14 +88,14 @@ void print_tkns_up(t_tokens *lst)
 	}
 }
 
-int create_token(t_mshell *shell, int i, int j)
+int create_token(t_mshell *shell, int i, int j, char *to_add)
 {
 	t_tokens *new;
 	t_tokens *temp;
 	char *str;
 	char *result;
 
-	str = ft_substr((const char *)shell->input, j, (i - j));
+	str = ft_substr((const char *)to_add, j, (i - j));
 	if (!str)
 		return (1);
 	if (!str[0])
@@ -127,7 +127,10 @@ int create_token(t_mshell *shell, int i, int j)
 		new->next = NULL;
 	}
 	new->content = ft_strdup(result);
-	new->type = 0;
+	if (new->content[0] == '|')
+		new->type = PIPE;
+	else
+		new->type = CMD;
 	new->cmd_arr = NULL;
 	new->fd_in = 0;
 	new->fd_out = 1;
@@ -157,17 +160,17 @@ void	split_on_pipes(t_mshell *shell, char *str)
 			move_to_next_quote(str, &i, str[i]);
 		else if (is_char_in_set(str[i], "|"))
 		{
-			create_token(shell, i, j);
+			create_token(shell, i, j, str);
 			j = i;
 			i++;
-			create_token(shell, i, j);
+			create_token(shell, i, j, str);
 			j = i;
-			i++;
+			// i++;
 		}
 		else
 			i++;
 	}
-	create_token(shell, i, j);
+	create_token(shell, i, j, str);
 }
 
 char	*get_next_word(char *str)
@@ -213,7 +216,7 @@ void	heredoc_into_infile(t_dlist **lst)
 	temp->content = ft_strdup("<");
 	temp = temp->next;
 	free(temp->content);
-	temp->content = ft_strdup("/tmp/temp.heredoc");
+	temp->content = ft_strdup("/tmp/temp.heredoc2");
 }
 
 void	get_fd_in(t_tokens **tok, t_envp *envp)
@@ -241,7 +244,9 @@ void	get_fd_in(t_tokens **tok, t_envp *envp)
 			}	
 			else if (temp_dlst->content[0] == '<' && ft_strlen(temp_dlst->content) == 2)
 			{
-				temp_fd = open("/tmp/temp.heredoc", O_RDWR | O_CREAT, 0666);
+				if (has_fd)
+					close(temp_fd);
+				temp_fd = open("/tmp/temp.heredoc2", O_RDWR | O_CREAT | O_TRUNC, 0666);
 				heredoc(temp_dlst->next->content, temp_fd, envp);
 				heredoc_into_infile(&(*tok)->dlst);
 				get_fd_in(tok, envp);
@@ -272,7 +277,7 @@ void	get_fd_out(t_tokens **tok)
 			{
 				if (has_fd)
 					close(temp_fd);
-				temp_fd = open(temp_dlst->next->content, O_RDWR | O_CREAT | O_TRUNC, 0666);
+				temp_fd = open(temp_dlst->next->content, O_RDWR | O_CREAT, 0666);
 				has_fd++;
 			}
 			else if (temp_dlst->content[0] == '>' && ft_strlen(temp_dlst->content) == 2)
@@ -341,14 +346,6 @@ void	print_dlist(t_dlist	*lst)
 	}
 	ft_printf("\n");
 }
-
-// void	free_next_two_nodes(t_dlist	**to_delete,t_dlist	**to_delete2)
-// {
-// 	free((*to_delete)->content);
-//     free(*to_delete);
-//     free((*to_delete2)->content);
-//     free(*to_delete2);
-// }
 
 void	remove_fd_lst(t_dlist **lst, char c, t_dlist **new)
 {
@@ -442,15 +439,38 @@ void	print_arrays_in_list(t_tokens *lst)
 	}
 }
 
-void	create_cmd_arr(t_tokens **tk_lst)
+void	get_commands_lst(t_dlist *base, t_dlist **new)
+{
+	t_dlist	*temp;
+
+	temp = base;
+	while (temp)
+	{
+		if (is_char_in_set(temp->content[0], "<>"))
+			temp = temp->next->next;
+		else
+		{
+			split_into_dlst(new, temp->content, ft_strlen(temp->content), 0);
+			temp = temp->next;
+		}
+	}
+}
+
+void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 {
 	t_tokens	*temp;
+	t_dlist		*new;
 
 		temp = *tk_lst;
 		while (temp)
 		{
-			temp->cmd_arr = list_into_arr(temp->dlst);
+			new = NULL;
+			get_commands_lst(temp->dlst, &new);
+			temp->cmd_arr = list_into_arr(new);
+			if (!temp->cmd_arr)
+				return (ft_free_tokens(tk_lst), get_input_loop(shell));
 			free_dlist(&temp->dlst);
+			free_dlist(&new);
 			temp = temp->next;
 		}
 }
@@ -528,7 +548,7 @@ void	get_chevrons(char *str, size_t *i, char c, t_dlist **lst)
 	split_into_dlst(lst, str, *i, j);
 }
 
-void	split_words_and_redir(t_dlist **lst, char *str)
+void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 {
 	size_t	i;
 	size_t	j;
@@ -549,6 +569,8 @@ void	split_words_and_redir(t_dlist **lst, char *str)
 			while (is_ws(str[i]))
 				i++;
 			get_chevrons(str, &i, str[i], lst);
+			if (!str[i])
+				return (ft_printf("minishell: syntax error near unexpected token `newline'\n"), ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
 			get_redir(str, &i, lst);
 			while (str[i] && is_ws(str[i]))
 				i++;
@@ -569,7 +591,7 @@ void	split_words_and_redir(t_dlist **lst, char *str)
 		split_into_dlst(lst, str, i, j);
 }
 
-void	split_input_into_dlst(t_tokens **lst)
+void	split_input_into_dlst(t_tokens **lst, t_mshell *shell)
 {
 	t_tokens	*temp;
 
@@ -577,7 +599,7 @@ void	split_input_into_dlst(t_tokens **lst)
 	while (temp)
 	{
 		temp->dlst = NULL;
-		split_words_and_redir(&temp->dlst, temp->content);
+		split_words_and_redir(&temp->dlst, temp->content, shell);
 		temp = temp->next;
 	}
 }
@@ -595,19 +617,67 @@ void	print_tokens_dlist(t_tokens *tok)
 	}
 }
 
-/*to fix : several redirect --> keep the last one
-leak redaline de heredoc */
+// void	update_tok(t_mshell *shell, char *to_add)
+// {
+// 	size_t	i;
+// 	size_t	j;
+
+// 	i = 0;
+// 	h = 0;
+// 	while (str[i])
+// 	{
+// 		if (
+// 	}
+// }
+
+void	hdoc_add_cmd(t_mshell *shell)
+{
+	char	*to_add;
+
+	to_add = readline(">");
+	split_on_pipes(shell, to_add);
+	free(to_add);
+}
+
+int	last_is_pipe(t_tokens *tok)
+{
+	t_tokens	*temp;
+
+	temp = tok;
+	while (temp->next)
+		temp = temp->next;
+	if (temp->type == PIPE)
+		return (1);
+	return (0);
+}
+
+void	parse_tkn(t_tokens **tok, t_mshell *shell)
+{
+	t_tokens	*temp;
+
+	temp = *tok;
+	if (temp->type == PIPE)
+		return (ft_printf("minishell: syntax error near unexpected token '|'\n"), ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
+	while(last_is_pipe(*tok))
+	{
+		while (temp->next)
+			temp = temp->next;
+		if (temp->type == PIPE)
+			hdoc_add_cmd(shell);
+	}
+}
+
+/*if last = pipe->heredoc 
+if !redir --> error code : syntax error near unexpected token `newline'*/
 
 int	tokenizer(t_mshell *shell)
 {
 	shell->tok_lst = NULL;
 	split_on_pipes(shell, shell->input);
-	split_input_into_dlst(&shell->tok_lst);
+	parse_tkn(&shell->tok_lst, shell);
+	split_input_into_dlst(&shell->tok_lst, shell);
 	get_fds(&shell->tok_lst, shell->envp);
-	remove_redirect(&shell->tok_lst);
-	// ft_printf("after remove redirect :\n");
-	// print_tokens_dlist(shell->tok_lst);
-	create_cmd_arr(&shell->tok_lst);
+	create_cmd_arr(&shell->tok_lst, shell);
 	manage_quotes_arr(&shell->tok_lst);
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);

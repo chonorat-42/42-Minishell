@@ -24,7 +24,6 @@
 # define APPEND 9
 # define HEREDOC 10
 # define HEREDEL 11
-# define MAX_SIZE 100
 
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"
@@ -147,7 +146,7 @@ void		get_envp(t_mshell *shell, char **envp, char **argv);
 void		create_envp(t_mshell *shell, char **argv);
 
 void		get_input_loop(t_mshell *shell);
-void		handle_pipes(t_mshell *shell, t_tokens **temp, int fd_in, int fd_out);
+void		handle_pipes(t_mshell *shell, t_tokens **temp, int *fd_in, int *fd_out);
 void		exec_forwarding(t_tokens *temp, t_mshell *shell);
 void		get_current_location(t_mshell *shell);
 void		print_env(t_envp *lst);
@@ -181,4 +180,6 @@ void		free_dlist(t_dlist **head);
 
 void		print_single_token(t_tokens *tkn);
 
-#endif
+void		print_dlist(t_dlist	*lst);
+
+void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
