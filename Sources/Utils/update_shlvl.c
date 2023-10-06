@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 01:28:10 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/06 13:01:06 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/06 13:39:59 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,20 @@ void	update_shlvl(t_mshell *shell)
 {
 	int		shlvl;
 	char	*content;
+	char	*temp;
 
-	content = get_envvar_content(shell->envp, "SHLVL");
-	if (!content)
+	temp = get_envvar_content(shell->envp, "SHLVL");
+	if (!temp)
 		return (free_struct(shell), exit(2));
-	if (content[0] && only_digit(content))
+	content = ft_strtrim(temp, " \t\n\v\f\r");
+	free(temp);
+	if (only_digit(content))
 	{
 		shlvl = ft_atoi(content);
-		shlvl++;
+		if (shlvl < 0)
+			shlvl = 0;
+		else
+			shlvl++;
 	}
 	else
 		shlvl = 1;
