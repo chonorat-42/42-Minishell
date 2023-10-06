@@ -87,11 +87,13 @@ typedef struct s_mshell
 {
 	char		*input;
 	char		**cmd;
+	char		*prompt;
 	size_t		envp_size;
 	char		**menvp;
 	char		**paths;
 	char		*current_loc;
 	int			exit_status;
+	char		**exit;
 	size_t		cmd_count;
 	t_tokens	*tok_lst;
 	t_envp		*envp;
@@ -100,6 +102,10 @@ typedef struct s_mshell
 
 void		sig_handler(void);
 void		exec_sig(void);
+
+void		get_prompt(t_mshell *shell);
+void		update_shlvl(t_mshell *shell);
+int			history(char *input);
 
 void		get_paths(t_mshell *shell);
 size_t		count_arr_size(char **arr);
@@ -113,8 +119,10 @@ void 		struct_init(t_mshell *shell);
 void		sig_handler(void);
 int			tokenizer(t_mshell *shell);
 
+int			check_option(t_mshell *shell, char **cmd);
+
 void		cd_case(t_mshell *shell, char **cmd);
-void		pwd_case(t_mshell *shell, int fd);
+void		pwd_case(t_mshell *shell, char **cmd, int fd);
 void		echo_case(char **cmd, int fd);
 void		env_case(t_mshell *shell, char **cmd, int fd);
 void		unset_case(t_mshell *shell, char **cmd);
@@ -128,7 +136,7 @@ void		free_arr(char **arr);
 void		ft_free_tokens(t_tokens	**head);
 int			find_envvar_index(char **envp, const char *str);
 int			is_ws(char c);
-void		get_current_location(t_mshell *shell);
+int			get_current_location(t_mshell *shell);
 void		manage_quotes(t_tokens **lst);
 char		*get_envvar_content(t_envp *envp, char *to_find);
 char		*get_builtin_opt(char *str, size_t *i);
@@ -143,12 +151,11 @@ int			are_all_quotes_closed(char *str);
 char 		*get_other(char *str, size_t *i);
 
 void		get_envp(t_mshell *shell, char **envp, char **argv);
-void		create_envp(t_mshell *shell, char **argv);
+void		create_envp(t_mshell *shell, char **envp, char **argv);
 
 void		get_input_loop(t_mshell *shell);
 void		handle_pipes(t_mshell *shell, t_tokens **temp, int *fd_in, int *fd_out);
 void		exec_forwarding(t_tokens *temp, t_mshell *shell);
-void		get_current_location(t_mshell *shell);
 void		print_env(t_envp *lst);
 void		create_envp_list(t_mshell *shell, t_var *var);
 int			delete_envvar(t_envp **envp, char *var, int ign_param);

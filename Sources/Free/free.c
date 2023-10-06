@@ -131,8 +131,8 @@ void	free_struct(t_mshell *shell)
 		free_arr(shell->paths);
 		shell->paths = NULL;
 	}
-	if (shell->current_loc)
-		free(shell->current_loc);
+	if (shell->prompt)
+		free(shell->prompt);
 	if (shell->tok_lst)
 		ft_free_tokens(&shell->tok_lst);
 	if (shell->menvp)
@@ -141,5 +141,7 @@ void	free_struct(t_mshell *shell)
 		free_envp(&shell->envp);
 	if (shell->export)
 		free_envp(&shell->export);
+	if (shell->exit)
+		free_arr(shell->exit);
 	clear_history();
 }

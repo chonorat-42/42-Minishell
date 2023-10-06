@@ -6,23 +6,11 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:20:57 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/05 15:21:36 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/06 16:21:51 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	print(t_envp *env)
-{
-	t_envp	*lst;
-
-	lst = env;
-	while (lst)
-	{
-		ft_printf("%s=%s\n", lst->var.name, lst->var.content);
-		lst = lst->next;
-	}
-}
 
 static void	pwd(t_mshell *shell)
 {
@@ -42,8 +30,6 @@ static void	pwd(t_mshell *shell)
 		new.readable = 0;
 	new.alterable = 1;
 	create_envp_list(shell, &new);
-	//free(new.name);
-	//free(new.content);
 }
 
 static void	shlvl(t_mshell *shell)
@@ -53,37 +39,64 @@ static void	shlvl(t_mshell *shell)
 	new.name = ft_strdup("SHLVL");
 	if (!new.name)
 		return (free_struct(shell), exit(2));
-	new.content = ft_strdup("1");
+	new.content = ft_strdup("0");
 	if (!new.content)
 		return (free(new.name), free_struct(shell), exit(2));
 	new.readable = 1;
 	new.alterable = 1;
 	create_envp_list(shell, &new);
-	//free(new.name);
-	//free(new.content);
 }
 
 static void	underscore(t_mshell *shell, char **argv)
 {
 	t_var	new;
+	char	path[PATH_MAX];
+	char	*dir;
+	char	*cmd;
+	char	*join;
 
 	new.name = ft_strdup("_");
 	if (!new.name)
 		return (free_struct(shell), exit(2));
-	new.content = ft_strdup(argv[0]);
-	if (!new.content)
+	dir = getcwd(path, PATH_MAX);
+	if (!dir)
 		return (free(new.name), free_struct(shell), exit(2));
+	join = ft_strjoin(dir, "/");
+	if (!join)
+		return (free(new.name), free_struct(shell), exit(2));
+	cmd = ft_strdup(argv[0]);
+	if (!cmd)
+		return (free(new.name), free(join), free_struct(shell), exit(2));
+	new.content = ft_strjoin(join, cmd);
+	if (!new.content)
+		return (free(new.name), free(join), free(cmd), free_struct(shell), exit(2));
 	new.readable = 1;
 	new.alterable = 0;
 	create_envp_list(shell, &new);
-	//free(new.name);
-	//free(new.content);
+	return (free(join), free(cmd));
 }
 
-void	create_envp(t_mshell *shell, char **argv)
+static void	old_pwd(t_mshell *shell)
 {
-	pwd(shell);
-	shlvl(shell);
-	underscore(shell, argv);
-	print(shell->envp);
+	t_var	new;
+
+	new.name = ft_strdup("OLDPWD");
+	if (!new.name)
+		return (free_struct(shell), exit(2));
+	new.content = NULL;
+	new.readable = 0;
+	new.alterable = 1;
+	create_envp_list(shell, &new);
+}
+
+void	create_envp(t_mshell *shell, char **envp, char **argv)
+{
+	if (find_envvar_index(envp, "PWD") == -1)
+		pwd(shell);
+	if (find_envvar_index(envp, "SHLVL") == -1)
+		shlvl(shell);
+	if (find_envvar_index(envp, "_") == -1)
+		underscore(shell, argv);
+	if (find_envvar_index(envp, "OLDPWD") == -1)
+		old_pwd(shell);
 }

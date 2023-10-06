@@ -12,20 +12,6 @@
 
 #include "minishell.h"
 
-// long int find_char_index(char *str, int c)
-// {
-// 	long int	i;
-
-// 	i = 0;
-// 	while (str[i])
-// 	{
-// 		if (str[i] == c)
-// 			return (i);
-// 		i++;
-// 	}
-// 	return (-1);
-// }
-
 // int compare_strings(char *str, char *envs)
 // {
 // 	size_t i;
@@ -48,7 +34,8 @@
 // 	{
 // 		temp = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
 // 		if (!ft_strcmp(temp, str))
-// 				return (j);
+// 				return (free(temp), j);
+// 		free(temp);
 // 		j++;
 // 	}
 // 	return (-1);
@@ -60,11 +47,15 @@ char	*get_envvar_content(t_envp *envp, char *to_find)
 	char	*result;
 
 	temp = envp;
+	result = NULL;
 	while (temp)
 	{
 		if (!ft_strcmp(to_find, temp->var.name))
 		{
-			result = ft_strdup(temp->var.content);
+			if (temp->var.content)
+				result = ft_strdup(temp->var.content);
+			else
+				break ;
 			return (result);
 		}
 		temp = temp->next;

@@ -16,7 +16,13 @@ void env_case(t_mshell *shell, char **cmd, int fd)
 {
 	t_envp	*temp;
 
-	(void)cmd;
+	if (check_option(shell, cmd))
+		return ;
+	if (cmd[1])
+	{
+		builtin_error(cmd[0], cmd[1], 0);
+		return ;
+	}
 	temp = shell->envp;
 	while (temp)
 	{

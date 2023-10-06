@@ -17,8 +17,6 @@ extern long long	g_status;
 static void	ignore_sig(int signum)
 {
 	(void)signum;
-	//ft_printf("\b\b");
-	//ft_printf("\033[1mminishell@42\033[0m:~\033[0;32m$\033[0m ");
 }
 
 void	exec_sig(void)
@@ -37,7 +35,7 @@ static void	get_sig(int signum)
 	if (signum == SIGINT)
 	{
 		ft_printf("\b\b  ");
-		ft_printf("\n");
+		ft_printf("\n\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();

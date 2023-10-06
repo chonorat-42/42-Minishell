@@ -63,7 +63,8 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 		close(fd_in);
 	}
 	j = -1;
-	get_current_location(shell);
+	if (!get_current_location(shell))
+		return (free_struct(shell), exit(1));
 	trim = ft_strtrim(cmd_arr[0], ".");
 	temp = ft_strjoin(shell->current_loc, trim);
 	free(trim);
@@ -87,7 +88,7 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 		{
 			temp = ft_strjoin(shell->paths[j], cmd_arr[0]);
 			if (!temp)
-				exit(1);
+				return (free_struct(shell), exit(1));
 			if (execve(temp, cmd_arr, shell->menvp) == -1)
 				free(temp);
 		}
@@ -96,11 +97,11 @@ void bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 	else
 		show_error(cmd_arr[0], "EXEC", 2);
 	free_struct(shell);
-	exit(127);
 	if (fd_out != 1)
 		close(fd_out);
 	if (fd_in != 0)
 		close(fd_in);
+	exit(127);
 }
 
 void	print_single_token(t_tokens *tkn)
@@ -157,14 +158,14 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 	else if (!ft_strcmp(temp->cmd_arr[0], "unset"))
 		unset_case(shell, temp->cmd_arr);
 	else if (!ft_strcmp(temp->cmd_arr[0], "pwd"))
-		pwd_case(shell, temp->fd_out);
+		pwd_case(shell, temp->cmd_arr, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "export"))
 		export_case(shell, temp->cmd_arr, temp->fd_out);
 	else
 	{
 		child = fork();
 		if (child == -1)
-			return(free_struct(shell), exit(2));
+			return (free_struct(shell), exit(2));
 		if (!child)
 			bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
 		else

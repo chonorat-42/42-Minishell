@@ -38,6 +38,7 @@ FILES = minishell\
 		Environment/get_paths\
 		Environment/create_envp\
 		Environment/get_svar\
+		Environment/update_shlvl\
 		Environment/update_envp\
 		Parsing/parsing\
 		Parsing/Quotes/manage_quotes\
@@ -67,8 +68,8 @@ FILES = minishell\
 		Signals/sig_handler\
 		Errors/show_error\
 		Free/free\
-		Utils/resources\
-
+		Utils/get_prompt\
+		Utils/resources
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 
