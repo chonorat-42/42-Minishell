@@ -48,7 +48,8 @@ int	find_envvar_index(char **envp, const char *str)
 	{
 		temp = ft_substr(envp[j], 0, find_char_index(envp[j], '='));
 		if (!ft_strcmp(temp, str))
-				return (j);
+				return (free(temp), j);
+		free(temp);
 		j++;
 	}
 	return (-1);
