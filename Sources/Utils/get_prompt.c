@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 23:46:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/07 17:47:17 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/07 20:55:10 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,24 +87,31 @@ static void	get_color(t_mshell *shell)
 
 static void	print_upper(t_mshell *shell)
 {
-	char	*path;
-	char	*home;
-	char	*temp;
+	struct stat	stat;
+	char		*path;
+	char		*home;
+	char		*temp;
 
 	path = get_envvar_content(shell, shell->envp, "PWD");
 	home = get_envvar_content(shell, shell->envp, "HOME");
-	if (path && home && ft_strncmp(home, path, ft_strlen(home)) == 0)
+	if (home && ft_strlen(home) > 1 && home[ft_strlen(home) - 1] == '/')
+		home[ft_strlen(home) - 1] = '\0';
+	if (path && home && ft_strncmp(home, path, ft_strlen(home)) == 0
+		&& lstat(home, &stat) == 0)
 	{
-		temp = ft_substr(path, ft_strlen(home), ft_strlen(&path[ft_strlen(home)]));
+		temp = ft_substr(path, ft_strlen(home), 
+			ft_strlen(&path[ft_strlen(home)]));
 		if (!temp)
 			return (free_struct(shell), exit(2));
-		ft_printf("\033[0;37m~%s\033[0m", temp);
+		ft_printf("\033[0;37m~\033[0m");
+		if (temp[0] && temp[0] != '/')
+			ft_printf("\033[0;37m/\033[0m");
+		ft_printf("\033[0;37m%s\033[0m", temp);
 		free(temp);
 	}
 	else if (path)
 		ft_printf("\033[0;37m%s\033[0m", path);
-	free(path);
-	free(home);
+	return(free(path), free(home));
 }
 
 char	*get_prompt(t_mshell *shell)
