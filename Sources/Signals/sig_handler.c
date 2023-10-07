@@ -37,7 +37,7 @@ static void	get_sig(int signum)
 		ft_printf("\b\b  ");
 		ft_printf("\n");
 		rl_on_new_line();
-		//rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 	if (signum == SIGQUIT)
