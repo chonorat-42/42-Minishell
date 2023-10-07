@@ -26,7 +26,7 @@ void	heredoc_into_infile(t_dlist **lst)
 	temp->content = ft_strdup("/tmp/temp.heredoc2");
 }
 
-void	heredoc(char *delimiter, int fd_in, t_envp *envp)
+void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 {
 	char	*line;
 	char	*result;
@@ -49,7 +49,7 @@ void	heredoc(char *delimiter, int fd_in, t_envp *envp)
 		{
 			if (ft_char_index(line, '$') >= 0)
 			{
-    			temp = expand_envvar(line, envp);
+    			temp = expand_envvar(shell, line, envp);
 				ft_free_null(&line);
 			}
 			else

@@ -17,9 +17,8 @@ void	get_input_loop(t_mshell *shell)
 	while (1)
 	{
 		sig_handler();
-		get_prompt(shell);
 		get_svar(shell);
-		shell->input = readline(shell->prompt);
+		shell->input = readline(get_prompt(shell));
 		if (!shell->input)
 			return (exit_case(shell, shell->exit));
 		if (history(shell->input))
@@ -29,7 +28,5 @@ void	get_input_loop(t_mshell *shell)
 		parsing(shell);
 		tokenizer(shell);
 		execution(shell);
-		if (shell->prompt)
-			free(shell->prompt);
 	}
 }

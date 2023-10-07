@@ -28,6 +28,8 @@
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"
 
+# define TEST 1
+
 /*			DEBUG			*/
 # ifndef DEBUG
 #  define DEBUG 0
@@ -103,7 +105,7 @@ typedef struct s_mshell
 void		sig_handler(void);
 void		exec_sig(void);
 
-void		get_prompt(t_mshell *shell);
+char		*get_prompt(t_mshell *shell);
 void		update_shlvl(t_mshell *shell);
 int			history(char *input);
 
@@ -138,13 +140,13 @@ int			find_envvar_index(char **envp, const char *str);
 int			is_ws(char c);
 int			get_current_location(t_mshell *shell);
 void		manage_quotes(t_tokens **lst);
-char		*get_envvar_content(t_envp *envp, char *to_find);
+char		*get_envvar_content(t_mshell *shell, t_envp *envp, char *to_find);
 char		*get_builtin_opt(char *str, size_t *i);
 long int	find_char_index(char *str, int c);
 void		parsing(t_mshell *shell);
 
 int			expand(t_mshell *shell, char *cmd);
-char		*expand_envvar(char *str, t_envp *envp);
+char		*expand_envvar(t_mshell *shell, char *str, t_envp *envp);
 int			check_after_dollar(char *str);
 
 int			are_all_quotes_closed(char *str);
@@ -177,7 +179,7 @@ void		show_error(char *cmd, char *type, int error);
 
 void		get_svar(t_mshell *shell);
 
-void		heredoc(char *delimiter, int fd_in, t_envp *envp);
+void		heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp);
 
 void		print_tkns_down(t_tokens *lst);
 
@@ -191,7 +193,7 @@ void		print_dlist(t_dlist	*lst);
 
 void		split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
 
-void		get_fds(t_tokens **lst, t_envp *envp);
+void		get_fds(t_mshell *shell, t_tokens **lst, t_envp *envp);
 
 void		heredoc_into_infile(t_dlist **lst);
 

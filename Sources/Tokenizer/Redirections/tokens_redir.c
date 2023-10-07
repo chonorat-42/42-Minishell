@@ -54,7 +54,7 @@ void	remove_redirect(t_tokens **lst)
 	}
 }
 
-static void	get_fd_in(t_tokens **tok, t_envp *envp)
+static void	get_fd_in(t_mshell *shell, t_tokens **tok, t_envp *envp)
 {
 	t_tokens	*temp_tok;
 	t_dlist		*temp_dlst;
@@ -82,9 +82,9 @@ static void	get_fd_in(t_tokens **tok, t_envp *envp)
 				if (has_fd)
 					close(temp_fd);
 				temp_fd = open("/tmp/temp.heredoc2", O_RDWR | O_CREAT | O_TRUNC, 0666);
-				heredoc(temp_dlst->next->content, temp_fd, envp);
+				heredoc(shell, temp_dlst->next->content, temp_fd, envp);
 				heredoc_into_infile(&(*tok)->dlst);
-				get_fd_in(tok, envp);
+				get_fd_in(shell, tok, envp);
 			}
 			temp_dlst = temp_dlst->next;
 		}
@@ -129,8 +129,8 @@ static void	get_fd_out(t_tokens **tok)
 	}
 }
 
-void	get_fds(t_tokens **lst, t_envp *envp)
+void	get_fds(t_mshell *shell, t_tokens **lst, t_envp *envp)
 {
-		get_fd_in(lst, envp);
+		get_fd_in(shell, lst, envp);
 		get_fd_out(lst);
 }

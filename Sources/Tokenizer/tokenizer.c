@@ -97,7 +97,7 @@ int	tokenizer(t_mshell *shell)
 	split_on_pipes(shell, shell->input);
 	parse_tkn(&shell->tok_lst, shell);
 	split_tokens_into_dlst(&shell->tok_lst, shell);
-	get_fds(&shell->tok_lst, shell->envp);
+	get_fds(shell, &shell->tok_lst, shell->envp);
 	create_cmd_arr(&shell->tok_lst, shell);
 	manage_quotes_arr(&shell->tok_lst);
 	free_tokens_dlist(&shell->tok_lst);

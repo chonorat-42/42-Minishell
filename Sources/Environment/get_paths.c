@@ -41,7 +41,7 @@
 // 	return (-1);
 // }
 
-char	*get_envvar_content(t_envp *envp, char *to_find)
+char	*get_envvar_content(t_mshell *shell, t_envp *envp, char *to_find)
 {
 	t_envp	*temp;
 	char	*result;
@@ -53,14 +53,18 @@ char	*get_envvar_content(t_envp *envp, char *to_find)
 		if (!ft_strcmp(to_find, temp->var.name))
 		{
 			if (temp->var.content)
+			{
 				result = ft_strdup(temp->var.content);
+				if (!result)
+					return (free_struct(shell), exit(2), NULL);
+			}
 			else
-				break ;
+				return (NULL);
 			return (result);
 		}
 		temp = temp->next;
 	}
-	return (ft_strdup(""));
+	return (NULL);
 }
 
 static char	*add_ending_slash(char *str)
