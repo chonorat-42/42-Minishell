@@ -12,6 +12,18 @@
 
 #include "minishell.h"
 
+void	print_single_token(t_tokens *tkn)
+{
+	if (DEBUG)
+	{
+		ft_printf("content = %s\n", tkn->content);
+		ft_printf("cmd_arr :\n_________________\n");
+		print_arr(tkn->cmd_arr);
+		ft_printf("_________________\n");
+		ft_printf("fd_in = %d, fd_out = %d\n", tkn->fd_in, tkn->fd_out);
+	}
+}
+
 void	print_tokens_dlist(t_tokens *tok)
 {
 	t_tokens	*temp;

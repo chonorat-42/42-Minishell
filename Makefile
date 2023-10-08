@@ -53,8 +53,8 @@ FILES = minishell\
 		Tokenizer/Cmd_arrays/cmd_arr\
 		Get_input/get_input\
 		Execution/execution\
+		Execution/binary_exec\
 		Execution/pipe\
-		Execution/heredoc\
 		Execution/Built_in/echo\
 		Execution/Built_in/cd\
 		Execution/Built_in/env\
