@@ -68,50 +68,62 @@ char *get_between_quotes(char *str, int c, size_t *i)
 	return (result);
 }
 
-char	*remove_quotes(char	*str)
+char	*remove_quotes(char *str)
 {
-	char	*temp;
+	t_dlist	*temp;
 	char	*result;
 	size_t	i;
+	size_t	j;
 
-	i = 0; 
-	result = NULL;
-	while(str[i])
+	temp = NULL;
+	i = 0;
+	j = 0;
+	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '\"')
+		if (is_char_in_set(str[i], "\'\""))
 		{
+			j = i + 1;
+			move_to_next_quote(str, &i, str[i]);
+			split_into_dlst(&temp, str, i, j);
 			i++;
-			temp = get_between_quotes(str, str[i - 1], &i);
-			i++;
+			j = i;
 		}
 		else
-			temp = get_other(str, &i);
-		if (!result)
-			result = ft_strdup(temp);
-		else
-			result = ft_strjoin(result, temp);
-		free(temp);
-		if (!result)
-			return (NULL);
+		{
+			while (str[i] && !is_char_in_set(str[i], "\'\""))
+				i++;
+			split_into_dlst(&temp, str, i, j);
+		}
 	}
-	return (result);
+	result = join_dlist(temp);
+	return (free_dlist(&temp), result);
 }
 
-void	manage_quotes(t_tokens **lst)
-{
-	t_tokens	*tmp;
-	char		*new_content;
+// char	*remove_quotes(char	*str)
+// {
+// 	char	*temp;
+// 	char	*result;
+// 	size_t	i;
 
-	tmp = *lst;
-	while (tmp)
-	{
-		new_content = remove_quotes(tmp->content);
-		free(tmp->content);
-		tmp->content = ft_strdup(new_content);
-
-		ft_printf("in manage quotes, new content = %s\n\n", tmp->content);
-		
-		free(new_content);
-		tmp = tmp->next;
-	}
-}
+// 	i = 0; 
+// 	result = NULL;
+// 	while(str[i])
+// 	{
+// 		if (str[i] == '\'' || str[i] == '\"')
+// 		{
+// 			i++;
+// 			temp = get_between_quotes(str, str[i - 1], &i);
+// 			i++;
+// 		}
+// 		else
+// 			temp = get_other(str, &i);
+// 		if (!result)
+// 			result = ft_strdup(temp);
+// 		else
+// 			result = ft_strjoin(result, temp);
+// 		free(temp);
+// 		if (!result)
+// 			return (NULL);
+// 	}
+// 	return (result);
+// }
