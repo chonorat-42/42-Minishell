@@ -98,32 +98,3 @@ char	*remove_quotes(char *str)
 	result = join_dlist(temp);
 	return (free_dlist(&temp), result);
 }
-
-// char	*remove_quotes(char	*str)
-// {
-// 	char	*temp;
-// 	char	*result;
-// 	size_t	i;
-
-// 	i = 0; 
-// 	result = NULL;
-// 	while(str[i])
-// 	{
-// 		if (str[i] == '\'' || str[i] == '\"')
-// 		{
-// 			i++;
-// 			temp = get_between_quotes(str, str[i - 1], &i);
-// 			i++;
-// 		}
-// 		else
-// 			temp = get_other(str, &i);
-// 		if (!result)
-// 			result = ft_strdup(temp);
-// 		else
-// 			result = ft_strjoin(result, temp);
-// 		free(temp);
-// 		if (!result)
-// 			return (NULL);
-// 	}
-// 	return (result);
-// }
