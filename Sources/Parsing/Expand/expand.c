@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	expand_dlist(t_mshell *shell, t_dlist **lst)
+void	expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst)
 {
 	t_dlist	*temp;
 	char	*expanded;
@@ -22,7 +22,7 @@ void	expand_dlist(t_mshell *shell, t_dlist **lst)
 	{
 		if (find_char_index(temp->content, '$') >= 0)
 		{
-			expanded = expand_envvar(shell, temp->content, shell->envp);
+			expanded = expand_envvar(shell, temp->content, envp);
 			free(temp->content);
 			temp->content = expanded;
 		}

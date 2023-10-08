@@ -47,8 +47,6 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 	char	*result;
 	char	*line;
 	
-	(void)shell;
-	(void)envp;
 	lst = NULL;
 	result = NULL;
 	line = NULL;
@@ -57,10 +55,11 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 		line = readline(">");
 		if (!ft_strcmp(line, delimiter))
 		{
-			expand_dlist(shell, &lst);
+			expand_dlist(shell, envp, &lst);
 			add_newline_dlist(&lst);
 			result = join_dlist(lst);
-			ft_dprintf(fd_in, "%s", result);
+			if (result)
+				ft_dprintf(fd_in, "%s", result);
 			free(result);
 			free(line);
 			free_dlist(&lst);

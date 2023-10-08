@@ -215,6 +215,6 @@ void		move_to_next_quote(char *str, size_t *i, char c);
 
 char		*join_dlist(t_dlist	*lst);
 
-void		expand_dlist(t_mshell *shell, t_dlist **lst);
+void		expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst);
 
 # endif
