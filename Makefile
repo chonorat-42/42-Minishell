@@ -68,6 +68,7 @@ FILES = minishell\
 		Signals/sig_handler\
 		Errors/show_error\
 		Free/free\
+		Free/free_utils\
 		Utils/get_prompt\
 		Utils/resources
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
