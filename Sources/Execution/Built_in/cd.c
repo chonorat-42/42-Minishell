@@ -32,14 +32,12 @@ static int	replace_content(t_envp **envp, char *name, char *new_content)
 		if (new_content)
 		{
 			temp->var.content = ft_strdup(new_content);
+			temp->var.readable = 1;
 			if (!temp->var.content)
 				return (0);
 		}
 		else
-		{
-			temp->var.content = NULL;
-			temp->var.readable = 0;
-		}
+			return (temp->var.content = NULL, temp->var.readable = 0, 1);
 	}
 	return (1);
 }

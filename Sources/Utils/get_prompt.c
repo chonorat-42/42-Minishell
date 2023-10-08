@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 23:46:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/07 20:55:10 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/07 23:23:16 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static void	print_upper(t_mshell *shell)
 	}
 	else if (path)
 		ft_printf("\033[0;37m%s\033[0m", path);
-	return(free(path), free(home));
+	return (free(path), free(home));
 }
 
 char	*get_prompt(t_mshell *shell)

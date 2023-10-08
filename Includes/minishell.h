@@ -211,6 +211,10 @@ void		free_tokens_dlist(t_tokens **lst);
 
 void		create_cmd_arr(t_tokens **tk_lst, t_mshell *shell);
 
-void	move_to_next_quote(char *str, size_t *i, char c);
+void		move_to_next_quote(char *str, size_t *i, char c);
+
+char		*join_dlist(t_dlist	*lst);
+
+void		expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst);
 
 # endif
