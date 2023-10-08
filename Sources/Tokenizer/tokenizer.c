@@ -58,6 +58,7 @@ void create_token(t_mshell *shell, int i, int j, char *to_add)
 	new = malloc(sizeof(t_tokens));
 	str = ft_substr((const char *)to_add, j, (i - j));
 	new->content = ft_strtrim(str, " \n\t\b");
+	free(str);
 	new->next = NULL;
 	if (!shell->tok_lst)
 		shell->tok_lst = new;
