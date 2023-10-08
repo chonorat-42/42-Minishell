@@ -12,6 +12,24 @@
 
 #include "minishell.h"
 
+void	expand_dlist(t_mshell *shell, t_dlist **lst)
+{
+	t_dlist	*temp;
+	char	*expanded;
+
+	temp = *lst;
+	while (temp)
+	{
+		if (find_char_index(temp->content, '$') >= 0)
+		{
+			expanded = expand_envvar(shell, temp->content, shell->envp);
+			free(temp->content);
+			temp->content = expanded;
+		}
+		temp = temp->next;
+	}
+}
+
 void	split_envvar(char *str, t_dlist **lst)
 {
 	size_t	i;

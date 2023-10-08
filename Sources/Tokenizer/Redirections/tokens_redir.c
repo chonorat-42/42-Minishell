@@ -84,6 +84,7 @@ static void	get_fd_in(t_mshell *shell, t_tokens **tok, t_envp *envp)
 				temp_fd = open("/tmp/temp.heredoc2", O_RDWR | O_CREAT | O_TRUNC, 0666);
 				heredoc(shell, temp_dlst->next->content, temp_fd, envp);
 				heredoc_into_infile(&(*tok)->dlst);
+				close(temp_fd);
 				get_fd_in(shell, tok, envp);
 			}
 			temp_dlst = temp_dlst->next;

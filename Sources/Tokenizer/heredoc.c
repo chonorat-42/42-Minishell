@@ -26,12 +26,30 @@ void	heredoc_into_infile(t_dlist **lst)
 	temp->content = ft_strdup("/tmp/temp.heredoc2");
 }
 
+void	add_newline_dlist(t_dlist **lst)
+{
+	t_dlist	*temp;
+	char	*res;
+
+	temp = *lst;
+	while (temp)
+	{
+		res = ft_strjoin(temp->content, "\n");
+		free(temp->content);
+		temp->content = res;
+		temp = temp->next;
+	}
+}
+
 void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 {
-	char	*line;
+	t_dlist	*lst;
 	char	*result;
-	char	*temp;
+	char	*line;
 	
+	(void)shell;
+	(void)envp;
+	lst = NULL;
 	result = NULL;
 	line = NULL;
 	while (1)
@@ -39,35 +57,19 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 		line = readline(">");
 		if (!ft_strcmp(line, delimiter))
 		{
+			expand_dlist(shell, &lst);
+			add_newline_dlist(&lst);
+			result = join_dlist(lst);
 			ft_dprintf(fd_in, "%s", result);
-			ft_free_null(&result);
-			ft_free_null(&line);
-			close(fd_in);
+			free(result);
+			free(line);
+			free_dlist(&lst);
 			return ;
 		}
 		else
 		{
-			if (ft_char_index(line, '$') >= 0)
-			{
-    			temp = expand_envvar(shell, line, envp);
-				ft_free_null(&line);
-			}
-			else
-				temp = ft_strdup(line);
-			line = strjoin_free_first(&temp, "\n");
-			if (result)
-			{
-				result = strjoin_free_both(result, line);
-				// result = NULL;
-				line = NULL;
-			}
-			else
-			{
-				result = ft_strdup(line);
-				ft_free_null(&line);
-			}
+			split_into_dlst(&lst, line, ft_strlen(line), 0);
+			free(line);
 		}
-		if (line)
-			ft_free_null(&line);
 	}
 }
