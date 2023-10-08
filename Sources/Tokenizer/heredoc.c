@@ -41,29 +41,33 @@ void	add_newline_dlist(t_dlist **lst)
 	}
 }
 
+void	delimiter_found(t_mshell *shell, t_envp *envp, t_dlist *lst, int fd_in)
+{
+	char	*result;
+
+	expand_dlist(shell, envp, &lst);
+	add_newline_dlist(&lst);
+	result = join_dlist(lst);
+	if (result)
+		ft_dprintf(fd_in, "%s", result);
+	free(result);
+	free_dlist(&lst);
+}
+
 void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 {
 	t_dlist	*lst;
-	char	*result;
 	char	*line;
 	
 	lst = NULL;
-	result = NULL;
 	line = NULL;
 	while (1)
 	{
 		line = readline(">");
 		if (!ft_strcmp(line, delimiter))
 		{
-			expand_dlist(shell, envp, &lst);
-			add_newline_dlist(&lst);
-			result = join_dlist(lst);
-			if (result)
-				ft_dprintf(fd_in, "%s", result);
-			free(result);
-			free(line);
-			free_dlist(&lst);
-			return ;
+			delimiter_found(shell, envp, lst, fd_in);
+			return (free(line));
 		}
 		else
 		{
