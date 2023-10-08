@@ -53,8 +53,8 @@ FILES = minishell\
 		Tokenizer/Cmd_arrays/cmd_arr\
 		Get_input/get_input\
 		Execution/execution\
+		Execution/binary_exec\
 		Execution/pipe\
-		Execution/heredoc\
 		Execution/Built_in/echo\
 		Execution/Built_in/cd\
 		Execution/Built_in/env\
@@ -68,6 +68,7 @@ FILES = minishell\
 		Signals/sig_handler\
 		Errors/show_error\
 		Free/free\
+		Free/free_utils\
 		Utils/get_prompt\
 		Utils/resources
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))

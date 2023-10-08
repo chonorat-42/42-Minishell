@@ -217,4 +217,6 @@ char		*join_dlist(t_dlist	*lst);
 
 void		expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst);
 
+void		bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out);
+
 # endif

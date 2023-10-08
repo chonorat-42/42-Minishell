@@ -34,11 +34,26 @@ int	are_all_quotes_closed(char *str)
 	return (1);
 }
 
+void add_quotes_input(t_mshell *shell)
+{
+	char	*line;
+	char	*join;
+
+	line = readline(">");
+	if (!line)
+		return (free_struct(shell), exit(1));
+	join = ft_strjoin(shell->input, line);
+	if (!join)
+		return (free(line), free_struct(shell), exit(2));
+	free(line);
+	free(shell->input);
+	shell->input = join;
+}
+
 void    parsing(t_mshell *shell)
 {
-	if (!are_all_quotes_closed(shell->input))
-		return (show_error(NULL, "QUOTES", 0), free(shell->input),
-				get_input_loop(shell));
+	while (!are_all_quotes_closed(shell->input))
+		add_quotes_input(shell);
     if (shell->input[0] != '\0')
 		{
 			if (expand(shell, shell->input) == 1)
