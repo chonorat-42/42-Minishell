@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/18 13:16:14 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 18:51:16 by pgouasmi         ###   ########.fr       */
+/*   Created: 2023/10/09 17:40:23 by chonorat          #+#    #+#             */
+/*   Updated: 2023/10/09 17:40:23 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern long long g_status;
+extern long long	g_status;
 
-void env_case(t_mshell *shell, char **cmd, int fd)
+void	env_case(t_mshell *shell, char **cmd, int fd)
 {
 	t_envp	*temp;
 
