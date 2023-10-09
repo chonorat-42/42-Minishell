@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_envp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 16:31:44 by chonorat          #+#    #+#             */
-/*   Updated: 2023/09/22 17:39:00 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/09 15:12:53 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ void	update_envp(t_mshell *shell)
 	t_envp	*temp;
 
 	if (shell->menvp)
+	{
 		free_arr(shell->menvp);
+		shell->menvp = NULL;
+	}
 	shell->envp_size = get_envp_size(shell->envp);
 	shell->menvp = malloc((shell->envp_size + 1) * sizeof(char *));
 	if (!shell->menvp)

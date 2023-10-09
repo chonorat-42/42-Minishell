@@ -22,7 +22,6 @@ void	heredoc_into_infile(t_dlist **lst)
 	free(temp->content);
 	temp->content = ft_strdup("<");
 	temp = temp->next;
-	free(temp->content);
 	temp->content = ft_strdup("/tmp/temp.heredoc2");
 }
 
@@ -41,11 +40,12 @@ void	add_newline_dlist(t_dlist **lst)
 	}
 }
 
-void	delimiter_found(t_mshell *shell, t_envp *envp, t_dlist *lst, int fd_in)
+void	delimiter_found(t_mshell *shell, t_envp *envp, t_dlist *lst, int fd_in, int del_quote)
 {
 	char	*result;
 
-	expand_dlist(shell, envp, &lst);
+	if (!del_quote)
+		expand_dlist(shell, envp, &lst);
 	add_newline_dlist(&lst);
 	result = join_dlist(lst);
 	if (result)
@@ -58,7 +58,17 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 {
 	t_dlist	*lst;
 	char	*line;
-	
+	int		del_quote;
+	char	*new_del;
+
+	del_quote = 0;
+	if (is_char_in_set(delimiter[0], "\'\""))
+	{
+		del_quote = 1;
+		new_del = remove_quotes(delimiter);
+		free(delimiter);
+		delimiter = new_del;
+	}
 	lst = NULL;
 	line = NULL;
 	while (1)
@@ -66,8 +76,8 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 		line = readline(">");
 		if (!ft_strcmp(line, delimiter))
 		{
-			delimiter_found(shell, envp, lst, fd_in);
-			return (free(line));
+			delimiter_found(shell, envp, lst, fd_in, del_quote);
+			return (free(line), free(delimiter));
 		}
 		else
 		{

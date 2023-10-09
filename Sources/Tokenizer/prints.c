@@ -78,7 +78,6 @@ void print_tkns_up(t_tokens *lst)
 		temp = temp->next;
 	while (temp)
 	{
-		ft_printf("position = %d\n", temp->position);
 		ft_printf("%s\n", temp->content);
 		temp = temp->prev;
 	}
@@ -91,16 +90,12 @@ void print_tkns_down(t_tokens *lst)
 	if (!lst)
 		return;
 	temp = lst;
-	if (DEBUG)
-	{
 		while (temp)
 		{
 			ft_printf("content = %s\n", temp->content);
 			ft_printf("type = %d\n", temp->type);
-			ft_printf("position = %d\n", temp->position);
 			ft_printf("fd_in = %d\n", temp->fd_in);
 			ft_printf("fd_out = %d\n\n", temp->fd_out);
 			temp = temp->next;
 		}
-	}
 }

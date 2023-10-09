@@ -79,7 +79,6 @@ typedef struct s_tokens
 	int		fd_in;
 	int		fd_out;
 	int  	type;
-	int		position;
 	t_dlist	*dlst;
 	struct s_tokens *prev;
 	struct s_tokens *next;
@@ -193,7 +192,7 @@ void		print_dlist(t_dlist	*lst);
 
 void		split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
 
-void		get_fds(t_mshell *shell, t_tokens **lst, t_envp *envp);
+void		get_fds(t_mshell *shell, t_tokens **lst);
 
 void		heredoc_into_infile(t_dlist **lst);
 
@@ -218,5 +217,7 @@ char		*join_dlist(t_dlist	*lst);
 void		expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst);
 
 void		bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out);
+
+void	get_fd_in(t_mshell *shell, t_tokens **tok);
 
 # endif

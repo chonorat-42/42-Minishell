@@ -52,8 +52,8 @@ void	init_new_token(t_tokens **new)
 
 void create_token(t_mshell *shell, int i, int j, char *to_add)
 {
-	t_tokens *new;
-	char *str;
+	t_tokens	*new;
+	char		*str;
 
 	new = malloc(sizeof(t_tokens));
 	str = ft_substr((const char *)to_add, j, (i - j));
@@ -80,6 +80,9 @@ void	split_on_pipes(t_mshell *shell, char *str)
 			move_to_next_quote(str, &i, str[i]);
 		else if (is_char_in_set(str[i], "|"))
 		{
+			if (str[i + 1] == '|')
+				return (ft_free_tokens(&shell->tok_lst), free(shell->input),
+					ft_printf("Operator `||' is not supported\n"), get_input_loop(shell));
 			create_token(shell, i, j, str);
 			j = i;
 			i++;
@@ -87,9 +90,15 @@ void	split_on_pipes(t_mshell *shell, char *str)
 			j = i;
 		}
 		else
+		{
+			if (str[i] == '&')
+				return (ft_free_tokens(&shell->tok_lst), free(shell->input),
+					ft_printf("Operator `&' and `&&' are not supported\n"), get_input_loop(shell));
 			i++;
+		}
 	}
-	create_token(shell, i, j, str);
+	if (i != j)
+		create_token(shell, i, j, str);
 }
 
 int	tokenizer(t_mshell *shell)
@@ -98,10 +107,12 @@ int	tokenizer(t_mshell *shell)
 	split_on_pipes(shell, shell->input);
 	parse_tkn(&shell->tok_lst, shell);
 	split_tokens_into_dlst(&shell->tok_lst, shell);
-	get_fds(shell, &shell->tok_lst, shell->envp);
+	get_fds(shell, &shell->tok_lst);
 	create_cmd_arr(&shell->tok_lst, shell);
 	manage_quotes_arr(&shell->tok_lst);
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
+	if (!shell->tok_lst || !shell->tok_lst->cmd_arr || !shell->tok_lst->cmd_arr[0][0])
+		return (ft_free_tokens(&shell->tok_lst), free(shell->input), get_input_loop(shell), 0);
 	return (0);
 }

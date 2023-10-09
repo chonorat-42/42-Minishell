@@ -66,23 +66,47 @@ void	create_child(int fd_in, int fd_out, t_tokens *temp, t_mshell *shell)
 	}
 }
 
+int	get_last_out(t_tokens *lst)
+{
+	t_tokens	*temp;
+
+	temp = lst;
+	while (temp->next)
+		temp = temp->next;
+	return (temp->fd_out);
+}
+
 /*to do
 recuper fd_in de la premiere commande
 executer la commande et l'envoyer dans le pipe (fd_out)
-fd_in->next->next->in = fd_out*/
+fd_in->next->next->in = fd_out
+tant que sur un pipe, pour le dernier envoyer last_out*/
+
+// void	fork_pipes(size_t pipes_nbr, t_tokens **temp, int *fd_in, t_mshell *shell, int *fd_out)
+// {
+// 	int		pipefd[2];
+// 	pid_t	child_process;
+// 	while (*temp)
+// 	{
+// 		if (temp->next->type == PIPE)
+// 		pipe(pipefd);
+// 		child_process = fork();
+
+// 	}
+// }
 
 void	fork_pipes(size_t pipes_nbr, t_tokens **temp, int *fd_in, t_mshell *shell, int *fd_out)
 {
-	size_t i;
-    pid_t child;
-    pid_t child_processes[pipes_nbr + 1];
+	size_t	i;
+	int		last_out;
+	int	pipefd[2];
+    pid_t	child;
+    pid_t	child_processes[pipes_nbr + 1];
 
     i = 0;
+	last_out = get_last_out(*temp);
     while (i < pipes_nbr)
     {
-		// ft_printf("in fork pipes, i = %d\ntemp->arr = \n", i);
-		// print_arr((*temp)->cmd_arr);
-        int pipefd[2];
         pipe(pipefd);
 
         child = fork();
@@ -104,6 +128,7 @@ void	fork_pipes(size_t pipes_nbr, t_tokens **temp, int *fd_in, t_mshell *shell, 
             }
             if (i < pipes_nbr - 1)
             {
+				/*out = pipefd[1]*/
                 if (dup2(pipefd[1], 1) == -1)
                 {
                     perror("dup2");
