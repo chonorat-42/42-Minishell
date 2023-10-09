@@ -62,6 +62,8 @@ void	get_envp(t_mshell *shell, char **envp, char **argv)
 				ft_strlen(envp[j]));
 		new.readable = 1;
 		new.alterable = 1;
+		if (ft_strcmp(new.name, "_") == 0)
+			new.alterable = 0;
 		create_envp_list(shell, &new);
 		free(new.name);
 		free(new.content);
