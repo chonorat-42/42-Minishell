@@ -27,7 +27,10 @@ void	free_arrays_shell(t_mshell *shell)
 void	free_strings_shell(t_mshell *shell)
 {
 	if (shell->input)
+	{
 		free(shell->input);
+		shell->input = NULL;
+	}
 }
 
 void	free_struct(t_mshell *shell)
