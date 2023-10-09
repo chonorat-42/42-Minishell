@@ -6,13 +6,13 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 13:17:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/07 00:12:43 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/09 17:44:50 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern long long g_status;
+extern long long	g_status;
 
 static void	exit_error(char *arg, int error)
 {
@@ -43,6 +43,7 @@ static void	cd_error(char *arg, int error)
 		ft_dprintf(2, "%s: Not a directory\n", arg);
 	g_status = 1;
 }
+
 static void	option_error(char *cmd, char *arg)
 {
 	ft_dprintf(2, "%s: options are not supported\n", arg);
@@ -61,16 +62,13 @@ void	builtin_error(char *cmd, char *arg, int error)
 	if (error == -1)
 		return (option_error(cmd, arg));
 	if (ft_strcmp(cmd, "export") == 0)
-		return (g_status = 1, 
+		return (g_status = 1,
 			(void)ft_dprintf(2, "`%s': not a valid identifier\n", arg));
 	else if (ft_strcmp(cmd, "exit") == 0)
 		return (exit_error(arg, error));
 	else if (ft_strcmp(cmd, "cd") == 0)
 		return (cd_error(arg, error));
 	else if (ft_strcmp(cmd, "unset") == 0)
-		return (g_status = 1, 
+		return (g_status = 1,
 			(void)ft_dprintf(2, "`%s': not a valid identifier\n", arg));
-	else if (ft_strcmp(cmd, "env") == 0)
-		return (g_status = 1, 
-			(void)ft_dprintf(2, "does not take arguments\n"));
 }

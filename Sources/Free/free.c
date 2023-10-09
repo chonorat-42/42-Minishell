@@ -43,11 +43,6 @@ void	free_strings_shell(t_mshell *shell)
 		free(shell->input);
 		shell->input = NULL;
 	}
-	if (shell->prompt)
-	{
-		free(shell->prompt);
-		shell->prompt = NULL;
-	}
 }
 
 void	free_struct(t_mshell *shell)

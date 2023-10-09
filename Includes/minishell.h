@@ -88,7 +88,6 @@ typedef struct s_mshell
 {
 	char		*input;
 	char		**cmd;
-	char		*prompt;
 	size_t		envp_size;
 	char		**menvp;
 	char		**paths;
@@ -129,6 +128,9 @@ void		env_case(t_mshell *shell, char **cmd, int fd);
 void		unset_case(t_mshell *shell, char **cmd);
 void		export_case(t_mshell *shell, char **cmd, int fd);
 void		exit_case(t_mshell *shell, char **cmd);
+
+int			is_var(char *arg);
+void		get_var(t_mshell *shell, char *cmd);
 
 void		execution(t_mshell *shell);
 int			get_final_out(t_tokens *lst);

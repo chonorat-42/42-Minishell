@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/18 13:11:51 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/20 19:29:00 by pgouasmi         ###   ########.fr       */
+/*   Created: 2023/10/09 17:40:50 by chonorat          #+#    #+#             */
+/*   Updated: 2023/10/09 17:40:50 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ static void	mod_pwd(t_mshell *shell)
 		return (free_struct(shell), exit(2));
 }
 
-
 static void	get_error(char **cmd)
 {
 	struct stat	info;
@@ -78,7 +77,7 @@ static void	get_error(char **cmd)
 static int	get_dir(t_mshell *shell, char **cmd)
 {
 	if (cmd[1][0] == '\0')
-			return (0);
+		return (0);
 	if (chdir(cmd[1]))
 		get_error(cmd);
 	else
@@ -86,7 +85,7 @@ static int	get_dir(t_mshell *shell, char **cmd)
 	return (1);
 }
 
-void cd_case(t_mshell *shell, char **cmd)
+void	cd_case(t_mshell *shell, char **cmd)
 {
 	char	*home;
 	int		arg_count;

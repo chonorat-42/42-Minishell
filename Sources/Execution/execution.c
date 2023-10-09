@@ -16,9 +16,12 @@ extern long long g_status;
 
 int	is_builtin(t_tokens *temp)
 {
-	if (!ft_strcmp(temp->cmd_arr[0], "echo") || !ft_strcmp(temp->cmd_arr[0], "cd") ||
-		!ft_strcmp(temp->cmd_arr[0], "exit") || !ft_strcmp(temp->cmd_arr[0], "env") ||
-		!ft_strcmp(temp->cmd_arr[0], "unset") || !ft_strcmp(temp->cmd_arr[0], "pwd") ||
+	if (!ft_strcmp(temp->cmd_arr[0], "echo") ||
+		!ft_strcmp(temp->cmd_arr[0], "cd") ||
+		!ft_strcmp(temp->cmd_arr[0], "exit") ||
+		!ft_strcmp(temp->cmd_arr[0], "env") ||
+		!ft_strcmp(temp->cmd_arr[0], "unset") ||
+		!ft_strcmp(temp->cmd_arr[0], "pwd") ||
 		!ft_strcmp(temp->cmd_arr[0], "export"))
 			return (1);
 		return (0);

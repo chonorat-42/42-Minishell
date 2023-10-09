@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/19 17:35:09 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/24 19:03:11 by pgouasmi         ###   ########.fr       */
+/*   Created: 2023/10/09 17:42:29 by chonorat          #+#    #+#             */
+/*   Updated: 2023/10/09 17:42:29 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	delete_envvar(t_envp **envp, char *var, int ign_param)
 	temp = *envp;
 	while (temp)
 	{
-		if (!ft_strcmp(var, temp->var.name) &&
-			(temp->var.alterable || ign_param))
+		if (!ft_strcmp(var, temp->var.name)
+			&& (temp->var.alterable || ign_param))
 		{
 			free(temp->var.content);
 			free(temp->var.name);
