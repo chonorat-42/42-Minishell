@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern long long g_status;
+
 void env_case(t_mshell *shell, char **cmd, int fd)
 {
 	t_envp	*temp;
@@ -20,7 +22,7 @@ void env_case(t_mshell *shell, char **cmd, int fd)
 		return ;
 	if (cmd[1])
 	{
-		builtin_error(cmd[0], cmd[1], 0);
+		g_status = 1;
 		return ;
 	}
 	temp = shell->envp;

@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 13:17:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/07 00:12:43 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/09 15:04:05 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,4 @@ void	builtin_error(char *cmd, char *arg, int error)
 	else if (ft_strcmp(cmd, "unset") == 0)
 		return (g_status = 1, 
 			(void)ft_dprintf(2, "`%s': not a valid identifier\n", arg));
-	else if (ft_strcmp(cmd, "env") == 0)
-		return (g_status = 1, 
-			(void)ft_dprintf(2, "does not take arguments\n"));
 }

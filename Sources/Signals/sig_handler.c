@@ -17,6 +17,7 @@ extern long long	g_status;
 static void	ignore_sig(int signum)
 {
 	(void)signum;
+	ft_printf("\b\b  ");
 }
 
 void	exec_sig(void)
