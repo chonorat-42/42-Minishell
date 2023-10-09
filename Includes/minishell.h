@@ -79,7 +79,6 @@ typedef struct s_tokens
 	int		fd_in;
 	int		fd_out;
 	int  	type;
-	int		position;
 	t_dlist	*dlst;
 	struct s_tokens *prev;
 	struct s_tokens *next;
