@@ -57,6 +57,22 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 	}
 }
 
+void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *i, size_t *j)
+{
+			if (*i != *j)
+				split_into_dlst(lst, str, *i, *j);
+			while (ft_isws(str[(*i)]))
+				i++;
+			get_chevrons(str, i, str[(*i)], lst);
+			if (!str[(*i)])
+				return (ft_printf("minishell: syntax error near unexpected token `newline'\n"),
+					ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
+			get_redir(str, i, lst);
+			while (str[(*i)] && ft_isws(str[(*i)]))
+				(*i)++;
+			*j = *i;
+}
+
 void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 {
 	size_t	i;
@@ -72,19 +88,7 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 			i++;
 		}
 		else if (is_char_in_set(str[i], "<>"))
-		{
-			if (i != j)
-				split_into_dlst(lst, str, i, j);
-			while (ft_isws(str[i]))
-				i++;
-			get_chevrons(str, &i, str[i], lst);
-			if (!str[i])
-				return (ft_printf("minishell: syntax error near unexpected token `newline'\n"), ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
-			get_redir(str, &i, lst);
-			while (str[i] && ft_isws(str[i]))
-				i++;
-			j = i;
-		}
+			split_redir(shell, lst, str, &i, &j);
 		else if (ft_isws(str[i]))
 		{
 			if (j != i)

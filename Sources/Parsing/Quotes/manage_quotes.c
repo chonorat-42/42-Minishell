@@ -26,7 +26,10 @@ void	manage_quotes_arr(t_tokens	**lst)
 		{
 			temp = remove_quotes(temp2->cmd_arr[i]);
 			free(temp2->cmd_arr[i]);
-			temp2->cmd_arr[i] = ft_strdup(temp);
+			if (temp)
+				temp2->cmd_arr[i] = ft_strdup(temp);
+			else
+				temp2->cmd_arr[i] = ft_strdup("");
 			free(temp);
 			i++;
 		}

@@ -15,19 +15,34 @@
 void	free_arrays_shell(t_mshell *shell)
 {
 	if (shell->cmd)
+	{
 		free_arr(shell->cmd);
+		shell->cmd = NULL;
+	}
 	if (shell->paths)
+	{
 		free_arr(shell->paths);
+		shell->paths = NULL;
+	}
 	if (shell->menvp)
+	{
 		free_arr(shell->menvp);
+		shell->menvp = NULL;
+	}
 	if (shell->exit)
+	{
 		free_arr(shell->exit);
+		shell->exit = NULL;
+	}
 }
 
 void	free_strings_shell(t_mshell *shell)
 {
 	if (shell->input)
+	{
 		free(shell->input);
+		shell->input = NULL;
+	}
 }
 
 void	free_struct(t_mshell *shell)
