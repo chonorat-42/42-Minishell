@@ -48,8 +48,9 @@ FILES = minishell\
 		Tokenizer/heredoc\
 		Tokenizer/parse_tokens\
 		Tokenizer/prints\
-		Tokenizer/Redirections/tokens_redir\
 		Tokenizer/Redirections/tokens_dlist\
+		Tokenizer/Redirections/tokens_fd\
+		Tokenizer/Redirections/remove_redirections\
 		Tokenizer/Cmd_arrays/cmd_arr\
 		Get_input/get_input\
 		Execution/execution\

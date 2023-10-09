@@ -33,6 +33,23 @@ int	last_is_pipe(t_tokens *tok)
 	return (0);
 }
 
+// int has_successive_pipes(t_tokens **tok)
+// {
+// 	t_tokens *temp;
+
+// 	temp = *tok;
+// 	while (temp)
+// 	{
+// 		if (temp->type == PIPE)
+// 		{
+// 			if (temp->next && temp->next->type == PIPE)
+// 				return (1);
+// 		}
+// 		temp = temp->next;
+// 	}
+// 	return (0);
+// }
+
 void	parse_tkn(t_tokens **tok, t_mshell *shell)
 {
 	t_tokens	*temp;
@@ -47,4 +64,6 @@ void	parse_tkn(t_tokens **tok, t_mshell *shell)
 		if (temp->type == PIPE)
 			hdoc_add_cmd(shell);
 	}
+	// if (has_successive_pipes(tok))
+	// 	return (ft_printf("minishell: operator '||' not supported\n"), ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
 }
