@@ -28,8 +28,6 @@ void	free_strings_shell(t_mshell *shell)
 {
 	if (shell->input)
 		free(shell->input);
-	if (shell->prompt)
-		free(shell->prompt);
 }
 
 void	free_struct(t_mshell *shell)

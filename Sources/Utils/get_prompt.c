@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 23:46:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/09 14:54:58 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/09 16:05:28 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,6 @@ int	history(char *input)
 			return (1);
 	}
 	return (0);
-}
-
-static void	get_color(t_mshell *shell)
-{
-	if (shell->exit_status == 0)
-	{
-		shell->prompt = ft_strdup("> \033[0;32m$\033[0m ");
-		if (!shell->prompt)
-			return (free_struct(shell), exit(2));
-	}
-	else
-	{
-		shell->prompt = ft_strdup("> \033[0;31m$\033[0m ");
-		if (!shell->prompt)
-			return (free_struct(shell), exit(2));
-	}
 }
 
 static void	print_upper(t_mshell *shell)
@@ -76,11 +60,10 @@ static void	print_upper(t_mshell *shell)
 
 char	*get_prompt(t_mshell *shell)
 {
-	if (shell->prompt)
-		free(shell->prompt);
 	ft_printf("\n\033[1mMinishell \033[0m");
 	print_upper(shell);
 	ft_printf("\n");
-	get_color(shell);
-	return (shell->prompt);
+	if (shell->exit_status != 0)
+		return ("> \033[0;31m$\033[0m ");
+	return ("> \033[0;32m$\033[0m ");
 }

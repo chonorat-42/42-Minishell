@@ -56,7 +56,6 @@ void	init_shell(t_mshell *shell)
 {
 	shell->input = NULL;
 	shell->cmd = NULL;
-	shell->prompt = NULL;
 	shell->menvp = NULL;
 	shell->paths = NULL;
 	shell->current_loc = NULL;

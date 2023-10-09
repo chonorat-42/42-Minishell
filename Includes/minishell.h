@@ -89,7 +89,6 @@ typedef struct s_mshell
 {
 	char		*input;
 	char		**cmd;
-	char		*prompt;
 	size_t		envp_size;
 	char		**menvp;
 	char		**paths;
