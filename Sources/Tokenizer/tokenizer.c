@@ -81,8 +81,8 @@ void	split_on_pipes(t_mshell *shell, char *str)
 		else if (is_char_in_set(str[i], "|"))
 		{
 			if (str[i + 1] == '|')
-				return (free_struct(shell), ft_printf("Operator `||' is not supported\n"),
-					get_input_loop(shell));
+				return (ft_free_tokens(&shell->tok_lst), free(shell->input),
+					ft_printf("Operator `||' is not supported\n"), get_input_loop(shell));
 			create_token(shell, i, j, str);
 			j = i;
 			i++;
@@ -92,8 +92,8 @@ void	split_on_pipes(t_mshell *shell, char *str)
 		else
 		{
 			if (str[i] == '&')
-				return (free_struct(shell), ft_printf("Operator `&' and `&&' are not supported\n"),
-					get_input_loop(shell));
+				return (ft_free_tokens(&shell->tok_lst), free(shell->input),
+					ft_printf("Operator `&' and `&&' are not supported\n"), get_input_loop(shell));
 			i++;
 		}
 	}
@@ -113,6 +113,6 @@ int	tokenizer(t_mshell *shell)
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
 	if (!shell->tok_lst || !shell->tok_lst->cmd_arr || !shell->tok_lst->cmd_arr[0][0])
-		return (free_struct(shell), get_input_loop(shell), 0);
+		return (ft_free_tokens(&shell->tok_lst), free(shell->input), get_input_loop(shell), 0);
 	return (0);
 }

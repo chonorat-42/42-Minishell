@@ -74,7 +74,7 @@ int main(int argc, char **argv, char **envp)
 	t_mshell	shell;
 
 	if (argc != 1)
-		return (ft_printf("Error\nMinishell does not take arguments\n"), 1);
+		return (ft_printf("minishell: %s: No such file or directory\n", argv[1]), 1);
 	init_shell(&shell);
 	get_envp(&shell, envp, argv);
 	update_shlvl(&shell);
