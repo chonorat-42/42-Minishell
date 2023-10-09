@@ -51,10 +51,16 @@ int	create_export(t_envp **export, t_envp *envp)
 	*export = malloc(sizeof(t_envp));
 	if (!*export)
 		return (0);
+	(*export)->var.content = NULL;
 	(*export)->var.name = ft_strdup(envp->var.name);
-	(*export)->var.content = ft_strdup(envp->var.content);
-	if (!(*export)->var.name || !(*export)->var.content)
+	if (!(*export)->var.name)
 		return (0);
+	if (envp->var.content)
+	{
+		(*export)->var.content = ft_strdup(envp->var.content);
+		if (!(*export)->var.content)
+			return (0);
+	}
 	(*export)->var.readable = 1;
 	(*export)->var.alterable = 1;
 	if (ft_strncmp((*export)->var.name, "_", ft_strlen((*export)->var.name)) == 0 ||

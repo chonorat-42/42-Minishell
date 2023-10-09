@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:20:57 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/06 16:21:51 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/09 13:06:54 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static void	pwd(t_mshell *shell)
 		new.readable = 0;
 	new.alterable = 1;
 	create_envp_list(shell, &new);
+	free(new.name);
 }
 
 static void	shlvl(t_mshell *shell)
@@ -45,6 +46,8 @@ static void	shlvl(t_mshell *shell)
 	new.readable = 1;
 	new.alterable = 1;
 	create_envp_list(shell, &new);
+	free(new.name);
+	free(new.content);
 }
 
 static void	underscore(t_mshell *shell, char **argv)
@@ -73,7 +76,7 @@ static void	underscore(t_mshell *shell, char **argv)
 	new.readable = 1;
 	new.alterable = 0;
 	create_envp_list(shell, &new);
-	return (free(join), free(cmd));
+	return (free(new.name), free(new.content), free(join), free(cmd));
 }
 
 static void	old_pwd(t_mshell *shell)
@@ -87,6 +90,7 @@ static void	old_pwd(t_mshell *shell)
 	new.readable = 0;
 	new.alterable = 1;
 	create_envp_list(shell, &new);
+	free(new.name);
 }
 
 void	create_envp(t_mshell *shell, char **envp, char **argv)
