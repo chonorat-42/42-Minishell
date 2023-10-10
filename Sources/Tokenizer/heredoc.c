@@ -60,6 +60,7 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 	char	*line;
 	int		del_quote;
 	char	*new_del;
+	char	*trim;
 
 	del_quote = 0;
 	if (is_char_in_set(delimiter[0], "\'\""))
@@ -73,7 +74,11 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 	line = NULL;
 	while (1)
 	{
-		line = readline(">");
+		ft_dprintf(STDOUT_FILENO, ">");
+		line = get_next_line(0);
+		trim = ft_strtrim(line, "\n");
+		free(line);
+		line = trim;
 		if (!ft_strcmp(line, delimiter))
 		{
 			delimiter_found(shell, envp, lst, fd_in, del_quote);
