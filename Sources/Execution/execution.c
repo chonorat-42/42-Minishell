@@ -59,7 +59,11 @@ void	executable(t_tokens *temp, t_mshell *shell)
 	if (WIFEXITED(g_status))
 		g_status = WEXITSTATUS(g_status);
 	else if (WIFSIGNALED(g_status))
+	{
 		g_status = WTERMSIG(g_status);
+		if (g_status != 131)
+			g_status += 128;
+	}
 	if (temp->cmd_arr)
 		free_arr(temp->cmd_arr);
 	temp->cmd_arr = NULL;
