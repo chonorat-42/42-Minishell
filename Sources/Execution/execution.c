@@ -51,7 +51,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 
 	child = fork();
 	if (child == -1)
-		return (free_struct(shell), exit(2));
+		return (free_struct(shell), exit(EXIT_FAILURE));
 	if (!child)
 		bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
 	else

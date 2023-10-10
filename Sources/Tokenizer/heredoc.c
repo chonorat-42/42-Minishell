@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern long long g_status;
+
 void	heredoc_into_infile(t_dlist **lst)
 {
 	t_dlist	*temp;
@@ -71,9 +73,12 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 	}
 	lst = NULL;
 	line = NULL;
+	heredoc_sig();
 	while (1)
 	{
 		line = readline(">");
+		if (!line)
+			return ((void)ft_putchar_fd('\n', 0));
 		if (!ft_strcmp(line, delimiter))
 		{
 			delimiter_found(shell, envp, lst, fd_in, del_quote);
