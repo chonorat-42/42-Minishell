@@ -38,10 +38,17 @@ void add_quotes_input(t_mshell *shell)
 {
 	char	*line;
 	char	*join;
+	char	*trim;
 
-	line = readline(">");
+	ft_dprintf(STDOUT_FILENO, ">");
+	line = get_next_line(0);
 	if (!line)
 		return (free_struct(shell), exit(1));
+	trim = ft_strtrim(line, "\n");
+	if (!trim)
+		return (free(line), free_struct(shell), exit(2));
+	free(line);
+	line = trim;
 	join = ft_strjoin(shell->input, line);
 	if (!join)
 		return (free(line), free_struct(shell), exit(2));
