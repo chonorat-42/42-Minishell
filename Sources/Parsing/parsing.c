@@ -43,7 +43,7 @@ void add_quotes_input(t_mshell *shell)
 	ft_dprintf(STDOUT_FILENO, ">");
 	line = get_next_line(0);
 	if (!line)
-		return (free_struct(shell), exit(1));
+		return ((void)ft_putstr_fd("\n", 1), free(shell->input), free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
 	trim = ft_strtrim(line, "\n");
 	if (!trim)
 		return (free(line), free_struct(shell), exit(2));

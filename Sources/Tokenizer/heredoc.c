@@ -76,6 +76,8 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 	{
 		ft_dprintf(STDOUT_FILENO, ">");
 		line = get_next_line(0);
+		if (!line)
+			return ((void)ft_putstr_fd("\n", 1));
 		trim = ft_strtrim(line, "\n");
 		free(line);
 		line = trim;
