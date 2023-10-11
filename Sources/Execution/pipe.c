@@ -188,7 +188,7 @@ void	fork_pipesB(size_t pipes_nbr, t_tokens **temp, int fd_in, t_mshell *shell, 
 
 void	end_pipe(t_mshell *shell, t_tokens *temp)
 {
-	ft_dprintf(2, "got in end pipe, temp = %s, temp->fd_in = %d, fd_out=%d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out);
+	//ft_dprintf(2, "got in end pipe, temp = %s, temp->fd_in = %d, fd_out=%d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out);
 	exec_forwarding(temp, shell);
 
 }
@@ -200,7 +200,7 @@ void	middle_pipes(t_mshell *shell, t_tokens *temp)
 	pipe(fd);
 	temp->fd_out = fd[1];
 	temp->next->next->fd_in = fd[0];
-	ft_dprintf(2, "got in MIDDLE pipe, temp = %s, temp->fd_in = %d, fd_out=%d, temp->next->next->in = %d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out, temp->next->next->fd_in);
+	//ft_dprintf(2, "got in MIDDLE pipe, temp = %s, temp->fd_in = %d, fd_out=%d, temp->next->next->in = %d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out, temp->next->next->fd_in);
 	exec_forwarding(temp, shell);
 }
 
@@ -211,7 +211,7 @@ void	first_pipe(t_mshell *shell, t_tokens *temp)
 	pipe(fd);
 	temp->fd_out = fd[1];
 	temp->next->next->fd_in = fd[0];
-	ft_dprintf(2, "got in first pipe, temp = %s, temp->fd_in = %d, fd_out=%d, temp->next->next->in = %d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out, temp->next->next->fd_in);
+	//ft_dprintf(2, "got in first pipe, temp = %s, temp->fd_in = %d, fd_out=%d, temp->next->next->in = %d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out, temp->next->next->fd_in);
 	exec_forwarding(temp, shell);
 }
 

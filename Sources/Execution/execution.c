@@ -80,7 +80,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 
 void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 {
-	ft_dprintf(2, "got in exec forwarding, temp_>cmd_arr[0] = %s\n", temp->cmd_arr[0]);
+	//ft_dprintf(2, "got in exec forwarding, temp_>cmd_arr[0] = %s\n", temp->cmd_arr[0]);
 	if (is_builtin(temp))
 		builtin_forwarding(temp, shell);
 	else

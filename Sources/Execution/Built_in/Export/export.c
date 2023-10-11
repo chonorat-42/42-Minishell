@@ -113,6 +113,20 @@ static void	sort_env(t_mshell *shell)
 	}
 }
 
+void	check_plus(t_mshell *shell, char **arg)
+{
+	int	index;
+
+	index = 1;
+	while ((*arg)[index])
+	{
+		if ((*arg)[index] == '=' && (*arg)[index - 1])
+			if ((*arg)[index - 1] == '+')
+				return (prepare_join(shell, arg, index - 1));
+		index++;
+	}
+}
+
 void	export_case(t_mshell *shell, char **cmd, int fd)
 {
 	int	index;
@@ -123,7 +137,10 @@ void	export_case(t_mshell *shell, char **cmd, int fd)
 		if (check_option(shell, cmd))
 			break ;
 		if (is_var(cmd[index]))
+		{
+			check_plus(shell, &cmd[index]);
 			get_var(shell, cmd[index]);
+		}
 		index++;
 	}
 	if (ft_arr_size(cmd) == 1)
