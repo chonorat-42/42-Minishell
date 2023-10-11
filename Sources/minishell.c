@@ -37,7 +37,6 @@ remake parsing
 
 long long	g_status;
 
-
 static char	**get_exit(t_mshell *shell)
 {
 	char	**arr;
@@ -68,12 +67,13 @@ void	init_shell(t_mshell *shell)
 	g_status = 0;
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	t_mshell	shell;
 
 	if (argc != 1)
-		return (ft_printf("minishell: %s: No such file or directory\n", argv[1]), 1);
+		return (ft_printf("minishell: %s: No such file or directory\n",
+				argv[1]), 1);
 	init_shell(&shell);
 	get_envp(&shell, envp, argv);
 	update_shlvl(&shell);

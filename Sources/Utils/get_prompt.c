@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 23:46:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/11 13:54:28 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/11 17:42:27 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ static void	print_upper(t_mshell *shell)
 	home = get_envvar_content(shell, shell->envp, "HOME");
 	if (home && ft_strlen(home) > 1 && home[ft_strlen(home) - 1] == '/')
 		home[ft_strlen(home) - 1] = '\0';
-	if (path && home && ft_strncmp(home, path, ft_strlen(home)) == 0 &&
-		lstat(home, &stat) == 0)
+	if (path && home && ft_strncmp(home, path, ft_strlen(home)) == 0
+		&& lstat(home, &stat) == 0)
 	{
-		temp = ft_substr(path, ft_strlen(home), 
-			ft_strlen(&path[ft_strlen(home)]));
+		temp = ft_substr(path, ft_strlen(home),
+				ft_strlen(&path[ft_strlen(home)]));
 		if (!temp)
 			return (free_struct(shell), exit(2));
 		ft_printf("\033[0;37m~\033[0m");

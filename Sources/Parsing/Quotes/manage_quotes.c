@@ -52,10 +52,10 @@ char	*get_other(char *str, size_t *i)
 	return (temp);
 }
 
-char *get_between_quotes(char *str, int c, size_t *i)
+char	*get_between_quotes(char *str, int c, size_t *i)
 {
-	char *result;
-	int j;
+	char	*result;
+	int		j;
 
 	j = *i;
 	if (str[j] == c)
@@ -71,6 +71,15 @@ char *get_between_quotes(char *str, int c, size_t *i)
 	return (result);
 }
 
+void	quote_found(t_dlist **temp, char *str, size_t *i, size_t *j)
+{
+	*j = *i + 1;
+	move_to_next_quote(str, i, str[(*i)]);
+	split_into_dlst(temp, str, *i, *j);
+	(*i)++;
+	*j = *i;
+}
+
 char	*remove_quotes(char *str)
 {
 	t_dlist	*temp;
@@ -84,13 +93,7 @@ char	*remove_quotes(char *str)
 	while (str[i])
 	{
 		if (is_char_in_set(str[i], "\'\""))
-		{
-			j = i + 1;
-			move_to_next_quote(str, &i, str[i]);
-			split_into_dlst(&temp, str, i, j);
-			i++;
-			j = i;
-		}
+			quote_found(&temp, str, &i, &j);
 		else
 		{
 			while (str[i] && !is_char_in_set(str[i], "\'\""))

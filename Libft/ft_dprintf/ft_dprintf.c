@@ -12,12 +12,14 @@
 
 #include "../../Includes/libft.h"
 
-const char	*ft_search_arg_fd(va_list arg, const char *format, size_t *char_count, int fd)
+const char	*ft_search_arg_fd(va_list arg, const char *format,
+	size_t *char_count, int fd)
 {
 	if (*format == 'd' || *format == 'i')
 		ft_dputnbr_base(va_arg(arg, int), "0123456789", char_count, fd);
 	if (*format == 'u')
-		ft_dputnbr_base(va_arg(arg, unsigned int), "0123456789", char_count, fd);
+		ft_dputnbr_base(va_arg(arg, unsigned int),
+			"0123456789", char_count, fd);
 	if (*format == 'x')
 		ft_dputnbr_base(va_arg(arg, unsigned int),
 			"0123456789abcdef", char_count, fd);

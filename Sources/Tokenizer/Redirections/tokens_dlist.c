@@ -19,7 +19,7 @@ void	get_redir(char *str, size_t *i, t_dlist **lst)
 	while (str[(*i)] && ft_isws(str[(*i)]))
 		(*i)++;
 	j = *i;
-	while (str[(*i)] && !ft_isws(str[(*i)]) && !is_char_in_set(str[(*i)],"<>"))
+	while (str[(*i)] && !ft_isws(str[(*i)]) && !is_char_in_set(str[(*i)], "<>"))
 		(*i)++;
 	split_into_dlst(lst, str, *i, j);
 }
@@ -37,7 +37,7 @@ void	get_chevrons(char *str, size_t *i, char c, t_dlist **lst)
 void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 {
 	t_dlist	*new;
-	t_dlist *temp;
+	t_dlist	*temp;
 
 	new = malloc(sizeof(t_dlist));
 	new->next = NULL;
@@ -50,7 +50,7 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 	else
 	{
 		temp = *lst;
-		while(temp->next)
+		while (temp->next)
 			temp = temp->next;
 		temp->next = new;
 		new->prev = temp;
@@ -59,18 +59,20 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 
 void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *i, size_t *j)
 {
-			if (*i != *j)
-				split_into_dlst(lst, str, *i, *j);
-			while (ft_isws(str[(*i)]))
-				i++;
-			get_chevrons(str, i, str[(*i)], lst);
-			if (!str[(*i)])
-				return (ft_printf("minishell: syntax error near unexpected token `newline'\n"),
-					ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
-			get_redir(str, i, lst);
-			while (str[(*i)] && ft_isws(str[(*i)]))
-				(*i)++;
-			*j = *i;
+	if (*i != *j)
+		split_into_dlst(lst, str, *i, *j);
+	while (ft_isws(str[(*i)]))
+		i++;
+	get_chevrons(str, i, str[(*i)], lst);
+	if (!str[(*i)])
+	{
+		ft_dprintf(2, "minishell: syntax error near unexpected token `newline'\n");
+		return (ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
+	}
+	get_redir(str, i, lst);
+	while (str[(*i)] && ft_isws(str[(*i)]))
+		(*i)++;
+	*j = *i;
 }
 
 void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
@@ -93,7 +95,7 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 		{
 			if (j != i)
 				split_into_dlst(lst, str, i, j);
-			while(str[i] && ft_isws(str[i]))
+			while (str[i] && ft_isws(str[i]))
 				i++;
 			j = i;
 		}

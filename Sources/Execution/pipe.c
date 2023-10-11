@@ -45,7 +45,7 @@ void	end_pipe(t_mshell *shell, t_tokens *temp)
 
 void	middle_pipes(t_mshell *shell, t_tokens *temp)
 {
-	int fd[2];
+	int	fd[2];
 
 	(void)shell;
 	pipe(fd);
@@ -55,12 +55,11 @@ void	middle_pipes(t_mshell *shell, t_tokens *temp)
 		builtin_forwarding(temp, shell);
 	else
 		executable(temp, shell);
-
 }
 
 void	first_pipe(t_mshell *shell, t_tokens *temp)
 {
-	int fd[2];
+	int	fd[2];
 
 	(void)shell;
 	if (pipe(fd))
@@ -71,7 +70,6 @@ void	first_pipe(t_mshell *shell, t_tokens *temp)
 		builtin_forwarding(temp, shell);
 	else
 		executable(temp, shell);
-
 }
 
 void	handle_pipes(t_mshell *shell, t_tokens *temp)
@@ -90,15 +88,14 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 		}
 		else if (i < pipes_nbr)
 		{
-			middle_pipes(shell,temp);
+			middle_pipes(shell, temp);
 			temp = temp->next->next;
 		}
-		else if(i == pipes_nbr)
+		else if (i == pipes_nbr)
 			end_pipe(shell, temp);
 		i++;
 	}
 	while (wait(NULL) != -1)
 	{
-
 	}
 }

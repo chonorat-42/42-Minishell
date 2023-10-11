@@ -47,9 +47,11 @@ void	parse_tkn(t_tokens **tok, t_mshell *shell)
 
 	temp = *tok;
 	if (temp->type == PIPE)
-		return (ft_printf("minishell: syntax error near unexpected token '|'\n"),
-			ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
-	while(last_is_pipe(*tok))
+	{
+		ft_dprintf(2, "minishell: syntax error near unexpected token '|'\n");
+		return (ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
+	}
+	while (last_is_pipe(*tok))
 	{
 		while (temp->next)
 			temp = temp->next;

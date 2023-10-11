@@ -12,7 +12,7 @@
 
 #include "../Includes/libft.h"
 
-char    **ft_arr_copy(char **envp, size_t size)
+char	**ft_arr_copy(char **envp, size_t size)
 {
 	char	**arr;
 	size_t	j;

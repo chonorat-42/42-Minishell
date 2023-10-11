@@ -12,9 +12,9 @@
 
 #include "../Includes/libft.h"
 
-size_t  ft_arr_size(char **arr)
+size_t	ft_arr_size(char **arr)
 {
-	size_t  i;
+	size_t	i;
 
 	if (!arr)
 		return (0);

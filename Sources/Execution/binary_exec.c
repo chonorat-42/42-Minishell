@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char *get_exec(char *cmd)
+char	*get_exec(char *cmd)
 {
 	size_t	j;
 	char	*res;

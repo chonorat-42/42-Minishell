@@ -42,7 +42,7 @@ static void	get_sig(int signum)
 		rl_redisplay();
 	}
 	if (signum == SIGQUIT)
-			ft_printf("\b\b  \b\b");
+		ft_printf("\b\b  \b\b");
 	g_status = 128 + signum;
 }
 

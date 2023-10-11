@@ -126,14 +126,14 @@ char	*expand_envvar(t_mshell *shell, char *str, t_envp *envp)
 
 int	expand(t_mshell *shell, char *cmd)
 {
-    char	*temp;
+	char	*temp;
 
 	temp = NULL;
-    if (ft_char_index(cmd, '$') >= 0)
+	if (ft_char_index(cmd, '$') >= 0)
 	{
-    	temp = expand_envvar(shell, cmd, shell->envp);
-    	free(shell->input);
-    	shell->input = ft_strdup(temp);
+		temp = expand_envvar(shell, cmd, shell->envp);
+		free(shell->input);
+		shell->input = ft_strdup(temp);
 		free(temp);
 	}
 	return (0);
