@@ -48,14 +48,23 @@ void	builtin_forwarding(t_tokens *temp, t_mshell *shell)
 void	executable(t_tokens *temp, t_mshell *shell)
 {
 	pid_t	child;
+	pid_t	wpid;
 
+	ft_dprintf(2, "in executable, temp->cmd_arr[0] = %s, in = %d, out = %d\n\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out);
 	child = fork();
 	if (child == -1)
 		return (free_struct(shell), exit(EXIT_FAILURE));
 	if (!child)
 		bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
 	else
-		waitpid(child, (int *)&g_status, 0);
+	{
+		wpid = waitpid(child, (int *)&g_status, 0);
+		if (wpid == -1)
+		{
+			perror("waitpid");
+			exit(EXIT_FAILURE);
+		}
+	}
 	if (WIFEXITED(g_status))
 		g_status = WEXITSTATUS(g_status);
 	else if (WIFSIGNALED(g_status))
@@ -71,6 +80,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 
 void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 {
+	ft_dprintf(2, "got in exec forwarding, temp_>cmd_arr[0] = %s\n", temp->cmd_arr[0]);
 	if (is_builtin(temp))
 		builtin_forwarding(temp, shell);
 	else
@@ -86,7 +96,7 @@ void	execution(t_mshell *shell)
 	while (temp)
 	{
 		if (temp->next && temp->next->type == PIPE)
-			handle_pipes(shell, &temp, &temp->fd_in, &temp->fd_out);
+			handle_pipes(shell, temp);
 		else
 			exec_forwarding(temp, shell);
 		temp = temp->next;

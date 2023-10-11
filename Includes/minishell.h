@@ -158,7 +158,7 @@ void		get_envp(t_mshell *shell, char **envp, char **argv);
 void		create_envp(t_mshell *shell, char **envp, char **argv);
 
 void		get_input_loop(t_mshell *shell);
-void		handle_pipes(t_mshell *shell, t_tokens **temp, int *fd_in, int *fd_out);
+void		handle_pipes(t_mshell *shell, t_tokens *temp);
 void		exec_forwarding(t_tokens *temp, t_mshell *shell);
 void		print_env(t_envp *lst);
 void		create_envp_list(t_mshell *shell, t_var *var);
