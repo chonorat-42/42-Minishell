@@ -102,6 +102,7 @@ typedef struct s_mshell
 
 void		sig_handler(void);
 void		exec_sig(void);
+void		heredoc_sig(void);
 
 char		*get_prompt(t_mshell *shell);
 void		update_shlvl(t_mshell *shell);

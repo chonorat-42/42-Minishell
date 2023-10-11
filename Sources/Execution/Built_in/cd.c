@@ -49,7 +49,7 @@ static void	mod_pwd(t_mshell *shell)
 
 	pwd = get_envvar_content(shell, shell->envp, "PWD");
 	if (!replace_content(&shell->envp, "OLDPWD", pwd))
-		return (free(pwd), free_struct(shell), exit(2));
+		return (free(pwd), free_struct(shell), exit(EXIT_FAILURE));
 	free(pwd);
 	if (!getcwd(path, PATH_MAX))
 	{
@@ -59,7 +59,7 @@ static void	mod_pwd(t_mshell *shell)
 		return ;
 	}
 	if (!replace_content(&shell->envp, "PWD", path))
-		return (free_struct(shell), exit(2));
+		return (free_struct(shell), exit(EXIT_FAILURE));
 }
 
 static void	get_error(char **cmd)

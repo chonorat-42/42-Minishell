@@ -81,7 +81,7 @@ static void	get_pos(t_mshell *shell, t_envp *env_cell)
 		if (ft_strcmp(temp->var.name, env_cell->var.name) > 0)
 		{
 			if (!add_to_export(&temp, env_cell))
-				return (free_struct(shell), exit(1));
+				return (free_struct(shell), exit(EXIT_FAILURE));
 			break ;
 		}
 		if (temp->next)
@@ -89,7 +89,7 @@ static void	get_pos(t_mshell *shell, t_envp *env_cell)
 		else
 		{
 			if (!add_to_end(&temp, env_cell))
-				return (free_struct(shell), exit(1));
+				return (free_struct(shell), exit(EXIT_FAILURE));
 			temp = NULL;
 		}
 	}

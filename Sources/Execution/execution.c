@@ -53,7 +53,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 	ft_dprintf(2, "in executable, temp->cmd_arr[0] = %s, in = %d, out = %d\n\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out);
 	child = fork();
 	if (child == -1)
-		return (free_struct(shell), exit(2));
+		return (free_struct(shell), exit(EXIT_FAILURE));
 	if (!child)
 		bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
 	else
@@ -68,7 +68,11 @@ void	executable(t_tokens *temp, t_mshell *shell)
 	if (WIFEXITED(g_status))
 		g_status = WEXITSTATUS(g_status);
 	else if (WIFSIGNALED(g_status))
+	{
 		g_status = WTERMSIG(g_status);
+		if (g_status != 131)
+			g_status += 128;
+	}
 	if (temp->cmd_arr)
 		free_arr(temp->cmd_arr);
 	temp->cmd_arr = NULL;

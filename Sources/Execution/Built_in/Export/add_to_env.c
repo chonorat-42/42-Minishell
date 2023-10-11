@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 17:26:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/09 17:29:59 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/10 11:19:31 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,6 @@ void	get_var(t_mshell *shell, char *cmd)
 
 	get_readable(cmd, &new);
 	if (!split_var(cmd, &new))
-		(free_struct(shell), exit(1));
+		(free_struct(shell), exit(EXIT_FAILURE));
 	add_to_env(shell, &new);
 }

@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern long long g_status;
+
 void	heredoc_into_infile(t_dlist **lst)
 {
 	t_dlist	*temp;
@@ -72,10 +74,15 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 	}
 	lst = NULL;
 	line = NULL;
+	heredoc_sig();
 	while (1)
 	{
-		ft_dprintf(STDOUT_FILENO, ">");
+		ft_dprintf(STDOUT_FILENO, "> ");
 		line = get_next_line(0);
+		if (!line)
+			return ((void)ft_putchar_fd('\n', 0));
+		if (g_status == 130 || g_status == 131)
+			return (free(line));
 		trim = ft_strtrim(line, "\n");
 		free(line);
 		line = trim;
