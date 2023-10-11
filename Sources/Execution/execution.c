@@ -50,7 +50,6 @@ void	executable(t_tokens *temp, t_mshell *shell)
 	pid_t	child;
 	pid_t	wpid;
 
-	// ft_dprintf(2, "in executable, temp->cmd_arr[0] = %s, in = %d, out = %d\n\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out);
 	child = fork();
 	if (child == -1)
 		return (free_struct(shell), exit(2));
@@ -83,7 +82,6 @@ void	executable(t_tokens *temp, t_mshell *shell)
 
 void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 {
-	// ft_dprintf(2, "got in exec forwarding, temp_>cmd_arr[0] = %s\n", temp->cmd_arr[0]);
 	if (is_builtin(temp))
 		builtin_forwarding(temp, shell);
 	else
@@ -99,10 +97,7 @@ void	execution(t_mshell *shell)
 	if (temp->next && temp->next->type == PIPE)
 		handle_pipes(shell, temp);
 	else
-	{
-		// ft_dprintf(2, "got out of handle pipes, next is exec forwarding\n");
 		exec_forwarding(temp, shell);
-	}
 	free(shell->input);
 	ft_free_tokens(&shell->tok_lst);
 	if (shell->paths)

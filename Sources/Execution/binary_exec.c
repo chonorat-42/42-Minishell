@@ -108,9 +108,5 @@ void	bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 	else
 		show_error(cmd_arr[0], "EXEC", 2);
 	free_struct(shell);
-	// if (fd_out != 1)
-	// 	close(fd_out);
-	// if (fd_in != 0)
-	// 	close(fd_in);
 	exit(127);
 }
