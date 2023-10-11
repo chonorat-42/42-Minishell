@@ -28,6 +28,8 @@ int	var_exist(t_mshell *shell, char *var)
 
 void	print_export(t_envp *export, int fd)
 {
+	int	index;
+
 	while (export)
 	{
 		if (export->var.readable == 1)
@@ -37,7 +39,13 @@ void	print_export(t_envp *export, int fd)
 			if (export->var.content)
 			{
 				ft_putstr_fd("=\"", fd);
-				ft_putstr_fd(export->var.content, fd);
+				index = 0;
+				while (export->var.content[index])
+				{
+					if (export->var.content[index] == '\"')
+						ft_putchar_fd('\\', fd);
+					ft_putchar_fd(export->var.content[index++], fd);
+				}
 				ft_putstr_fd("\"", fd);
 			}
 			ft_putchar_fd('\n', fd);

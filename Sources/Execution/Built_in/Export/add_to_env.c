@@ -6,59 +6,13 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 17:26:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/11 15:40:14 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/11 16:00:24 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 extern long long	g_status;
-
-int	get_join(t_var *var, char **arg, char *content)
-{
-	char	*temp;
-
-	free(*arg);
-	temp = ft_strjoin(var->name, "=");
-	if (!temp)
-		return (free(var->name), 0);
-	free(var->name);
-	*arg = ft_strjoin(temp, content);
-	if (!(*arg))
-		return (free(temp), 0);
-	free(temp);
-	return (1);
-}
-
-void	prepare_join(t_mshell *shell, char **arg, int index)
-{
-	t_var	var;
-	char	*new_content;
-	char	*join_content;
-
-	var.name = ft_substr(*arg, 0, index);
-	if (!var.name)
-		return (free_struct(shell), exit(EXIT_FAILURE));
-	var.content = NULL;
-	new_content = ft_substr(*arg, index + 2, ft_strlen(&(*arg)[index + 2]));
-	if (!new_content)
-		return (free(var.name), free_struct(shell), exit(EXIT_FAILURE));
-	if (var_exist(shell, var.name))
-		var.content = get_envvar_content(shell, shell->envp, var.name);
-	if (!var.content)
-		var.content = ft_strdup("");
-	if (!var.content)
-		return (free(var.name), free(new_content));
-	join_content = ft_strjoin(var.content, new_content);
-	if (!join_content)
-		return (free(var.name), free(var.content), free(new_content),
-			free_struct(shell), exit(EXIT_FAILURE));
-	free(var.content);
-	if (!get_join(&var, arg, join_content))
-		return (free_struct(shell), free(new_content), exit(EXIT_FAILURE));
-	ft_printf("%s\n", *arg);
-	return (free(new_content), free(join_content));
-}
 
 int	is_var(char *arg)
 {

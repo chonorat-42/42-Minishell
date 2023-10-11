@@ -60,10 +60,10 @@ static void	get_sig(int signum)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
+		g_status = 128 + signum;
 	}
 	if (signum == SIGQUIT)
 			ft_putstr_fd("\b\b  \b\b", 0);
-	g_status = 128 + signum;
 }
 
 void	sig_handler(void)
