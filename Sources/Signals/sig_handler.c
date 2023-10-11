@@ -16,10 +16,9 @@ extern long long	g_status;
 
 static void	hd_sig(int signum)
 {
-	(void)signum;
-	g_status = 130;
+	g_status = 128 + signum;
 	ft_putstr_fd("\b\b  \b\b", 0);
-	ft_putstr_fd("\b\b  \b\b", 2);
+	ft_putchar_fd('\n', 0);
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
