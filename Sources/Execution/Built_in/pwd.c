@@ -56,4 +56,6 @@ void	pwd_case(t_mshell *shell, char **cmd, int fd)
 	else if (path[0])
 		ft_dprintf(fd, "%s", path);
 	ft_dprintf(fd, "\n");
+	if (fd != 1)
+		close(fd);
 }

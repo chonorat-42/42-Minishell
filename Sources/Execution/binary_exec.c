@@ -99,7 +99,8 @@ void	browse_paths(t_mshell *shell, char **cmd_arr)
 
 void	bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 {
-	manage_fd(fd_in, fd_out);
+	(void)fd_in;
+	(void)fd_out;
 	if (ft_strchr(cmd_arr[0], '/'))
 		binary_with_path(shell, cmd_arr);
 	if (shell->paths)
@@ -107,9 +108,9 @@ void	bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 	else
 		show_error(cmd_arr[0], "EXEC", 2);
 	free_struct(shell);
-	if (fd_out != 1)
-		close(fd_out);
-	if (fd_in != 0)
-		close(fd_in);
+	// if (fd_out != 1)
+	// 	close(fd_out);
+	// if (fd_in != 0)
+	// 	close(fd_in);
 	exit(127);
 }

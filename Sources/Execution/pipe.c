@@ -35,46 +35,46 @@ size_t	count_successive_pipes(t_tokens *temp)
 	return (res);
 }
 
-void	create_child(int fd_in, int fd_out, t_tokens *temp, t_mshell *shell)
-{
-	pid_t	pid;
+// void	create_child(int fd_in, int fd_out, t_tokens *temp, t_mshell *shell)
+// {
+// 	pid_t	pid;
 
-	pid = fork();
-	if (pid == 0)
-	{
-		if (fd_in != 0)
-		{
-			if (dup2(fd_in, 0) == -1)
-			{
-				perror("dup2");
-				return (free_struct(shell), exit(EXIT_FAILURE));
-			}
-			close(fd_in);
-		}
-		if (fd_out != 1)
-		{
-			if (dup2(fd_out, 1) == -1)
-			{
-				perror("dup2");
-				return (free_struct(shell), exit(EXIT_FAILURE));
-			}
-			close(fd_out);
-		}
-		exec_forwarding(temp, shell);
-		waitpid(pid, NULL, 0);
-		exit(0);
-	}
-}
+// 	pid = fork();
+// 	if (pid == 0)
+// 	{
+// 		if (fd_in != 0)
+// 		{
+// 			if (dup2(fd_in, 0) == -1)
+// 			{
+// 				perror("dup2");
+// 				return (free_struct(shell), exit(EXIT_FAILURE));
+// 			}
+// 			close(fd_in);
+// 		}
+// 		if (fd_out != 1)
+// 		{
+// 			if (dup2(fd_out, 1) == -1)
+// 			{
+// 				perror("dup2");
+// 				return (free_struct(shell), exit(EXIT_FAILURE));
+// 			}
+// 			close(fd_out);
+// 		}
+// 		exec_forwarding(temp, shell);
+// 		waitpid(pid, NULL, 0);
+// 		exit(0);
+// 	}
+// }
 
-int	get_last_out(t_tokens *lst)
-{
-	t_tokens	*temp;
+// int	get_last_out(t_tokens *lst)
+// {
+// 	t_tokens	*temp;
 
-	temp = lst;
-	while (temp->next)
-		temp = temp->next;
-	return (temp->fd_out);
-}
+// 	temp = lst;
+// 	while (temp->next)
+// 		temp = temp->next;
+// 	return (temp->fd_out);
+// }
 
 /*to do
 recuper fd_in de la premiere commande
@@ -95,101 +95,115 @@ tant que sur un pipe, pour le dernier envoyer last_out*/
 // 	}
 // }
 
-void	fork_pipes(size_t pipes_nbr, t_tokens **temp, int *fd_in, t_mshell *shell, int *fd_out)
-{
-	size_t	i;
-	// int		last_out;
-	int	pipefd[2];
-    pid_t	child;
-    pid_t	child_processes[pipes_nbr + 1];
+// void	fork_pipes(size_t pipes_nbr, t_tokens **temp, int *fd_in, t_mshell *shell, int *fd_out)
+// {
+// 	size_t	i;
+// 	// int		last_out;
+// 	int	pipefd[2];
+//     pid_t	child;
+//     pid_t	child_processes[pipes_nbr + 1];
 
-    i = 0;
-	// last_out = get_last_out(*temp);
-    while (i < pipes_nbr)
-    {
-        pipe(pipefd);
+//     i = 0;
+// 	// last_out = get_last_out(*temp);
+//     while (i < pipes_nbr)
+//     {
+//         pipe(pipefd);
 
-        child = fork();
-        if (child == -1)
-        {
-            perror("fork");
-            exit(EXIT_FAILURE);
-        }
-        else if (child == 0)
-        {
-            if (*fd_in != 0)
-            {
-                if (dup2(*fd_in, 0) == -1)
-                {
-                    perror("dup2");
-                    exit(EXIT_FAILURE);
-                }
-                close(*fd_in);
-            }
-            if (i < pipes_nbr - 1)
-            {
-				// out = pipefd[1]
-                if (dup2(pipefd[1], 1) == -1)
-                {
-                    perror("dup2");
-                    exit(EXIT_FAILURE);
-                }
-				close(pipefd[1]);
-            }
-            close(pipefd[0]);
-			// *fd_in = pipefd[0];
-			// *fd_out = pipefd[1];
-			ft_printf("fd_in = %d, fd_out = %d, temp->content = %s\n\n", *fd_in, *fd_out, (*temp)->content);
-            exec_forwarding(*temp, shell);
-            exit(EXIT_SUCCESS);
-        }
-        else
-        {
-        	close(pipefd[1]);
-        	child_processes[i] = child;
-        }
-        (*temp)->next->next->fd_in = pipefd[0];
+//         child = fork();
+//         if (child == -1)
+//         {
+//             perror("fork");
+//             exit(EXIT_FAILURE);
+//         }
+//         else if (child == 0)
+//         {
+//             if (*fd_in != 0)
+//             {
+//                 if (dup2(*fd_in, 0) == -1)
+//                 {
+//                     perror("dup2");
+//                     exit(EXIT_FAILURE);
+//                 }
+//                 close(*fd_in);
+//             }
+//             if (i < pipes_nbr - 1)
+//             {
+// 				// out = pipefd[1]
+//                 if (dup2(pipefd[1], 1) == -1)
+//                 {
+//                     perror("dup2");
+//                     exit(EXIT_FAILURE);
+//                 }
+// 				close(pipefd[1]);
+//             }
+//             close(pipefd[0]);
+// 			// *fd_in = pipefd[0];
+// 			// *fd_out = pipefd[1];
+// 			ft_printf("fd_in = %d, fd_out = %d, temp->content = %s\n\n", *fd_in, *fd_out, (*temp)->content);
+//             exec_forwarding(*temp, shell);
+//             exit(EXIT_SUCCESS);
+//         }
+//         else
+//         {
+//         	close(pipefd[1]);
+//         	child_processes[i] = child;
+//         }
+//         (*temp)->next->next->fd_in = pipefd[0];
 
-        if ((*temp)->next->next)
-            (*temp) = (*temp)->next->next;
+//         if ((*temp)->next->next)
+//             (*temp) = (*temp)->next->next;
 
-        i++;
-    }
+//         i++;
+//     }
 
-    // Wait for all child processes to finish
-    for (i = 0; i < pipes_nbr; i++)
-    {
-        waitpid(child_processes[i], NULL, 0);
-    }
-	// (*temp)->fd_in = pipefd[1];
-	ft_printf("FINAL EXEC :fd_in = %d, fd_out = %d, temp->content = %s\n", (*temp)->fd_in, (*temp)->fd_out, (*temp)->content);
-    exec_forwarding(*temp, shell);
-}
+//     // Wait for all child processes to finish
+//     for (i = 0; i < pipes_nbr; i++)
+//     {
+//         waitpid(child_processes[i], NULL, 0);
+//     }
+// 	// (*temp)->fd_in = pipefd[1];
+// 	ft_printf("FINAL EXEC :fd_in = %d, fd_out = %d, temp->content = %s\n", (*temp)->fd_in, (*temp)->fd_out, (*temp)->content);
+//     exec_forwarding(*temp, shell);
+// }
 
-void	fork_pipesB(size_t pipes_nbr, t_tokens **temp, int fd_in, t_mshell *shell, int fd_out)
-{
-	size_t	i;
-	int		pipefd[2];
+// void	fork_pipesB(size_t pipes_nbr, t_tokens **temp, int fd_in, t_mshell *shell, int fd_out)
+// {
+// 	size_t	i;
+// 	int		pipefd[2];
 
-	(void)fd_out;
-	i = 0;
-	while (i < pipes_nbr)
-	{
-		pipe(pipefd);
-		create_child(fd_in, pipefd[1], *temp, shell);
-		close(pipefd[1]);
-		fd_in = pipefd[0];
-		if ((*temp)->next->next)
-			(*temp) = (*temp)->next->next;
-		i++;
-	}
-	exec_forwarding(*temp, shell);
-}
+// 	(void)fd_out;
+// 	i = 0;
+// 	while (i < pipes_nbr)
+// 	{
+// 		pipe(pipefd);
+// 		create_child(fd_in, pipefd[1], *temp, shell);
+// 		close(pipefd[1]);
+// 		fd_in = pipefd[0];
+// 		if ((*temp)->next->next)
+// 			(*temp) = (*temp)->next->next;
+// 		i++;
+// 	}
+// 	exec_forwarding(*temp, shell);
+// }
 
 void	end_pipe(t_mshell *shell, t_tokens *temp)
 {
-	ft_dprintf(2, "got in end pipe, temp = %s, temp->fd_in = %d, fd_out=%d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out);
-	exec_forwarding(temp, shell);
+	(void)shell;
+
+	// ft_dprintf(2, "in end pipe, first fd_in = %d\n", temp->fd_in);
+	// dup2(temp->fd_in, STDIN_FILENO);
+	// close(temp->fd_in);
+	// temp->fd_in = STDIN_FILENO;
+	// dup2(STDOUT_FILENO, 1);
+	// temp->fd_out = STDOUT_FILENO;
+	// ft_dprintf(2, "got in end pipe, temp = %s, temp->fd_in = %d, fd_out=%d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out);
+
+	if (is_builtin(temp))
+		builtin_forwarding(temp, shell);
+	else
+		executable(temp, shell);
+	dup2(STDIN_FILENO, 0);
+	
 
 }
 
@@ -197,22 +211,47 @@ void	middle_pipes(t_mshell *shell, t_tokens *temp)
 {
 	int fd[2];
 
+	(void)shell;
 	pipe(fd);
+	// ft_dprintf(2, "in first pipe fd_out(fd[i]) = %d\n", fd[1]);
 	temp->fd_out = fd[1];
+	// dup2(temp->fd_in, STDIN_FILENO);
+	// close(temp->fd_in);
+	// temp->fd_in = STDIN_FILENO;
+	// dup2(fd[1], STDOUT_FILENO);
+	// close(fd[1]);
+	// temp->fd_out = fd[1];
 	temp->next->next->fd_in = fd[0];
-	ft_dprintf(2, "got in MIDDLE pipe, temp = %s, temp->fd_in = %d, fd_out=%d, temp->next->next->in = %d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out, temp->next->next->fd_in);
-	exec_forwarding(temp, shell);
+	// ft_dprintf(2, "got in MIDDLE pipe, temp = %s, temp->fd_in = %d, fd_out=%d, temp->next->next->in = %d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out, temp->next->next->fd_in);
+
+	if (is_builtin(temp))
+		builtin_forwarding(temp, shell);
+	else
+		executable(temp, shell);
+
 }
 
 void	first_pipe(t_mshell *shell, t_tokens *temp)
 {
 	int fd[2];
 
-	pipe(fd);
+	(void)shell;
+	if (pipe(fd))
+		exit(EXIT_FAILURE);
+	// ft_dprintf(2, "in first pipe fd_out(fd[i]) = %d\n", fd[1]);
+	// dup2(fd[1], STDOUT_FILENO);
+	// close(fd[1]);
+	// dup2(fd[0], STDIN_FILENO);
+	// close(fd[0]);
 	temp->fd_out = fd[1];
 	temp->next->next->fd_in = fd[0];
-	ft_dprintf(2, "got in first pipe, temp = %s, temp->fd_in = %d, fd_out=%d, temp->next->next->in = %d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out, temp->next->next->fd_in);
-	exec_forwarding(temp, shell);
+	// ft_dprintf(2, "got in first pipe, temp = %s, temp->fd_in = %d, fd_out=%d, temp->next->next->in = %d\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out, temp->next->next->fd_in);
+
+	if (is_builtin(temp))
+		builtin_forwarding(temp, shell);
+	else
+		executable(temp, shell);
+
 }
 
 void	handle_pipes(t_mshell *shell, t_tokens *temp)
@@ -222,21 +261,21 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 
 	i = 0;
 	pipes_nbr = count_successive_pipes(temp);
-	ft_dprintf(2, "PIPES NBR = %d\n", pipes_nbr);
+	// ft_dprintf(2, "PIPES NBR = %d\n", pipes_nbr);
 	// fork_pipes(pipes_nbr, temp, fd_in, shell, fd_out);
-	while (i < pipes_nbr)
+	while (i <= pipes_nbr)
 	{
 		if (i == 0)
 		{
 			first_pipe(shell, temp);
 			temp = temp->next->next;
-			ft_dprintf(2, "after first pipe, temp = %s\n", temp->cmd_arr[0]);
+			// ft_dprintf(2, "after first pipe, temp = %s\n", temp->cmd_arr[0]);
 		}
-		else if (i < pipes_nbr - 1)
+		else if (i < pipes_nbr)
 		{
 			middle_pipes(shell,temp);
 			temp = temp->next->next;
-			ft_dprintf(2, "after middle pipe, temp = %s\n", temp->cmd_arr[0]);
+			// ft_dprintf(2, "after middle pipe, temp = %s\n", temp->cmd_arr[0]);
 		}
 		else if(i == pipes_nbr)
 			end_pipe(shell, temp);
