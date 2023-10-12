@@ -27,28 +27,12 @@ void	heredoc_into_infile(t_dlist **lst)
 	temp->content = ft_strdup("/tmp/temp.heredoc2");
 }
 
-void	add_newline_dlist(t_dlist **lst)
-{
-	t_dlist	*temp;
-	char	*res;
-
-	temp = *lst;
-	while (temp)
-	{
-		res = ft_strjoin(temp->content, "\n");
-		free(temp->content);
-		temp->content = res;
-		temp = temp->next;
-	}
-}
-
 void	delimiter_found(t_mshell *shell, t_dlist *lst, int fd_in, int del_quote)
 {
 	char	*result;
 
 	if (!del_quote)
 		expand_dlist(shell, shell->envp, &lst);
-	// add_newline_dlist(&lst);
 	result = join_dlist(lst);
 	if (result)
 		ft_dprintf(fd_in, "%s", result);

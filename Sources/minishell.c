@@ -12,29 +12,6 @@
 
 #include "minishell.h"
 
-/*to do :
-- debugger bin_exec double execution DONE
-- builtin sans arg KO DONE
-- refaire expand DONE
-- gestion des pipes DONE 28/08
-
-
-- export (diff export env ?) DONE ?
-- gerer simple quotes echo
-- factorisation + cleaning
-- redirection STDIN
-- readline a la place de GNL
-- $?
-- executable PATH relatif ou absolu ->ex : ./minishell
-- expand meme entre quotes
-
-
-remake parsing
-1) decouper selon metacaracteres
-2) Quotes
-3) Expand
-*/
-
 long long	g_status;
 
 static char	**get_exit(t_mshell *shell)
