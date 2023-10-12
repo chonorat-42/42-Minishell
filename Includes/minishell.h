@@ -233,4 +233,7 @@ void	executable(t_tokens *temp, t_mshell *shell);
 
 void	manage_fd(int fd_in, int fd_out);
 
+t_mshell	*adress_keeper(t_mshell *shell);
+
+
 # endif

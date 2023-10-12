@@ -44,6 +44,16 @@ void	init_shell(t_mshell *shell)
 	g_status = 0;
 }
 
+t_mshell	*adress_keeper(t_mshell *shell)
+{
+	static t_mshell	*adr;
+
+	if (!shell)
+		return (adr);
+	adr = shell;
+	return (adr);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_mshell	shell;
@@ -52,6 +62,7 @@ int	main(int argc, char **argv, char **envp)
 		return (ft_printf("minishell: %s: No such file or directory\n",
 				argv[1]), 1);
 	init_shell(&shell);
+	adress_keeper(&shell);
 	get_envp(&shell, envp, argv);
 	update_shlvl(&shell);
 	shell.exit = get_exit(&shell);
