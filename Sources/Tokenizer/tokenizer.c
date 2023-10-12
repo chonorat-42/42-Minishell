@@ -111,6 +111,8 @@ int	tokenizer(t_mshell *shell)
 {
 	shell->tok_lst = NULL;
 	split_on_pipes(shell, shell->input);
+	if (!shell->tok_lst)
+		return (free(shell->input), get_input_loop(shell), 0);
 	parse_tkn(&shell->tok_lst, shell);
 	split_tokens_into_dlst(&shell->tok_lst, shell);
 	get_fds(shell, &shell->tok_lst);

@@ -82,11 +82,6 @@ void	executable(t_tokens *temp, t_mshell *shell)
 	if (temp->cmd_arr)
 		free_arr(temp->cmd_arr);
 	temp->cmd_arr = NULL;
-	if (shell->paths)
-	{
-		free_arr(shell->paths);
-		shell->paths = NULL;
-	}
 }
 
 void	exec_forwarding(t_tokens *temp, t_mshell *shell)
@@ -109,9 +104,4 @@ void	execution(t_mshell *shell)
 		exec_forwarding(temp, shell);
 	free(shell->input);
 	ft_free_tokens(&shell->tok_lst);
-	if (shell->paths)
-	{
-		free_arr(shell->paths);
-		shell->paths = NULL;
-	}
 }

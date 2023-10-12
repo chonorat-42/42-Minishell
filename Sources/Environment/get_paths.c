@@ -104,6 +104,8 @@ void	get_paths(t_mshell *shell)
 {
 	char	*paths;
 
+	if (shell->paths)
+		free_arr(shell->paths);
 	paths = get_envp_content(shell->envp, "PATH");
 	if (!paths)
 		return ;
