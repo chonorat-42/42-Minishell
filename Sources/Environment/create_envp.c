@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_envp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:20:57 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/09 13:06:54 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/11 17:37:04 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ static void	underscore(t_mshell *shell, char **argv)
 		return (free(new.name), free(join), free_struct(shell), exit(2));
 	new.content = ft_strjoin(join, cmd);
 	if (!new.content)
-		return (free(new.name), free(join), free(cmd), free_struct(shell), exit(2));
+		return (free(new.name), free(join), free(cmd), free_struct(shell),
+			exit(2));
 	new.readable = 1;
 	new.alterable = 0;
 	create_envp_list(shell, &new);

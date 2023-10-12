@@ -6,13 +6,13 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 01:28:10 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/09 10:27:01 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/11 17:37:58 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int mod_shlvl(t_mshell *shell, int shlvl)
+static int	mod_shlvl(t_mshell *shell, int shlvl)
 {
 	char	*lvl;
 	t_envp	*temp;

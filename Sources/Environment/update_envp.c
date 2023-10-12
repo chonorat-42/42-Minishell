@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 16:31:44 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/09 15:12:53 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/11 17:38:48 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ static int	get_envp_size(t_envp *envp)
 	}
 	return (count);
 }
-static char *join_varinfo(t_envp *cell)
+
+static char	*join_varinfo(t_envp *cell)
 {
 	char	*var;
 	char	*join;
@@ -42,6 +43,7 @@ static char *join_varinfo(t_envp *cell)
 	}
 	return (var);
 }
+
 void	update_envp(t_mshell *shell)
 {
 	int		index;

@@ -19,6 +19,9 @@ void	hdoc_add_cmd(t_mshell *shell)
 
 	ft_dprintf(STDOUT_FILENO, ">");
 	to_add = get_next_line(0);
+	if (!to_add)
+		return ((void)ft_putstr_fd("\n", 1), free(shell->input),
+			free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
 	trim = ft_strtrim(to_add, "\n");
 	free(to_add);
 	to_add = trim;
@@ -44,8 +47,11 @@ void	parse_tkn(t_tokens **tok, t_mshell *shell)
 
 	temp = *tok;
 	if (temp->type == PIPE)
-		return (ft_printf("minishell: syntax error near unexpected token '|'\n"), ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
-	while(last_is_pipe(*tok))
+	{
+		ft_dprintf(2, "minishell: syntax error near unexpected token '|'\n");
+		return (ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
+	}
+	while (last_is_pipe(*tok))
 	{
 		while (temp->next)
 			temp = temp->next;

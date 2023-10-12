@@ -31,7 +31,8 @@ void	print_tokens_dlist(t_tokens *tok)
 	temp = tok;
 	while (temp)
 	{
-		ft_printf("DLST FROM CONTENT %s, fd_in = %d, fd_out = %d :\n", temp->content, temp->fd_in, temp->fd_out);
+		ft_printf("DLST FROM CONTENT %s, fd_in = %d, fd_out = %d :\n",
+			temp->content, temp->fd_in, temp->fd_out);
 		print_dlist(temp->dlst);
 		temp = temp->next;
 	}
@@ -67,12 +68,12 @@ void	print_dlist(t_dlist	*lst)
 	ft_printf("\n");
 }
 
-void print_tkns_up(t_tokens *lst)
+void	print_tkns_up(t_tokens *lst)
 {
-	t_tokens *temp;
+	t_tokens	*temp;
 
 	if (!lst)
-		return;
+		return ;
 	temp = lst;
 	while (temp->next)
 		temp = temp->next;
@@ -83,19 +84,19 @@ void print_tkns_up(t_tokens *lst)
 	}
 }
 
-void print_tkns_down(t_tokens *lst)
+void	print_tkns_down(t_tokens *lst)
 {
-	t_tokens *temp;
+	t_tokens	*temp;
 
 	if (!lst)
-		return;
+		return ;
 	temp = lst;
-		while (temp)
-		{
-			ft_printf("content = %s\n", temp->content);
-			ft_printf("type = %d\n", temp->type);
-			ft_printf("fd_in = %d\n", temp->fd_in);
-			ft_printf("fd_out = %d\n\n", temp->fd_out);
-			temp = temp->next;
-		}
+	while (temp)
+	{
+		ft_printf("content = %s\n", temp->content);
+		ft_printf("type = %d\n", temp->type);
+		ft_printf("fd_in = %d\n", temp->fd_in);
+		ft_printf("fd_out = %d\n\n", temp->fd_out);
+		temp = temp->next;
+	}
 }

@@ -12,7 +12,8 @@
 
 #include "../../Includes/libft.h"
 
-void	ft_putnbr_base_dp(size_t n, const char *base, size_t *char_count, int fd)
+void	ft_putnbr_base_dp(size_t n, const char *base,
+	size_t *char_count, int fd)
 {
 	size_t	base_length;
 

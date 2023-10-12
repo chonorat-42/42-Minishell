@@ -135,4 +135,6 @@ void	export_case(t_mshell *shell, char **cmd, int fd)
 		print_export(shell->export, fd);
 		free_envp(&shell->export);
 	}
+	if (fd != 1)
+		close(fd);
 }

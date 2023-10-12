@@ -84,7 +84,7 @@ void	free_envp(t_envp **head)
 
 void	free_arr(char **arr)
 {
-	int j;
+	int	j;
 
 	if (!arr)
 		return ;

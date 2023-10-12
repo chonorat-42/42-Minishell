@@ -14,10 +14,10 @@
 
 void	t_envp_addback(t_envp **envp, t_envp **new)
 {
-	t_envp *temp;
+	t_envp	*temp;
 
 	temp = *envp;
-	while(temp->next)
+	while (temp->next)
 		temp = temp->next;
 	(*new)->prev = temp;
 	temp->next = *new;

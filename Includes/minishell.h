@@ -183,7 +183,7 @@ void		show_error(char *cmd, char *type, int error);
 
 void		get_svar(t_mshell *shell);
 
-void		heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp);
+void		heredoc(t_mshell *shell, char *delimiter, int fd_in);
 
 void		print_tkns_down(t_tokens *lst);
 
@@ -224,5 +224,13 @@ void		expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst);
 void		bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out);
 
 void	get_fd_in(t_mshell *shell, t_tokens **tok);
+
+int	is_builtin(t_tokens *temp);
+
+void	builtin_forwarding(t_tokens *temp, t_mshell *shell);
+
+void	executable(t_tokens *temp, t_mshell *shell);
+
+void	manage_fd(int fd_in, int fd_out);
 
 # endif
