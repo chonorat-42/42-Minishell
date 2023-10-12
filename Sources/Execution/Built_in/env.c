@@ -36,4 +36,6 @@ void	env_case(t_mshell *shell, char **cmd, int fd)
 		}
 		temp = temp->next;
 	}
+	if (fd != 1)
+		close(fd);
 }

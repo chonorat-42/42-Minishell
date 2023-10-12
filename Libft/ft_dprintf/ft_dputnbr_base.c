@@ -12,7 +12,8 @@
 
 #include "../../Includes/libft.h"
 
-void	ft_dputnbr_base(long long int n, const char *base, size_t *char_count, int fd)
+void	ft_dputnbr_base(long long int n, const char *base,
+	size_t *char_count, int fd)
 {
 	size_t	nbr;
 	size_t	base_length;

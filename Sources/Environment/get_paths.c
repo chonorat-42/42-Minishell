@@ -76,7 +76,8 @@ static int	fix_paths(char *str, t_mshell *args)
 	{
 		args->paths[j] = add_ending_slash(temp[j]);
 		if (!args->paths[j])
-			return (free_arr(temp), temp = NULL, free_arr(args->paths), args->paths = NULL, 3);
+			return (free_arr(temp), temp = NULL, free_arr(args->paths),
+				args->paths = NULL, 3);
 	}
 	return (free_arr(temp), temp = NULL, 0);
 }
@@ -101,7 +102,7 @@ char	*get_envp_content(t_envp *envp, char *to_find)
 
 void	get_paths(t_mshell *shell)
 {
-	char *paths;
+	char	*paths;
 
 	paths = get_envp_content(shell->envp, "PATH");
 	if (!paths)

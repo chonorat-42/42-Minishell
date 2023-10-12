@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 11:00:46 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/10/09 11:03:16 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/11 17:21:32 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	remove_fd_lst(t_dlist **lst, char c, t_dlist **new)
 {
-	t_dlist *temp;
+	t_dlist	*temp;
 
 	temp = *lst;
 	while (temp)

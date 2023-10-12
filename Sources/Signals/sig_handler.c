@@ -62,7 +62,11 @@ static void	get_sig(int signum)
 		rl_redisplay();
 	}
 	if (signum == SIGQUIT)
+<<<<<<< HEAD
+		ft_printf("\b\b  \b\b");
+=======
 			ft_putstr_fd("\b\b  \b\b", 0);
+>>>>>>> 2b9b551d2b44db03d0989674247e11bd7127d811
 	g_status = 128 + signum;
 }
 

@@ -66,4 +66,6 @@ void	echo_case(char **cmd, int fd)
 	}
 	if (!option)
 		ft_putchar_fd('\n', fd);
+	if (fd != 1)
+		close(fd);
 }

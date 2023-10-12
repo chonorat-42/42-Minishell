@@ -12,19 +12,19 @@
 
 #include "minishell.h"
 
-extern long long g_status;
+extern long long	g_status;
 
 int	is_builtin(t_tokens *temp)
 {
-	if (!ft_strcmp(temp->cmd_arr[0], "echo") ||
-		!ft_strcmp(temp->cmd_arr[0], "cd") ||
-		!ft_strcmp(temp->cmd_arr[0], "exit") ||
-		!ft_strcmp(temp->cmd_arr[0], "env") ||
-		!ft_strcmp(temp->cmd_arr[0], "unset") ||
-		!ft_strcmp(temp->cmd_arr[0], "pwd") ||
-		!ft_strcmp(temp->cmd_arr[0], "export"))
-			return (1);
-		return (0);
+	if (!ft_strcmp(temp->cmd_arr[0], "echo")
+		|| !ft_strcmp(temp->cmd_arr[0], "cd")
+		|| !ft_strcmp(temp->cmd_arr[0], "exit")
+		|| !ft_strcmp(temp->cmd_arr[0], "env")
+		|| !ft_strcmp(temp->cmd_arr[0], "unset")
+		|| !ft_strcmp(temp->cmd_arr[0], "pwd")
+		|| !ft_strcmp(temp->cmd_arr[0], "export"))
+		return (1);
+	return (0);
 }
 
 void	builtin_forwarding(t_tokens *temp, t_mshell *shell)
@@ -50,14 +50,20 @@ void	executable(t_tokens *temp, t_mshell *shell)
 	pid_t	child;
 	pid_t	wpid;
 
-	ft_dprintf(2, "in executable, temp->cmd_arr[0] = %s, in = %d, out = %d\n\n", temp->cmd_arr[0], temp->fd_in, temp->fd_out);
 	child = fork();
 	if (child == -1)
 		return (free_struct(shell), exit(EXIT_FAILURE));
 	if (!child)
+	{
+		manage_fd(temp->fd_in, temp->fd_out);
 		bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
+	}
 	else
 	{
+		if (temp->fd_in != 0)
+			close(temp->fd_in);
+		if (temp->fd_out != 1)
+			close(temp->fd_out);
 		wpid = waitpid(child, (int *)&g_status, 0);
 		if (wpid == -1)
 		{
@@ -80,7 +86,6 @@ void	executable(t_tokens *temp, t_mshell *shell)
 
 void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 {
-	ft_dprintf(2, "got in exec forwarding, temp_>cmd_arr[0] = %s\n", temp->cmd_arr[0]);
 	if (is_builtin(temp))
 		builtin_forwarding(temp, shell);
 	else
@@ -93,14 +98,10 @@ void	execution(t_mshell *shell)
 
 	exec_sig();
 	temp = shell->tok_lst;
-	while (temp)
-	{
-		if (temp->next && temp->next->type == PIPE)
-			handle_pipes(shell, temp);
-		else
-			exec_forwarding(temp, shell);
-		temp = temp->next;
-	}
+	if (temp->next && temp->next->type == PIPE)
+		handle_pipes(shell, temp);
+	else
+		exec_forwarding(temp, shell);
 	free(shell->input);
 	ft_free_tokens(&shell->tok_lst);
 	if (shell->paths)

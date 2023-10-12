@@ -50,7 +50,7 @@ void	init_new_token(t_tokens **new)
 	(*new)->fd_out = 1;
 }
 
-void create_token(t_mshell *shell, int i, int j, char *to_add)
+void	create_token(t_mshell *shell, int i, int j, char *to_add)
 {
 	t_tokens	*new;
 	char		*str;
@@ -67,14 +67,23 @@ void create_token(t_mshell *shell, int i, int j, char *to_add)
 	init_new_token(&new);
 }
 
+void	pipe_found(t_mshell *shell, char *str, size_t *i, size_t *j)
+{
+	create_token(shell, *i, *j, str);
+	*j = *i;
+	(*i)++;
+	create_token(shell, *i, *j, str);
+	*j = *i;
+}
+
 void	split_on_pipes(t_mshell *shell, char *str)
 {
 	size_t	i;
 	size_t	j;
 
-	i = 0;
+	i = -1;
 	j = 0;
-	while (str[i])
+	while (str[++i])
 	{
 		if (is_char_in_set(str[i], "\'\""))
 			move_to_next_quote(str, &i, str[i]);
@@ -82,19 +91,16 @@ void	split_on_pipes(t_mshell *shell, char *str)
 		{
 			if (str[i + 1] == '|')
 				return (ft_free_tokens(&shell->tok_lst), free(shell->input),
-					ft_printf("Operator `||' is not supported\n"), get_input_loop(shell));
-			create_token(shell, i, j, str);
-			j = i;
-			i++;
-			create_token(shell, i, j, str);
-			j = i;
+					ft_printf("Operator `||' is not supported\n"),
+					get_input_loop(shell));
+			pipe_found(shell, str, &i, &j);
 		}
 		else
 		{
 			if (str[i] == '&')
 				return (ft_free_tokens(&shell->tok_lst), free(shell->input),
-					ft_printf("Operator `&' and `&&' are not supported\n"), get_input_loop(shell));
-			i++;
+					ft_printf("Operator `&' and `&&' are not supported\n"),
+					get_input_loop(shell));
 		}
 	}
 	if (i != j)
@@ -112,7 +118,9 @@ int	tokenizer(t_mshell *shell)
 	manage_quotes_arr(&shell->tok_lst);
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
-	if (!shell->tok_lst || !shell->tok_lst->cmd_arr || !shell->tok_lst->cmd_arr[0][0])
-		return (ft_free_tokens(&shell->tok_lst), free(shell->input), get_input_loop(shell), 0);
+	if (!shell->tok_lst || !shell->tok_lst->cmd_arr
+		|| !shell->tok_lst->cmd_arr[0][0])
+		return (ft_free_tokens(&shell->tok_lst), free(shell->input),
+			get_input_loop(shell), 0);
 	return (0);
 }

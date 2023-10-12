@@ -34,7 +34,7 @@ int	are_all_quotes_closed(char *str)
 	return (1);
 }
 
-void add_quotes_input(t_mshell *shell)
+void	add_quotes_input(t_mshell *shell)
 {
 	char	*line;
 	char	*join;
@@ -43,7 +43,8 @@ void add_quotes_input(t_mshell *shell)
 	ft_dprintf(STDOUT_FILENO, ">");
 	line = get_next_line(0);
 	if (!line)
-		return (free_struct(shell), exit(1));
+		return ((void)ft_putstr_fd("\n", 1), free(shell->input),
+			free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
 	trim = ft_strtrim(line, "\n");
 	if (!trim)
 		return (free(line), free_struct(shell), exit(2));
@@ -57,19 +58,19 @@ void add_quotes_input(t_mshell *shell)
 	shell->input = join;
 }
 
-void    parsing(t_mshell *shell)
+void	parsing(t_mshell *shell)
 {
 	while (!are_all_quotes_closed(shell->input))
 		add_quotes_input(shell);
-    if (shell->input[0] != '\0')
-		{
-			if (expand(shell, shell->input) == 1)
-                return (free(shell->input), get_input_loop(shell));
-		}
-    else
-    {
-        free(shell->input);
-        shell->input = NULL;
-        get_input_loop(shell);
-    }	
+	if (shell->input[0] != '\0')
+	{
+		if (expand(shell, shell->input) == 1)
+			return (free(shell->input), get_input_loop(shell));
+	}
+	else
+	{
+		free(shell->input);
+		shell->input = NULL;
+		get_input_loop(shell);
+	}
 }

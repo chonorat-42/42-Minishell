@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_svar.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/09/25 15:52:38 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/11 17:39:37 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int g_status;
+extern int	g_status;
 
 void	get_svar(t_mshell *shell)
 {
