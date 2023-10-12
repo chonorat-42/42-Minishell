@@ -25,7 +25,7 @@ void	heredoc_case(t_mshell *shell, t_tokens **tok, t_dlist *temp, int *has_fd, i
 	if (*has_fd)
 		close(*temp_fd);
 	*temp_fd = open("/tmp/temp.heredoc2", O_RDWR | O_CREAT | O_TRUNC, 0666);
-	heredoc(shell, temp->next->content, *temp_fd, shell->envp);
+	heredoc(shell, temp->next->content, *temp_fd);
 	heredoc_into_infile(&(*tok)->dlst);
 	close(*temp_fd);
 	get_fd_in(shell, tok);

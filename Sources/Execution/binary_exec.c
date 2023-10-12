@@ -12,13 +12,9 @@
 
 #include "minishell.h"
 
-<<<<<<< HEAD
-char	*get_exec(char *cmd)
-=======
 extern long long g_status;
 
-char *get_exec(char *cmd)
->>>>>>> 2b9b551d2b44db03d0989674247e11bd7127d811
+char	*get_exec(char *cmd)
 {
 	size_t	j;
 	char	*res;

@@ -38,18 +38,12 @@ void	add_quotes_input(t_mshell *shell)
 {
 	char	*line;
 	char	*join;
-	char	*trim;
 
 	ft_dprintf(STDOUT_FILENO, ">");
 	line = get_next_line(0);
 	if (!line)
 		return ((void)ft_putstr_fd("\n", 1), free(shell->input),
 			free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
-	trim = ft_strtrim(line, "\n");
-	if (!trim)
-		return (free(line), free_struct(shell), exit(2));
-	free(line);
-	line = trim;
 	join = ft_strjoin(shell->input, line);
 	if (!join)
 		return (free(line), free_struct(shell), exit(2));
@@ -60,6 +54,14 @@ void	add_quotes_input(t_mshell *shell)
 
 void	parsing(t_mshell *shell)
 {
+	char	*new_input;
+
+	if (!are_all_quotes_closed(shell->input))
+	{
+		new_input = ft_strjoin(shell->input, "\n");
+		free(shell->input);
+		shell->input = new_input;
+	}
 	while (!are_all_quotes_closed(shell->input))
 		add_quotes_input(shell);
 	if (shell->input[0] != '\0')

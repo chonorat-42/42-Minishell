@@ -181,7 +181,7 @@ void		show_error(char *cmd, char *type, int error);
 
 void		get_svar(t_mshell *shell);
 
-void		heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp);
+void		heredoc(t_mshell *shell, char *delimiter, int fd_in);
 
 void		print_tkns_down(t_tokens *lst);
 

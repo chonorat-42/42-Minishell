@@ -48,7 +48,7 @@ void	delimiter_found(t_mshell *shell, t_dlist *lst, int fd_in, int del_quote)
 
 	if (!del_quote)
 		expand_dlist(shell, shell->envp, &lst);
-	add_newline_dlist(&lst);
+	// add_newline_dlist(&lst);
 	result = join_dlist(lst);
 	if (result)
 		ft_dprintf(fd_in, "%s", result);
@@ -56,7 +56,7 @@ void	delimiter_found(t_mshell *shell, t_dlist *lst, int fd_in, int del_quote)
 	free_dlist(&lst);
 }
 
-void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
+void	heredoc(t_mshell *shell, char *delimiter, int fd_in)
 {
 	t_dlist	*lst;
 	char	*line;
@@ -80,25 +80,20 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in, t_envp *envp)
 		ft_dprintf(STDOUT_FILENO, "> ");
 		line = get_next_line(0);
 		if (!line)
-<<<<<<< HEAD
-			return ((void)ft_putstr_fd("\n", 1));
-=======
 			return ((void)ft_putchar_fd('\n', 0));
 		if (g_status == 130 || g_status == 131)
 			return (free(line));
->>>>>>> 2b9b551d2b44db03d0989674247e11bd7127d811
 		trim = ft_strtrim(line, "\n");
-		free(line);
-		line = trim;
-		if (!ft_strcmp(line, delimiter))
+		if (!ft_strcmp(trim, delimiter))
 		{
 			delimiter_found(shell, lst, fd_in, del_quote);
-			return (free(line), free(delimiter));
+			return (free(line), free(trim), free(delimiter));
 		}
 		else
 		{
 			split_into_dlst(&lst, line, ft_strlen(line), 0);
 			free(line);
+			free(trim);
 		}
 	}
 }
