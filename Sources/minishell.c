@@ -72,8 +72,12 @@ int	main(int argc, char **argv, char **envp)
 	t_mshell	shell;
 
 	if (argc != 1)
+<<<<<<< HEAD
 		return (ft_printf("minishell: %s: No such file or directory\n",
 				argv[1]), 1);
+=======
+		return (ft_printf("minishell: %s: No such file or directory\n", argv[1]), EXIT_FAILURE);
+>>>>>>> 2b9b551d2b44db03d0989674247e11bd7127d811
 	init_shell(&shell);
 	get_envp(&shell, envp, argv);
 	update_shlvl(&shell);

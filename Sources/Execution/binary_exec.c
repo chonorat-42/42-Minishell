@@ -12,7 +12,13 @@
 
 #include "minishell.h"
 
+<<<<<<< HEAD
 char	*get_exec(char *cmd)
+=======
+extern long long g_status;
+
+char *get_exec(char *cmd)
+>>>>>>> 2b9b551d2b44db03d0989674247e11bd7127d811
 {
 	size_t	j;
 	char	*res;
@@ -64,13 +70,14 @@ void	binary_with_path(t_mshell *shell, char **cmd_arr)
 
 	exec = get_exec(cmd_arr[0]);
 	if (!exec)
-		return (free_struct(shell), exit(1));
+		return (free_struct(shell), exit(EXIT_FAILURE));
 	exec_split = ft_split(exec, ' ');
 	if (!exec_split)
-		return (free(exec), free_struct(shell), exit(2));
+		return (free(exec), free_struct(shell), exit(EXIT_FAILURE));
 	temp = ft_strjoin(get_path(cmd_arr[0]), exec);
 	if (!temp)
-		return (free(exec), free_arr(exec_split), free_struct(shell), exit(3));
+		return (free(exec), free_arr(exec_split), free_struct(shell), 
+			exit(EXIT_FAILURE));
 	if (execve(temp, exec_split, shell->menvp) == -1)
 	{
 		free(exec);
@@ -89,7 +96,7 @@ void	browse_paths(t_mshell *shell, char **cmd_arr)
 	{
 		temp = ft_strjoin(shell->paths[j], cmd_arr[0]);
 		if (!temp)
-			return (free_struct(shell), exit(1));
+			return (free_struct(shell), exit(EXIT_FAILURE));
 		if (execve(temp, cmd_arr, shell->menvp) == -1)
 			free(temp);
 		j++;
