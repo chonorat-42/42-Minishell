@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 17:26:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/10 11:19:31 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/11 16:00:24 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ int	is_var(char *arg)
 	{
 		if (arg[index] == '=')
 			return (1);
-		else if (!ft_isalnum(arg[index]) && !is_char_in_set(arg[index], "_"))
+		if (arg[index] == '+')
+			if (arg[index + 1] == '=' && arg[index + 1])
+				return (1);
+		if (!ft_isalnum(arg[index]) && !is_char_in_set(arg[index], "_"))
 		{
 			g_status = 1;
 			return (builtin_error("export", arg, 0), 0);

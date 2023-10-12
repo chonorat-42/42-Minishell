@@ -123,7 +123,10 @@ void	export_case(t_mshell *shell, char **cmd, int fd)
 		if (check_option(shell, cmd))
 			break ;
 		if (is_var(cmd[index]))
+		{
+			check_plus(shell, &cmd[index]);
 			get_var(shell, cmd[index]);
+		}
 		index++;
 	}
 	if (ft_arr_size(cmd) == 1)

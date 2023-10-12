@@ -130,6 +130,8 @@ void		unset_case(t_mshell *shell, char **cmd);
 void		export_case(t_mshell *shell, char **cmd, int fd);
 void		exit_case(t_mshell *shell, char **cmd);
 
+void		check_plus(t_mshell *shell, char **arg);
+
 int			is_var(char *arg);
 void		get_var(t_mshell *shell, char *cmd);
 

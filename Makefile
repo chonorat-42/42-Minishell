@@ -63,6 +63,7 @@ FILES = minishell\
 		Execution/Built_in/Export/export\
 		Execution/Built_in/Export/export_utils\
 		Execution/Built_in/Export/add_to_env\
+		Execution/Built_in/Export/join_content\
 		Execution/Built_in/pwd\
 		Execution/Built_in/Exit/exit\
 		Execution/Built_in/Exit/exit_utils\
