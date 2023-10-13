@@ -66,6 +66,20 @@ void	get_commands_lst(t_dlist *base, t_dlist **new)
 	}
 }
 
+void	handle_bad_fd(t_tokens *temp, t_mshell *shell, t_tokens **tk_lst)
+{
+	if (temp->fd_in == -1)
+	{
+		return (ft_dprintf(2, "%s: %s: No such file or directory\n", temp->cmd_arr[0], temp->fd_in_str), free_arr(shell->paths),
+		free(shell->input), ft_free_tokens(tk_lst), get_input_loop(shell));
+	}
+	if (temp->fd_out == -1)
+	{
+		return (ft_dprintf(2, "minishell: %s: Persmission denied\n", temp->fd_out_str), free_arr(shell->paths),
+		free(shell->input), ft_free_tokens(tk_lst), get_input_loop(shell));
+	}
+}
+
 void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 {
 	t_tokens	*temp;
@@ -80,9 +94,7 @@ void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 			return (free_arr(shell->paths), free(shell->input),
 				ft_free_tokens(tk_lst), get_input_loop(shell));
 		temp->cmd_arr = list_into_arr(new);
-		if (!temp->cmd_arr)
-			return (free_arr(shell->paths), free(shell->input),
-				ft_free_tokens(tk_lst), get_input_loop(shell));
+		handle_bad_fd(temp, shell, tk_lst);
 		free_dlist(&temp->dlst);
 		free_dlist(&new);
 		temp = temp->next;

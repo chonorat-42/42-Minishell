@@ -48,6 +48,8 @@ void	init_new_token(t_tokens **new)
 		(*new)->type = CMD;
 	(*new)->fd_in = 0;
 	(*new)->fd_out = 1;
+	(*new)->fd_in_str = NULL;
+	(*new)->fd_out_str = NULL;
 }
 
 void	create_token(t_mshell *shell, int i, int j, char *to_add)

@@ -24,10 +24,11 @@ static void	hd_sig(int signum)
 	exit(g_status);
 }
 
-void	heredoc_sig(void)
+void	heredoc_sig(int fd)
 {
 	struct sigaction	signal;
 
+	close(fd);
 	sigemptyset(&signal.sa_mask);
 	signal.sa_flags = SA_RESTART;
 	signal.sa_handler = hd_sig;

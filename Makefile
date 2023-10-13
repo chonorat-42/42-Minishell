@@ -120,9 +120,9 @@ exec : all
 val : all
 	valgrind --leak-check=full --show-reachable=no --track-origins=yes -s --track-fds=yes ./minishell
 
-#debug: $(OBJS)
-#	$(PRINT) "${_RED}----------DEBUG----------${_END}"
-#	$(NORM)
-#	leaks_r 
+# debug: $(OBJS)
+# 	$(PRINT) "${_RED}----------DEBUG----------${_END}"
+# 	$(NORM)
+# 	leaks_r 
 
 .PHONY: all clean fclean re exec val
