@@ -77,7 +77,9 @@ typedef struct s_tokens
 	char 	*content;
 	char	**cmd_arr;
 	int		fd_in;
+	char	*fd_in_str;
 	int		fd_out;
+	char	*fd_out_str;
 	int  	type;
 	t_dlist	*dlst;
 	struct s_tokens *prev;
@@ -102,7 +104,7 @@ typedef struct s_mshell
 
 void		sig_handler(void);
 void		exec_sig(void);
-void		heredoc_sig(void);
+void		heredoc_sig(int fd);
 
 char		*get_prompt(t_mshell *shell);
 void		update_shlvl(t_mshell *shell);
@@ -232,5 +234,8 @@ void	builtin_forwarding(t_tokens *temp, t_mshell *shell);
 void	executable(t_tokens *temp, t_mshell *shell);
 
 void	manage_fd(int fd_in, int fd_out);
+
+t_mshell	*adress_keeper(t_mshell *shell);
+
 
 # endif

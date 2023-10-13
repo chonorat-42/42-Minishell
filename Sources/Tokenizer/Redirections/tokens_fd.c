@@ -37,6 +37,7 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 	t_dlist		*temp_dlst;
 	int			temp_fd;
 	int			has_fd;
+	char		*fd_str;
 
 	temp_tok = *tok;
 	while (temp_tok)
@@ -48,13 +49,17 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 		{
 			if (temp_dlst->content[0] == '<'
 				&& ft_strlen(temp_dlst->content) == 1)
-				simple_in_case(temp_dlst, &has_fd, &temp_fd);
+				{
+					fd_str = temp_dlst->next->content;
+					simple_in_case(temp_dlst, &has_fd, &temp_fd);
+				}
 			else if (temp_dlst->content[0] == '<'
 				&& ft_strlen(temp_dlst->content) == 2)
-				heredoc_case(shell, tok, temp_dlst, &has_fd, &temp_fd);
+					heredoc_case(shell, tok, temp_dlst, &has_fd, &temp_fd);
 			temp_dlst = temp_dlst->next;
 		}
 		temp_tok->fd_in = temp_fd;
+		temp_tok->fd_in_str = fd_str;
 		temp_tok = temp_tok->next;
 	}
 }
@@ -81,6 +86,7 @@ static void	get_fd_out(t_tokens **tok)
 	t_dlist		*temp_dlst;
 	int			temp_fd;
 	int			has_fd;
+	char		*fd_str;
 
 	temp_tok = *tok;
 	while (temp_tok)
@@ -92,13 +98,21 @@ static void	get_fd_out(t_tokens **tok)
 		{
 			if (temp_dlst->content[0] == '>'
 				&& ft_strlen(temp_dlst->content) == 1)
-				simple_out_case(temp_dlst, &has_fd, &temp_fd);
+				{
+					fd_str = temp_dlst->next->content;
+					simple_out_case(temp_dlst, &has_fd, &temp_fd);
+				}
 			else if (temp_dlst->content[0] == '>'
 				&& ft_strlen(temp_dlst->content) == 2)
-				append_case(temp_dlst, &has_fd, &temp_fd);
+				{
+					fd_str = temp_dlst->next->content;
+					append_case(temp_dlst, &has_fd, &temp_fd);
+				}
+				
 			temp_dlst = temp_dlst->next;
 		}
 		temp_tok->fd_out = temp_fd;
+		temp_tok->fd_out_str = fd_str;
 		temp_tok = temp_tok->next;
 	}
 }

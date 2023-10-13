@@ -47,6 +47,8 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in)
 	int		del_quote;
 	char	*new_del;
 	char	*trim;
+	pid_t	child;
+	pid_t	wpid;
 
 	del_quote = 0;
 	if (is_char_in_set(delimiter[0], "\'\""))
@@ -58,26 +60,47 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in)
 	}
 	lst = NULL;
 	line = NULL;
-	heredoc_sig();
-	while (1)
+	child = fork();
+	heredoc_sig(fd_in);
+	if (!child)
 	{
-		ft_dprintf(STDOUT_FILENO, "> ");
-		line = get_next_line(0);
-		if (!line)
-			return ((void)ft_putchar_fd('\n', 0));
-		if (g_status == 130 || g_status == 131)
-			return (free(line));
-		trim = ft_strtrim(line, "\n");
-		if (!ft_strcmp(trim, delimiter))
+		while (1)
 		{
-			delimiter_found(shell, lst, fd_in, del_quote);
-			return (free(line), free(trim), free(delimiter));
+			ft_dprintf(STDOUT_FILENO, "> ");
+			line = get_next_line(0);
+			if (!line)
+				return ((void)ft_putchar_fd('\n', 0));
+			if (g_status == 130 || g_status == 131)
+				return (free(line));
+			trim = ft_strtrim(line, "\n");
+			if (!ft_strcmp(trim, delimiter))
+			{
+				delimiter_found(shell, lst, fd_in, del_quote);
+				return (close(fd_in), free(line)/*, free_struct(shell)*/, free(trim), free(delimiter));
+			}
+			else
+			{
+				split_into_dlst(&lst, line, ft_strlen(line), 0);
+				free(line);
+				free(trim);
+			}
 		}
-		else
+	}
+	else
+	{
+		wpid = waitpid(child, (int *)&g_status, 0);
+		if (wpid == -1)
 		{
-			split_into_dlst(&lst, line, ft_strlen(line), 0);
-			free(line);
-			free(trim);
+			perror("waitpid");
+			exit(EXIT_FAILURE);
+		}
+		if (WIFEXITED(g_status))
+			g_status = WEXITSTATUS(g_status);
+		else if (WIFSIGNALED(g_status))
+		{
+			g_status = WTERMSIG(g_status);
+			if (g_status != 131)
+			g_status += 128;
 		}
 	}
 }
