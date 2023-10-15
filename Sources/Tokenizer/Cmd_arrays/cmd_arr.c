@@ -68,16 +68,31 @@ void	get_commands_lst(t_dlist *base, t_dlist **new)
 
 void	handle_bad_fd(t_tokens *temp, t_mshell *shell, t_tokens **tk_lst)
 {
+	struct stat	sb;
+	int			issue;
+
+	issue = 0;
 	if (temp->fd_in == -1)
 	{
-		return (ft_dprintf(2, "%s: %s: No such file or directory\n", temp->cmd_arr[0], temp->fd_in_str), free_arr(shell->paths),
-		free(shell->input), ft_free_tokens(tk_lst), get_input_loop(shell));
+		issue++;
+		stat(temp->fd_in_str, &sb);
+		if (errno == ENOENT)
+			ft_dprintf(2, "minishell: %s: No such file or directory\n", temp->fd_in_str);
+		else if (errno == EACCES)
+			ft_dprintf(2, "minishell: %s: Persmission denied\n", temp->fd_in_str);
 	}
 	if (temp->fd_out == -1)
 	{
-		return (ft_dprintf(2, "minishell: %s: Persmission denied\n", temp->fd_out_str), free_arr(shell->paths),
-		free(shell->input), ft_free_tokens(tk_lst), get_input_loop(shell));
+		issue++;
+		stat(temp->fd_out_str, &sb);
+		if (errno == ENOENT)
+			ft_dprintf(2, "minishell: %s: No such file or directory\n", temp->fd_out_str);
+		else if (errno = EACCES)
+			ft_dprintf(2, "minishell: %s: Persmission denied\n", temp->fd_out_str);
 	}
+	if (issue)
+		return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
+			ft_free_tokens(tk_lst), get_input_loop(shell));
 }
 
 void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
