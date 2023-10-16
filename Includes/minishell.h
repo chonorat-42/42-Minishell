@@ -237,5 +237,7 @@ void	manage_fd(int fd_in, int fd_out);
 
 t_mshell	*adress_keeper(t_mshell *shell);
 
+void	close_fd(t_mshell *shell);
+
 
 # endif

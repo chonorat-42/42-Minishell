@@ -66,33 +66,61 @@ void	get_commands_lst(t_dlist *base, t_dlist **new)
 	}
 }
 
-void	handle_bad_fd(t_tokens *temp, t_mshell *shell, t_tokens **tk_lst)
+void	handle_fd_in(t_tokens *temp, int *issue)
 {
 	struct stat	sb;
-	int			issue;
 
-	issue = 0;
-	if (temp->fd_in == -1)
+	if (temp->fd_in == -1 && temp->type == CMD)
 	{
-		issue++;
+		(*issue)++;
 		stat(temp->fd_in_str, &sb);
 		if (errno == ENOENT)
 			ft_dprintf(2, "minishell: %s: No such file or directory\n", temp->fd_in_str);
 		else if (errno == EACCES)
 			ft_dprintf(2, "minishell: %s: Persmission denied\n", temp->fd_in_str);
 	}
-	if (temp->fd_out == -1)
+}
+
+void	handle_fd_out(t_tokens *temp, int *issue)
+{
+	struct stat	sb;
+
+	if (temp->fd_out == -1 && temp->type == CMD)
 	{
-		issue++;
+		(*issue)++;
 		stat(temp->fd_out_str, &sb);
 		if (errno == ENOENT)
 			ft_dprintf(2, "minishell: %s: No such file or directory\n", temp->fd_out_str);
-		else if (errno = EACCES)
+		else if (errno == EACCES)
 			ft_dprintf(2, "minishell: %s: Persmission denied\n", temp->fd_out_str);
+	}
+}
+
+void	handle_bad_fd(t_mshell *shell, t_tokens *lst)
+{
+	t_tokens	*temp;
+	int			issue;
+
+	temp = lst;
+	issue = 0;
+	while (temp)
+	{
+		handle_fd_in(temp, &issue);
+		temp = temp->next;
 	}
 	if (issue)
 		return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
-			ft_free_tokens(tk_lst), get_input_loop(shell));
+			ft_free_tokens(&lst), get_input_loop(shell));
+	temp = lst;
+	issue = 0;
+	while (temp)
+	{
+		handle_fd_out(temp, &issue);
+		temp = temp->next;
+	}
+	if (issue)
+		return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
+			ft_free_tokens(&lst), get_input_loop(shell));
 }
 
 void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
@@ -106,12 +134,17 @@ void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 		new = NULL;
 		get_commands_lst(temp->dlst, &new);
 		if (!new)
-			return (free_arr(shell->paths), free(shell->input),
-				ft_free_tokens(tk_lst), get_input_loop(shell));
+			return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
+				close_fd(shell), ft_free_tokens(tk_lst), get_input_loop(shell));
 		temp->cmd_arr = list_into_arr(new);
-		handle_bad_fd(temp, shell, tk_lst);
-		free_dlist(&temp->dlst);
 		free_dlist(&new);
+		temp = temp->next;
+	}
+	handle_bad_fd(shell, *tk_lst);
+	temp = *tk_lst;
+	while (temp)
+	{
+		free_dlist(&temp->dlst);
 		temp = temp->next;
 	}
 }

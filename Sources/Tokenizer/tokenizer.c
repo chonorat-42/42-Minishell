@@ -109,6 +109,22 @@ void	split_on_pipes(t_mshell *shell, char *str)
 		create_token(shell, i, j, str);
 }
 
+void	close_fd(t_mshell *shell)
+{
+	t_tokens	*temp;
+
+	ft_dprintf(2, "got in close fd\n");
+	temp = shell->tok_lst;
+	while (temp)
+	{
+		if (temp->fd_in != 0 && temp->fd_in != -1)
+			close (temp->fd_in);
+		if (temp->fd_out != 1 && temp->fd_out != -1)
+			close(temp->fd_out);
+		temp = temp->next;
+	}
+}
+
 int	tokenizer(t_mshell *shell)
 {
 	shell->tok_lst = NULL;
@@ -124,7 +140,7 @@ int	tokenizer(t_mshell *shell)
 	give_type(&shell->tok_lst);
 	if (!shell->tok_lst || !shell->tok_lst->cmd_arr
 		|| !shell->tok_lst->cmd_arr[0][0])
-		return (ft_free_tokens(&shell->tok_lst), free(shell->input),
+		return (close_fd(shell), ft_free_tokens(&shell->tok_lst), free(shell->input),
 			get_input_loop(shell), 0);
 	return (0);
 }
