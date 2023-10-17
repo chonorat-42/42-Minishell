@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern long long	g_status;
+
 int	history(char *input)
 {
 	int	index;
@@ -63,7 +65,7 @@ char	*get_prompt(t_mshell *shell)
 	ft_printf("\n\033[1mMinishell \033[0m");
 	print_upper(shell);
 	ft_printf("\n");
-	if (shell->exit_status != 0)
+	if (g_status != 0)
 		return ("> \033[0;31m$\033[0m ");
 	return ("> \033[0;32m$\033[0m ");
 }
