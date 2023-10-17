@@ -74,9 +74,9 @@ int	handle_fd(int fd, char *file, int type)
 	{
 		stat(file, &sb);
 		if (errno == ENOENT)
-			ft_dprintf(2, "minishell: %s: No such file or directory\n", file);
+			show_error(file, "NO_FILE", 0);
 		else if (errno == EACCES)
-			ft_dprintf(2, "minishell: %s: Persmission denied\n", file);
+			show_error(file, "PERMISSION", 0);
 		return (1);
 	}
 	return (0);

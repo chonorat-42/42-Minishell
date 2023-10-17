@@ -42,7 +42,7 @@ static int	replace_content(t_envp **envp, char *name, char *new_content)
 	return (1);
 }
 
-static void	mod_pwd(t_mshell *shell)
+static void	mod_pwd(t_mshell *shell, char **cmd)
 {
 	char	*pwd;
 	char	path[PATH_MAX];
@@ -52,12 +52,7 @@ static void	mod_pwd(t_mshell *shell)
 		return (free(pwd), free_struct(shell), exit(EXIT_FAILURE));
 	free(pwd);
 	if (!getcwd(path, PATH_MAX))
-	{
-		ft_dprintf(2, "cd: error retrieving current directory: getcwd: ");
-		ft_dprintf(2, "cannot access parent directories: ");
-		ft_dprintf(2, "No such file or directory\n");
-		return ;
-	}
+		return (builtin_error(cmd[0], NULL, 6));
 	if (!replace_content(&shell->envp, "PWD", path))
 		return (free_struct(shell), exit(EXIT_FAILURE));
 }
@@ -81,7 +76,7 @@ static int	get_dir(t_mshell *shell, char **cmd)
 	if (chdir(cmd[1]))
 		get_error(cmd);
 	else
-		mod_pwd(shell);
+		mod_pwd(shell, cmd);
 	return (1);
 }
 
@@ -106,6 +101,6 @@ void	cd_case(t_mshell *shell, char **cmd)
 	else if (chdir(home))
 		builtin_error(cmd[0], home, 1);
 	else
-		mod_pwd(shell);
+		mod_pwd(shell, cmd);
 	free(home);
 }
