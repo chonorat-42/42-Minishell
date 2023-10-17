@@ -16,41 +16,43 @@ extern long long	g_status;
 
 static void	hd_sig(int signum)
 {
-	g_status = 128 + signum;
 	ft_putstr_fd("\b\b  \b\b", 0);
-	ft_putchar_fd('\n', 0);
-	rl_replace_line("", 0);
-	free_struct(adress_keeper(NULL));
-	exit(g_status);
+	if (signum == SIGINT)
+	{
+		g_status = 128 + signum;
+		ft_putstr_fd("\n", 0);
+		free_struct(adress_keeper(NULL));
+		free_dlist(dlist_keeper(NULL));
+		close(*fd_keeper(NULL));
+		exit(g_status);
+	}
 }
 
-void	heredoc_sig(int fd)
+void	heredoc_sig(void)
 {
-	struct sigaction	signal;
+	struct sigaction	sig;
 
-	close(fd);
-	sigemptyset(&signal.sa_mask);
-	signal.sa_flags = SA_RESTART;
-	signal.sa_handler = hd_sig;
-	sigaction(SIGINT, &signal, NULL);
-	sigaction(SIGQUIT, &signal, NULL);
+	sigemptyset(&sig.sa_mask);
+	sig.sa_flags = SA_RESTART;
+	sig.sa_handler = hd_sig;
+	sigaction(SIGINT, &sig, NULL);
+	sigaction(SIGQUIT, &sig, NULL);
 }
 
-static void	ignore_sig(int signum)
+static void	ign_sig(int signum)
 {
 	(void)signum;
-	ft_putstr_fd("\b\b  ", 0);
 }
 
-void	exec_sig(void)
+void	ignore_sig(void)
 {
-	struct sigaction	signal;
+	struct sigaction	sig;
 
-	sigemptyset(&signal.sa_mask);
-	signal.sa_flags = SA_RESTART;
-	signal.sa_handler = ignore_sig;
-	sigaction(SIGINT, &signal, NULL);
-	sigaction(SIGQUIT, &signal, NULL);
+	sigemptyset(&sig.sa_mask);
+	sig.sa_flags = SA_RESTART;
+	sig.sa_handler = ign_sig;
+	sigaction(SIGINT, &sig, NULL);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 static void	get_sig(int signum)
@@ -64,17 +66,15 @@ static void	get_sig(int signum)
 		rl_redisplay();
 		g_status = 128 + signum;
 	}
-	if (signum == SIGQUIT)
-			ft_putstr_fd("\b\b  \b\b", 0);
 }
 
 void	sig_handler(void)
 {
-	struct sigaction	signal;
+	struct sigaction	sig;
 
-	sigemptyset(&signal.sa_mask);
-	signal.sa_flags = SA_RESTART;
-	signal.sa_handler = get_sig;
-	sigaction(SIGINT, &signal, NULL);
-	sigaction(SIGQUIT, &signal, NULL);
+	sigemptyset(&sig.sa_mask);
+	sig.sa_flags = SA_RESTART;
+	sig.sa_handler = get_sig;
+	sigaction(SIGINT, &sig, NULL);
+	signal(SIGQUIT, SIG_IGN);
 }

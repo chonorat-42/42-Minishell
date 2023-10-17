@@ -17,7 +17,7 @@ void	hdoc_add_cmd(t_mshell *shell)
 	char	*to_add;
 	char	*trim;
 
-	ft_dprintf(STDOUT_FILENO, ">");
+	ft_dprintf(STDOUT_FILENO, "> ");
 	to_add = get_next_line(0);
 	if (!to_add)
 		return ((void)ft_putstr_fd("\n", 1), free(shell->input),
@@ -49,7 +49,7 @@ void	parse_tkn(t_tokens **tok, t_mshell *shell)
 
 	if (temp->type == PIPE)
 	{
-		ft_dprintf(2, "minishell: syntax error near unexpected token `|'\n");
+		show_error("|", "SYNTAX", 0);
 		return (ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
 	}
 }

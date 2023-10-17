@@ -67,7 +67,7 @@ void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *i, size_t *j
 	get_chevrons(str, i, str[(*i)], lst);
 	if (!str[(*i)])
 	{
-		ft_dprintf(2, "minishell: syntax error near unexpected token `newline'\n");
+		show_error("newline", "SYNTAX", 0);
 		return (ft_free_tokens(&shell->tok_lst), free_arr(shell->paths),
 			shell->paths = NULL, get_input_loop(shell));
 	}

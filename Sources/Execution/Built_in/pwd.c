@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern long long	g_status;
+
 int	check_option(t_mshell *shell, char **cmd)
 {
 	char	*option;
@@ -40,6 +42,7 @@ int	get_current_location(t_mshell *shell)
 	if (!shell->current_loc)
 	{
 		ft_dprintf(2, "Error retrieving current directory\n");
+		g_status = 1;
 		return (0);
 	}
 	return (1);
@@ -52,7 +55,7 @@ void	pwd_case(t_mshell *shell, char **cmd, int fd)
 	if (check_option(shell, cmd))
 		return ;
 	if (!getcwd(path, PATH_MAX))
-		ft_dprintf(2, "pwd: error retrieving current directory");
+		builtin_error(cmd[0], NULL, 0);
 	else if (path[0])
 		ft_dprintf(fd, "%s", path);
 	ft_dprintf(fd, "\n");

@@ -96,7 +96,7 @@ void	execution(t_mshell *shell)
 {
 	t_tokens	*temp;
 
-	exec_sig();
+	ignore_sig();
 	temp = shell->tok_lst;
 	if (temp->next && temp->next->type == PIPE)
 		handle_pipes(shell, temp);

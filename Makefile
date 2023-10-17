@@ -67,12 +67,13 @@ FILES = minishell\
 		Execution/Built_in/pwd\
 		Execution/Built_in/Exit/exit\
 		Execution/Built_in/Exit/exit_utils\
-		Execution/Built_in/builtin_error\
 		Signals/sig_handler\
+		Errors/builtin_error\
 		Errors/show_error\
 		Free/free\
 		Free/free_utils\
 		Utils/get_prompt\
+		Utils/adress_keeper\
 		Utils/resources
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
