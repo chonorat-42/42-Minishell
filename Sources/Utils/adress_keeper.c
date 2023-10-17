@@ -6,11 +6,21 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 12:51:28 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/17 12:52:23 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/17 13:28:44 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_mshell	*adress_keeper(t_mshell *shell)
+{
+	static t_mshell	*shell_adr;
+
+	if (!shell)
+		return (shell_adr);
+	shell_adr = shell;
+	return (shell_adr);
+}
 
 int	*fd_keeper(int *fd)
 {

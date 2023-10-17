@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 13:17:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/09 17:44:50 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/17 13:44:22 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	option_error(char *cmd, char *arg)
 
 void	builtin_error(char *cmd, char *arg, int error)
 {
-	ft_dprintf(2, "minishell: %s: ", cmd);
+	ft_dprintf(2, "\033[0;37m\033[1mminishell: %s: ", cmd);
 	if (error == -1)
 		return (option_error(cmd, arg));
 	if (ft_strcmp(cmd, "export") == 0)
@@ -71,4 +71,5 @@ void	builtin_error(char *cmd, char *arg, int error)
 	else if (ft_strcmp(cmd, "unset") == 0)
 		return (g_status = 1,
 			(void)ft_dprintf(2, "`%s': not a valid identifier\n", arg));
+	ft_printf("\033[0m");
 }

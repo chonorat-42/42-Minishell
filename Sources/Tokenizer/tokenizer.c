@@ -113,7 +113,6 @@ void	close_fd(t_mshell *shell)
 {
 	t_tokens	*temp;
 
-	ft_dprintf(2, "got in close fd\n");
 	temp = shell->tok_lst;
 	while (temp)
 	{

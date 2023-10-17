@@ -74,8 +74,8 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in)
 			ft_dprintf(STDOUT_FILENO, "> ");
 			line = get_next_line(0);
 			if (!line)
-				return ((void)ft_putchar_fd('\n', 0), free_dlist(&lst), free_struct(shell),
-					show_error(delimiter, "HEREDOC", 0), exit(0));
+				return ((void)ft_putchar_fd('\n', 0), show_error(delimiter, "HEREDOC", 0),
+					free_dlist(&lst), free_struct(shell), close(fd_in), exit(0));
 			trim = ft_strtrim(line, "\n");
 			if (!ft_strcmp(trim, delimiter))
 			{
@@ -104,7 +104,7 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in)
 		{
 			g_status = WTERMSIG(g_status);
 			if (g_status != 131)
-			g_status += 128;
+				g_status += 128;
 		}
 	}
 }

@@ -67,8 +67,8 @@ FILES = minishell\
 		Execution/Built_in/pwd\
 		Execution/Built_in/Exit/exit\
 		Execution/Built_in/Exit/exit_utils\
-		Execution/Built_in/builtin_error\
 		Signals/sig_handler\
+		Errors/builtin_error\
 		Errors/show_error\
 		Free/free\
 		Free/free_utils\

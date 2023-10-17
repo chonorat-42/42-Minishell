@@ -44,16 +44,6 @@ void	init_shell(t_mshell *shell)
 	g_status = 0;
 }
 
-t_mshell	*adress_keeper(t_mshell *shell)
-{
-	static t_mshell	*adr;
-
-	if (!shell)
-		return (adr);
-	adr = shell;
-	return (adr);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_mshell	shell;
