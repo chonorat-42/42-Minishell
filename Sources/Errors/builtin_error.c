@@ -70,7 +70,7 @@ void	builtin_error(char *cmd, char *arg, int error)
 		return (option_error(cmd, arg));
 	if (ft_strcmp(cmd, "export") == 0)
 		return (g_status = 1,
-			(void)ft_dprintf(2, "`%s': not a valid identifier\n\033[0m", arg));
+			(void)ft_dprintf(2, "`%s': not a valid identifier\033[0m\n", arg));
 	else if (ft_strcmp(cmd, "exit") == 0)
 		return (exit_error(arg, error));
 	else if (ft_strcmp(cmd, "cd") == 0)
