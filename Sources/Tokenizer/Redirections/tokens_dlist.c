@@ -15,6 +15,7 @@
 void	get_redir(char *str, size_t *i, t_dlist **lst)
 {
 	size_t	j;
+	// char	c;
 
 	while (str[(*i)] && ft_isws(str[(*i)]))
 		(*i)++;
@@ -67,7 +68,8 @@ void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *i, size_t *j
 	if (!str[(*i)])
 	{
 		ft_dprintf(2, "minishell: syntax error near unexpected token `newline'\n");
-		return (ft_free_tokens(&shell->tok_lst), get_input_loop(shell));
+		return (ft_free_tokens(&shell->tok_lst), free_arr(shell->paths),
+			shell->paths = NULL, get_input_loop(shell));
 	}
 	get_redir(str, i, lst);
 	while (str[(*i)] && ft_isws(str[(*i)]))
@@ -109,10 +111,16 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 void	split_tokens_into_dlst(t_tokens **lst, t_mshell *shell)
 {
 	t_tokens	*temp;
+	char		*str;
 
 	temp = *lst;
 	while (temp)
 	{
+		str = remove_quotes(temp->content);
+		if (!str)
+			return (free_struct(shell), exit(1));
+		free(temp->content);
+		temp->content = str;
 		temp->dlst = NULL;
 		split_words_and_redir(&temp->dlst, temp->content, shell);
 		temp = temp->next;
