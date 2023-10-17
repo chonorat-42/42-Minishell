@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   show_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/11 16:54:50 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/17 12:48:19 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@ static void	exec_error(char *cmd, int error)
 		ft_dprintf(2, "%s: No such file or directory\n", cmd);
 }
 
+static void	heredoc_error(char *delimiter)
+{
+	ft_dprintf(2, "warning: ");
+	ft_dprintf(2, "here-document delimited by end-of-file");
+	ft_dprintf(2, "(wanted `%s')", delimiter);
+}
+
 void	show_error(char *cmd, char *type, int error)
 {
 	ft_putstr_fd("minishell: ", 2);
@@ -27,4 +34,6 @@ void	show_error(char *cmd, char *type, int error)
 		exec_error(cmd, error);
 	if (ft_strcmp(type, "QUOTES") == 0)
 		ft_putendl_fd("Quotes are not closed", 2);
+	if (ft_strcmp(type, "HEREDOC") == 0)
+		heredoc_error(cmd);
 }

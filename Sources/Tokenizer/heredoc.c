@@ -24,6 +24,8 @@ void	heredoc_into_infile(t_dlist **lst)
 	free(temp->content);
 	temp->content = ft_strdup("<");
 	temp = temp->next;
+	if (temp->content)
+		free(temp->content);
 	temp->content = ft_strdup("/tmp/temp.heredoc2");
 }
 
@@ -60,23 +62,25 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in)
 	}
 	lst = NULL;
 	line = NULL;
+	ignore_sig();
+	fd_keeper(&fd_in);
+	dlist_keeper(&lst);
 	child = fork();
-	heredoc_sig(fd_in);
 	if (!child)
 	{
+		heredoc_sig();
 		while (1)
 		{
 			ft_dprintf(STDOUT_FILENO, "> ");
 			line = get_next_line(0);
 			if (!line)
-				return ((void)ft_putchar_fd('\n', 0));
-			if (g_status == 130 || g_status == 131)
-				return (free(line));
+				return ((void)ft_putchar_fd('\n', 0), free_dlist(&lst), free_struct(shell),
+					show_error(delimiter, "HEREDOC", 0), exit(0));
 			trim = ft_strtrim(line, "\n");
 			if (!ft_strcmp(trim, delimiter))
 			{
 				delimiter_found(shell, lst, fd_in, del_quote);
-				return (close(fd_in), free(line)/*, free_struct(shell)*/, free(trim), free(delimiter));
+				return (close(fd_in), free(line), free_struct(shell), free(trim), exit(0));
 			}
 			else
 			{

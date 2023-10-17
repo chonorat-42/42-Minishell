@@ -66,34 +66,20 @@ void	get_commands_lst(t_dlist *base, t_dlist **new)
 	}
 }
 
-void	handle_fd_in(t_tokens *temp, int *issue)
+int	handle_fd(int fd, char *file, int type)
 {
 	struct stat	sb;
 
-	if (temp->fd_in == -1 && temp->type == CMD)
+	if (fd == -1 && type == CMD)
 	{
-		(*issue)++;
-		stat(temp->fd_in_str, &sb);
+		stat(file, &sb);
 		if (errno == ENOENT)
-			ft_dprintf(2, "minishell: %s: No such file or directory\n", temp->fd_in_str);
+			ft_dprintf(2, "minishell: %s: No such file or directory\n", file);
 		else if (errno == EACCES)
-			ft_dprintf(2, "minishell: %s: Persmission denied\n", temp->fd_in_str);
+			ft_dprintf(2, "minishell: %s: Persmission denied\n", file);
+		return (1);
 	}
-}
-
-void	handle_fd_out(t_tokens *temp, int *issue)
-{
-	struct stat	sb;
-
-	if (temp->fd_out == -1 && temp->type == CMD)
-	{
-		(*issue)++;
-		stat(temp->fd_out_str, &sb);
-		if (errno == ENOENT)
-			ft_dprintf(2, "minishell: %s: No such file or directory\n", temp->fd_out_str);
-		else if (errno == EACCES)
-			ft_dprintf(2, "minishell: %s: Persmission denied\n", temp->fd_out_str);
-	}
+	return (0);
 }
 
 void	handle_bad_fd(t_mshell *shell, t_tokens *lst)
@@ -105,7 +91,7 @@ void	handle_bad_fd(t_mshell *shell, t_tokens *lst)
 	issue = 0;
 	while (temp)
 	{
-		handle_fd_in(temp, &issue);
+		issue += handle_fd(temp->fd_in, temp->fd_in_str, temp->type);
 		temp = temp->next;
 	}
 	if (issue)
@@ -115,7 +101,7 @@ void	handle_bad_fd(t_mshell *shell, t_tokens *lst)
 	issue = 0;
 	while (temp)
 	{
-		handle_fd_out(temp, &issue);
+		issue += handle_fd(temp->fd_out, temp->fd_out_str, temp->type);
 		temp = temp->next;
 	}
 	if (issue)

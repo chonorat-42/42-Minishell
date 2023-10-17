@@ -103,12 +103,16 @@ typedef struct s_mshell
 }				t_mshell;
 
 void		sig_handler(void);
-void		exec_sig(void);
-void		heredoc_sig(int fd);
+void		ignore_sig(void);
+void		heredoc_sig(void);
 
 char		*get_prompt(t_mshell *shell);
 void		update_shlvl(t_mshell *shell);
 int			history(char *input);
+
+t_mshell	*adress_keeper(t_mshell *shell);
+int			*fd_keeper(int *fd);
+t_dlist		**dlist_keeper(t_dlist **lst);
 
 void		get_paths(t_mshell *shell);
 size_t		count_arr_size(char **arr);
@@ -235,7 +239,6 @@ void	executable(t_tokens *temp, t_mshell *shell);
 
 void	manage_fd(int fd_in, int fd_out);
 
-t_mshell	*adress_keeper(t_mshell *shell);
 
 void	close_fd(t_mshell *shell);
 
