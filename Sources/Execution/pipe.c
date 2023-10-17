@@ -30,72 +30,95 @@ size_t	count_successive_pipes(t_tokens *temp)
 		else
 			return (res);
 	}
-	if (DEBUG)
-		ft_printf("number of successive pipes : %d\n\n", res);
 	return (res);
 }
 
-void	end_pipe(t_mshell *shell, t_tokens *temp)
+void	close_all_fds(t_tokens *lst, int *old_fd)
 {
-	if (is_builtin(temp))
-		builtin_forwarding(temp, shell);
-	else
-		executable(temp, shell);
+	t_tokens	*temp;
+
+	close(old_fd[0]);
+	close(old_fd[1]);
+	temp = lst;
+	while (temp)
+	{
+		if (temp->fd_in != 0 && temp->fd_in != -1)
+			close(temp->fd_in);
+		if (temp->fd_out != 1 && temp->fd_out != -1)
+			close (temp->fd_out);
+		temp = temp->next;
+	}
 }
 
-void	middle_pipes(t_mshell *shell, t_tokens *temp)
+void	parent_management(t_mshell *shell, t_tokens *temp, pid_t child, int *lpids, size_t i, int *new_fd, int *old_fd)
 {
-	int	fd[2];
-
-	(void)shell;
-	pipe(fd);
-	temp->fd_out = fd[1];
-	temp->next->next->fd_in = fd[0];
-	if (is_builtin(temp))
-		builtin_forwarding(temp, shell);
-	else
-		executable(temp, shell);
+	lpids[i] = child;
+	if (temp != shell->tok_lst)
+	{
+		close(old_fd[0]);
+		close(old_fd[1]);			
+	}
+	if (temp->next)
+	{
+		old_fd[0] = new_fd[0];
+		old_fd[1] = new_fd[1];
+	}
 }
 
-void	first_pipe(t_mshell *shell, t_tokens *temp)
+void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd)
 {
-	int	fd[2];
-
-	(void)shell;
-	if (pipe(fd))
-		exit(EXIT_FAILURE);
-	temp->fd_out = fd[1];
-	temp->next->next->fd_in = fd[0];
+	if (temp != shell->tok_lst)
+	{
+		dup2(old_fd[0], 0);
+		close(old_fd[0]);
+		close(old_fd[1]);
+	}
+	if (temp->next)
+	{
+		close(new_fd[0]);
+		dup2(new_fd[1], 1);
+		close(new_fd[1]);
+	}
+	manage_fd(temp->fd_in, temp->fd_out);
 	if (is_builtin(temp))
 		builtin_forwarding(temp, shell);
 	else
-		executable(temp, shell);
+		bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
 }
 
 void	handle_pipes(t_mshell *shell, t_tokens *temp)
 {
-	size_t	pipes_nbr;
+	int		new_fd[2];
+	int		old_fd[2];
+	pid_t	child;
+	int		*lpids;
 	size_t	i;
+	size_t	pipes_nbr;
+	size_t	j = 0;
 
+	pipes_nbr = count_successive_pipes(temp) + 1;
+	lpids = malloc(sizeof(int) * pipes_nbr);
 	i = 0;
-	pipes_nbr = count_successive_pipes(temp);
-	while (i <= pipes_nbr)
+	while (temp)
 	{
-		if (i == 0)
-		{
-			first_pipe(shell, temp);
+		if (temp->next)
+			pipe(new_fd);
+		child = fork();
+		if (!child)
+			child_management(shell, temp, new_fd, old_fd);
+		else
+			parent_management(shell, temp, child, lpids, i, new_fd, old_fd);
+		if (temp->next && temp->next->type == PIPE)
 			temp = temp->next->next;
-		}
-		else if (i < pipes_nbr)
-		{
-			middle_pipes(shell, temp);
-			temp = temp->next->next;
-		}
-		else if (i == pipes_nbr)
-			end_pipe(shell, temp);
+		else
+			temp = temp->next;
 		i++;
 	}
-	while (wait(NULL) != -1)
+	while (j < pipes_nbr)
 	{
+		waitpid(lpids[j], NULL, 0);
+		j++;
 	}
+	free(lpids);
+	close_all_fds(shell->tok_lst, old_fd);
 }
