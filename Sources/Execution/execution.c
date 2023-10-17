@@ -89,14 +89,16 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 	if (is_builtin(temp))
 		builtin_forwarding(temp, shell);
 	else
+	{
+		ignore_sig();
 		executable(temp, shell);
+	}
 }
 
 void	execution(t_mshell *shell)
 {
 	t_tokens	*temp;
 
-	ignore_sig();
 	temp = shell->tok_lst;
 	if (temp->next && temp->next->type == PIPE)
 		handle_pipes(shell, temp);
