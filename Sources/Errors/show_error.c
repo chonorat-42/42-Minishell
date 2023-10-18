@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/17 17:44:49 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/18 15:37:29 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@ static void	exec_error(char *cmd, int error)
 		ft_dprintf(2, "%s: command not found\n", cmd);
 	else if (error == 2)
 		ft_dprintf(2, "%s: No such file or directory\n", cmd);
+	if (error == 3)
+	{
+		ft_dprintf(2, "%s: Is a directory\n", cmd);
+		g_status = 126;
+		return ;
+	}
+	g_status = 127;
 }
 
 static void	heredoc_error(char *delimiter)

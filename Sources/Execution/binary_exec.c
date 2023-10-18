@@ -63,6 +63,7 @@ void	binary_with_path(t_mshell *shell, char **cmd_arr)
 	char	*exec;
 	char	**exec_split;
 	char	*temp;
+	char	*path;
 
 	exec = get_exec(cmd_arr[0]);
 	if (!exec)
@@ -70,10 +71,15 @@ void	binary_with_path(t_mshell *shell, char **cmd_arr)
 	exec_split = ft_split(exec, ' ');
 	if (!exec_split)
 		return (free(exec), free_struct(shell), exit(EXIT_FAILURE));
-	temp = ft_strjoin(get_path(cmd_arr[0]), exec);
+	path = get_path(cmd_arr[0]);
+	temp = ft_strjoin(path, exec);
 	if (!temp)
 		return (free(exec), free_arr(exec_split), free_struct(shell), 
-			exit(EXIT_FAILURE));
+			free(path), exit(EXIT_FAILURE));
+	free(path);
+	if (!check_access(temp))
+		return (free(exec), free(temp), free_arr(exec_split),
+			free_struct(shell), exit(g_status));
 	if (execve(temp, exec_split, shell->menvp) == -1)
 	{
 		free(exec);
@@ -100,10 +106,8 @@ void	browse_paths(t_mshell *shell, char **cmd_arr)
 	show_error(cmd_arr[0], "EXEC", 1);
 }
 
-void	bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
+void	bin_exec(t_mshell *shell, char **cmd_arr)
 {
-	(void)fd_in;
-	(void)fd_out;
 	if (ft_strchr(cmd_arr[0], '/'))
 		binary_with_path(shell, cmd_arr);
 	if (shell->paths)
@@ -111,5 +115,5 @@ void	bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out)
 	else
 		show_error(cmd_arr[0], "EXEC", 2);
 	free_struct(shell);
-	exit(127);
+	exit(g_status);
 }

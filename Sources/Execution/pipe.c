@@ -83,7 +83,7 @@ void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd)
 	if (is_builtin(temp))
 		builtin_forwarding(temp, shell);
 	else
-		bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
+		bin_exec(shell, temp->cmd_arr);
 }
 
 void	handle_pipes(t_mshell *shell, t_tokens *temp)
