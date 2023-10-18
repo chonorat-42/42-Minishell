@@ -72,6 +72,8 @@ void	binary_with_path(t_mshell *shell, char **cmd_arr)
 	if (!exec_split)
 		return (free(exec), free_struct(shell), exit(EXIT_FAILURE));
 	path = get_path(cmd_arr[0]);
+	if (!path)
+		return (free(exec), free_arr(exec_split), free_struct(shell), exit(1));
 	temp = ft_strjoin(path, exec);
 	if (!temp)
 		return (free(exec), free_arr(exec_split), free_struct(shell), 
@@ -81,11 +83,7 @@ void	binary_with_path(t_mshell *shell, char **cmd_arr)
 		return (free(exec), free(temp), free_arr(exec_split),
 			free_struct(shell), exit(g_status));
 	if (execve(temp, exec_split, shell->menvp) == -1)
-	{
-		free(exec);
-		free_arr(exec_split);
-		free(temp);
-	}
+		return (free(exec), free_arr(exec_split), free(temp));
 }
 
 void	browse_paths(t_mshell *shell, char **cmd_arr)
