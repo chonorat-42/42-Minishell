@@ -64,7 +64,10 @@ void	create_token(t_mshell *shell, int i, int j, char *to_add)
 	free(str);
 	new->next = NULL;
 	if (!shell->tok_lst)
+	{
 		shell->tok_lst = new;
+		new->prev = NULL;
+	}
 	else
 		tokens_addback(&shell->tok_lst, new);
 	init_new_token(&new);
