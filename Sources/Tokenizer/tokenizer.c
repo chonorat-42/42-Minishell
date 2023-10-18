@@ -152,5 +152,8 @@ int	tokenizer(t_mshell *shell)
 		|| !shell->tok_lst->cmd_arr[0][0])
 		return (close_fd(shell), ft_free_tokens(&shell->tok_lst), free(shell->input),
 			get_input_loop(shell), 0);
+
+	print_arr(shell->tok_lst->cmd_arr);
+	
 	return (0);
 }

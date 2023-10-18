@@ -119,6 +119,12 @@ void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 	{
 		new = NULL;
 		get_commands_lst(temp->dlst, &new);
+		// ft_dprintf(2, "in create arr, temp->content = %s\n", temp->content);
+		// ft_dprintf(2, "temp->dlist = \n");
+		// print_dlist(temp->dlst);
+		// ft_dprintf(2, "\nin create cmd_arr, new =\n");
+		// print_dlist(new);
+
 		if (!new)
 			return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
 				close_fd(shell), ft_free_tokens(tk_lst), get_input_loop(shell));

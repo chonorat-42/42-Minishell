@@ -20,9 +20,19 @@ void	get_redir(char *str, size_t *i, t_dlist **lst)
 	while (str[(*i)] && ft_isws(str[(*i)]))
 		(*i)++;
 	j = *i;
-	while (str[(*i)] && !ft_isws(str[(*i)]) && !is_char_in_set(str[(*i)], "<>"))
+	if (is_char_in_set(str[(*i)], "\'\""))
+	{
+		move_to_next_quote(str, i, str[j]);
+		j++;
+		split_into_dlst(lst, str, *i, j);
 		(*i)++;
-	split_into_dlst(lst, str, *i, j);
+	}
+	else
+	{
+		while (str[(*i)] && !ft_isws(str[(*i)]) && !is_char_in_set(str[(*i)], "<>"))
+			(*i)++;
+		split_into_dlst(lst, str, *i, j);
+	}
 }
 
 void	get_chevrons(char *str, size_t *i, char c, t_dlist **lst)
