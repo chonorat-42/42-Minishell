@@ -63,6 +63,7 @@ void	binary_with_path(t_mshell *shell, char **cmd_arr)
 	char	*exec;
 	char	**exec_split;
 	char	*temp;
+	char	*path;
 
 	exec = get_exec(cmd_arr[0]);
 	if (!exec)
@@ -70,10 +71,12 @@ void	binary_with_path(t_mshell *shell, char **cmd_arr)
 	exec_split = ft_split(exec, ' ');
 	if (!exec_split)
 		return (free(exec), free_struct(shell), exit(EXIT_FAILURE));
-	temp = ft_strjoin(get_path(cmd_arr[0]), exec);
+	path = get_path(cmd_arr[0]);
+	temp = ft_strjoin(path, exec);
 	if (!temp)
 		return (free(exec), free_arr(exec_split), free_struct(shell), 
-			exit(EXIT_FAILURE));
+			free(path), exit(EXIT_FAILURE));
+	free(path);
 	if (execve(temp, exec_split, shell->menvp) == -1)
 	{
 		free(exec);

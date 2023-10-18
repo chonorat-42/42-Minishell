@@ -144,7 +144,10 @@ int	expand(t_mshell *shell, char *cmd)
 		// ft_dprintf(2, "temp = %s\n", temp);
 
 		free(shell->input);
-		shell->input = ft_strdup(temp);
+		if (temp)
+			shell->input = ft_strdup(temp);
+		else
+			shell->input = ft_strdup("");
 		free(temp);
 	}
 	return (0);
