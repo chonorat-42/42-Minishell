@@ -66,17 +66,20 @@ void	expand_dlst(t_mshell *shell, t_dlist **lst, t_envp *envp)
 	{
 		if (temp->content[0] == '$')
 		{
-			name = ft_substr(temp->content, 1, ft_strlen(temp->content));
-			content = get_envvar_content(shell, envp, name);
-			free(name);
-			free(temp->content);
-			if (content)
+			if (temp->content[1])
 			{
-				temp->content = ft_strdup(content);
-				free(content);
+				name = ft_substr(temp->content, 1, ft_strlen(temp->content));
+				content = get_envvar_content(shell, envp, name);
+				free(name);
+				free(temp->content);
+				if (content)
+				{
+					temp->content = ft_strdup(content);
+					free(content);
+				}
+				else
+					temp->content = ft_strdup("");
 			}
-			else
-				temp->content = ft_strdup("");
 		}
 		temp = temp->next;
 	}
@@ -118,6 +121,10 @@ char	*expand_envvar(t_mshell *shell, char *str, t_envp *envp)
 
 	temp = NULL;
 	split_envvar(str, &temp);
+
+	// ft_dprintf(2, "after split envvar, dlst = \n");
+	// print_dlist(temp);
+
 	expand_dlst(shell, &temp, envp);
 	result = join_dlist(temp);
 	free_dlist(&temp);
@@ -131,7 +138,11 @@ int	expand(t_mshell *shell, char *cmd)
 	temp = NULL;
 	if (ft_char_index(cmd, '$') >= 0)
 	{
+		// ft_dprintf(2, "got in expand, $ found\n");
 		temp = expand_envvar(shell, cmd, shell->envp);
+
+		// ft_dprintf(2, "temp = %s\n", temp);
+
 		free(shell->input);
 		shell->input = ft_strdup(temp);
 		free(temp);

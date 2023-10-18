@@ -45,6 +45,9 @@ static void	get_option(char **cmd, int *option, int *index)
 
 void	echo_case(char **cmd, int fd)
 {
+
+	// ft_dprintf(2, "fd = %d\n", fd);
+
 	int	option;
 	int	index;
 	int	printed;

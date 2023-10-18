@@ -111,18 +111,24 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 void	split_tokens_into_dlst(t_tokens **lst, t_mshell *shell)
 {
 	t_tokens	*temp;
-	char		*str;
+	// char		*str;
 
 	temp = *lst;
 	while (temp)
 	{
-		str = remove_quotes(temp->content);
-		if (!str)
-			return (free_struct(shell), exit(1));
-		free(temp->content);
-		temp->content = str;
+		// str = remove_quotes(temp->content);
+		// ft_dprintf(2, "in split tokens into dlst, temp(token) = %s\n", temp->content);
+		// ft_dprintf(2, "in split tokens, str = %s\n", str);
+		// if (!str)
+		// 	return (free_struct(shell), exit(1));
+		// free(temp->content);
+		// temp->content = str;
 		temp->dlst = NULL;
 		split_words_and_redir(&temp->dlst, temp->content, shell);
+
+		// ft_dprintf(2, "in split tokens, final dlist = \n");
+		// print_dlist(temp->dlst);
+
 		temp = temp->next;
 	}
 }
