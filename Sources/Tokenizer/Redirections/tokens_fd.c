@@ -58,7 +58,7 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 			if (temp_dlst->content[0] == '<'
 				&& ft_strlen(temp_dlst->content) == 1)
 				{
-					fd_str = temp_dlst->next->content;
+					fd_str = remove_quotes(temp_dlst->next->content);
 					simple_in_case(temp_dlst, &has_fd, &temp_fd);
 				}
 			else if (temp_dlst->content[0] == '<'

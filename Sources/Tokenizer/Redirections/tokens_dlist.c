@@ -28,9 +28,20 @@ void	get_redir(char *str, size_t *i, t_dlist **lst)
 	j = *i;
 	if (is_char_in_set(str[(*i)], "\'\""))
 	{
-		move_to_last_quote(str, i, str[j]);
-		(*i)++;
-		split_into_dlst(lst, str, *i, j);
+		move_to_next_quote(str, i, str[j]);
+		{
+			if (ft_isws(str[(*i + 1)]) || !str[(*i + 1)])
+			{
+				(*i)++;
+				split_into_dlst(lst, str, *i, j);
+			}
+			else
+			{
+				(*i)++;
+				get_redir(str, i, lst);
+			}
+		}
+		
 	}
 	else
 	{
