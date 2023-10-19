@@ -237,12 +237,8 @@ void	builtin_forwarding(t_tokens *temp, t_mshell *shell);
 void	executable(t_tokens *temp, t_mshell *shell);
 
 void	manage_fd(int fd_in, int fd_out);
-
 int		handle_fd(int fd, char *file, int type);
-
 void	close_fd(t_mshell *shell);
-
 void	close_all_fds(t_tokens *lst, int *old_fd);
-
 
 # endif
