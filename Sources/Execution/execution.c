@@ -56,7 +56,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 	if (!child)
 	{
 		manage_fd(temp->fd_in, temp->fd_out);
-		bin_exec(shell, temp->cmd_arr, temp->fd_in, temp->fd_out);
+		bin_exec(shell, temp->cmd_arr);
 	}
 	else
 	{

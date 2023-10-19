@@ -120,7 +120,7 @@ void		print_arr(char **arr);
 void		print_lst(t_list *lst);
 void		free_struct(t_mshell *shell);
 void		free_arr(char **arr);
-void		bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out);
+void		bin_exec(t_mshell *shell, char **cmd_arr);
 int 		redirect(t_mshell *shell);
 void 		struct_init(t_mshell *shell);
 void		sig_handler(void);
@@ -143,6 +143,7 @@ void		get_var(t_mshell *shell, char *cmd);
 
 void		execution(t_mshell *shell);
 int			get_final_out(t_tokens *lst);
+int			check_access(char *path);
 
 void		free_arr(char **arr);
 void		ft_free_tokens(t_tokens	**head);
@@ -226,8 +227,6 @@ void		move_to_next_quote(char *str, size_t *i, char c);
 char		*join_dlist(t_dlist	*lst);
 
 void		expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst);
-
-void		bin_exec(t_mshell *shell, char **cmd_arr, int fd_in, int fd_out);
 
 void	get_fd_in(t_mshell *shell, t_tokens **tok);
 
