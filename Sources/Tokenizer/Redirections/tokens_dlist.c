@@ -12,20 +12,25 @@
 
 #include "minishell.h"
 
+void	move_to_last_quote(char *str, size_t *i, char c)
+{
+	(*i) = ft_strlen(str);
+	while (*i && str[(*i)] != c)
+		(*i)--;
+}
+
 void	get_redir(char *str, size_t *i, t_dlist **lst)
 {
 	size_t	j;
-	// char	c;
 
 	while (str[(*i)] && ft_isws(str[(*i)]))
 		(*i)++;
 	j = *i;
 	if (is_char_in_set(str[(*i)], "\'\""))
 	{
-		move_to_next_quote(str, i, str[j]);
-		j++;
-		split_into_dlst(lst, str, *i, j);
+		move_to_last_quote(str, i, str[j]);
 		(*i)++;
+		split_into_dlst(lst, str, *i, j);
 	}
 	else
 	{
@@ -98,7 +103,7 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 	{
 		if (is_char_in_set(str[i], "\'\""))
 		{
-			move_to_next_quote(str, &i, str[i]);
+			move_to_last_quote(str, &i, str[i]);
 			i++;
 		}
 		else if (is_char_in_set(str[i], "<>"))
@@ -121,24 +126,12 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 void	split_tokens_into_dlst(t_tokens **lst, t_mshell *shell)
 {
 	t_tokens	*temp;
-	// char		*str;
 
 	temp = *lst;
 	while (temp)
 	{
-		// str = remove_quotes(temp->content);
-		// ft_dprintf(2, "in split tokens into dlst, temp(token) = %s\n", temp->content);
-		// ft_dprintf(2, "in split tokens, str = %s\n", str);
-		// if (!str)
-		// 	return (free_struct(shell), exit(1));
-		// free(temp->content);
-		// temp->content = str;
 		temp->dlst = NULL;
 		split_words_and_redir(&temp->dlst, temp->content, shell);
-
-		// ft_dprintf(2, "in split tokens, final dlist = \n");
-		// print_dlist(temp->dlst);
-
 		temp = temp->next;
 	}
 }
