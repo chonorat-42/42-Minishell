@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/18 16:52:56 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/19 13:16:04 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,8 @@ void	show_error(char *cmd, char *type, int error)
 		ft_dprintf(2, "syntax error near unexpected token `%s'\n", cmd);
 		g_status = 2;
 	}
+	else if (ft_strcmp(type, "SHLVL") == 0)
+		ft_dprintf(2, "warning: shell level (%d) too high, resetting to 1\n",
+			error);
 	ft_printf("\033[0m");
 }

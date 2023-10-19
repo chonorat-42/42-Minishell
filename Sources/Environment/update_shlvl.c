@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_shlvl.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 01:28:10 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/11 17:37:58 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/19 14:05:19 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,24 @@ static int	mod_shlvl(t_mshell *shell, int shlvl)
 	return (1);
 }
 
+static void	prepare_shlvl(char *content, int *shlvl)
+{
+	if (only_digit(content))
+	{
+		*shlvl = ft_atoi(content);
+		(*shlvl)++;
+		if (*shlvl < 0)
+			*shlvl = 0;
+		if (*shlvl >= 1000)
+		{
+			show_error(NULL, "SHLVL", *shlvl);
+			*shlvl = 1;
+		}
+	}
+	else
+		*shlvl = 1;
+}
+
 void	update_shlvl(t_mshell *shell)
 {
 	int		shlvl;
@@ -47,19 +65,10 @@ void	update_shlvl(t_mshell *shell)
 		ft_strdup("0");
 	content = ft_strtrim(temp, " \t\n\v\f\r");
 	if (!content)
-		return (free(temp), free_struct(shell), exit(2));
+		return (free(temp), free_struct(shell), exit(1));
 	free(temp);
-	if (only_digit(content))
-	{
-		shlvl = ft_atoi(content);
-		if (shlvl < 0)
-			shlvl = 0;
-		else
-			shlvl++;
-	}
-	else
-		shlvl = 1;
+	prepare_shlvl(content, &shlvl);
 	free(content);
 	if (!mod_shlvl(shell, shlvl))
-		return (free_struct(shell), exit(2));
+		return (free_struct(shell), exit(1));
 }
