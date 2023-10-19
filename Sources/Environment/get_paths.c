@@ -27,7 +27,7 @@ char	*get_envvar_content(t_mshell *shell, t_envp *envp, char *to_find)
 			{
 				result = ft_strdup(temp->var.content);
 				if (!result)
-					return (free_struct(shell), exit(2), NULL);
+					return (free_struct(shell), exit(1), NULL);
 			}
 			else
 				return (NULL);
@@ -82,7 +82,7 @@ static int	fix_paths(char *str, t_mshell *args)
 	return (free_arr(temp), temp = NULL, 0);
 }
 
-char	*get_envp_content(t_envp *envp, char *to_find)
+char	*get_envp_content(t_mshell *shell, t_envp *envp, char *to_find)
 {
 	t_envp	*temp;
 	char	*res;
@@ -93,6 +93,8 @@ char	*get_envp_content(t_envp *envp, char *to_find)
 		if (!ft_strcmp(to_find, temp->var.name))
 		{
 			res = ft_strdup(temp->var.content);
+			if (!res)
+				return (free_struct(shell), exit(1), NULL);
 			return (res);
 		}
 		temp = temp->next;
@@ -106,7 +108,7 @@ void	get_paths(t_mshell *shell)
 
 	if (shell->paths)
 		free_arr(shell->paths);
-	paths = get_envp_content(shell->envp, "PATH");
+	paths = get_envp_content(shell, shell->envp, "PATH");
 	if (!paths)
 		return ;
 	if (fix_paths(paths, shell))
