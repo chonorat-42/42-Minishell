@@ -53,6 +53,10 @@ void	ft_free_tokens(t_tokens	**head)
 			free_arr((*head)->cmd_arr);
 		if ((*head)->dlst)
 			free_dlist(&(*head)->dlst);
+		if ((*head)->fd_in != 0)
+			free((*head)->fd_in_str);
+		if ((*head)->fd_out != 1)
+			free((*head)->fd_out_str);
 		temp = *head;
 		*head = temp->next;
 		free(temp);

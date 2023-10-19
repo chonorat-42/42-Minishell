@@ -53,20 +53,25 @@ void	close_all_fds(t_tokens *lst, int *old_fd)
 void	parent_management(t_mshell *shell, t_tokens *temp, pid_t child, int *lpids, size_t i, int *new_fd, int *old_fd)
 {
 	lpids[i] = child;
-	if (temp != shell->tok_lst)
+
+	(void)shell;
+	(void)temp;
+	if (i != 0)
 	{
 		close(old_fd[0]);
 		close(old_fd[1]);			
 	}
-	if (temp->next)
-	{
+	// if (temp->next)
+	// {
 		old_fd[0] = new_fd[0];
 		old_fd[1] = new_fd[1];
-	}
+	// }
 }
 
 void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd)
 {
+
+	(void)old_fd;
 	if (temp != shell->tok_lst)
 	{
 		dup2(old_fd[0], 0);
@@ -95,9 +100,11 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 	size_t	i;
 	size_t	pipes_nbr;
 	size_t	j = 0;
+	size_t	cmd_nbr;
 
-	pipes_nbr = count_successive_pipes(temp) + 1;
-	lpids = malloc(sizeof(int) * pipes_nbr);
+	pipes_nbr = count_successive_pipes(temp);
+	cmd_nbr = pipes_nbr + 1;
+	lpids = malloc(sizeof(int) * cmd_nbr);
 	i = 0;
 	while (temp)
 	{
@@ -113,6 +120,11 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 		else
 			temp = temp->next;
 		i++;
+	}
+	if (cmd_nbr > 2)
+	{
+		close(old_fd[0]);
+		close(old_fd[1]);
 	}
 	while (j < pipes_nbr)
 	{

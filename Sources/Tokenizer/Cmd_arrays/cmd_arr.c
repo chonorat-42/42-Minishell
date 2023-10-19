@@ -74,6 +74,7 @@ int	handle_fd(int fd, char *file, int type)
 
 	if (fd == -1 && type == CMD)
 	{
+		ft_dprintf(2, "file = %s\n", file);
 		stat(file, &sb);
 		if (errno == ENOENT)
 			show_error(file, "NO_FILE", 0);
@@ -96,7 +97,9 @@ void	handle_bad_fd(t_mshell *shell, t_tokens *lst)
 	issue = 0;
 	while (temp)
 	{
+		// ft_dprintf(2, "return = %d\n", handle_fd(temp->fd_in, temp->fd_in_str, temp->type));
 		issue += handle_fd(temp->fd_in, temp->fd_in_str, temp->type);
+		// ft_dprintf(2, "in handle bad fd, issue = %d\n", issue);
 		temp = temp->next;
 	}
 	if (issue)

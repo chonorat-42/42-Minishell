@@ -28,20 +28,17 @@ void	get_redir(char *str, size_t *i, t_dlist **lst)
 	j = *i;
 	if (is_char_in_set(str[(*i)], "\'\""))
 	{
-		move_to_next_quote(str, i, str[j]);
+		while (is_char_in_set(str[(*i)], "\'\""))
 		{
+			move_to_next_quote(str, i, str[j]);
 			if (ft_isws(str[(*i + 1)]) || !str[(*i + 1)])
 			{
 				(*i)++;
 				split_into_dlst(lst, str, *i, j);
 			}
 			else
-			{
 				(*i)++;
-				get_redir(str, i, lst);
-			}
 		}
-		
 	}
 	else
 	{
@@ -143,6 +140,9 @@ void	split_tokens_into_dlst(t_tokens **lst, t_mshell *shell)
 	{
 		temp->dlst = NULL;
 		split_words_and_redir(&temp->dlst, temp->content, shell);
+
+		// ft_dprintf(2, "after split words and redir, dlst =\n");
+		// print_dlist(temp->dlst);
 		temp = temp->next;
 	}
 }

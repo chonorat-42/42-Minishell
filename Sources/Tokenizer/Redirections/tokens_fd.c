@@ -63,7 +63,10 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 				}
 			else if (temp_dlst->content[0] == '<'
 				&& ft_strlen(temp_dlst->content) == 2)
+				{
+					fd_str = remove_quotes(temp_dlst->next->content);
 					heredoc_case(shell, tok, temp_dlst, &has_fd, &temp_fd);
+				}
 			if (handle_fd(temp_fd, fd_str, CMD))
 				return (free_struct(shell), free(shell->input), free_arr(shell->paths), shell->paths = NULL, (get_input_loop(shell)));
 			temp_dlst = temp_dlst->next;
@@ -76,16 +79,35 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 
 void	simple_out_case(t_dlist *temp, int *has_fd, int *temp_fd)
 {
+	char	*trim;
+
+	// ft_dprintf(2, "in simple out case, temp =\n");
+	// print_dlist(temp);
+
 	if (*has_fd && *temp_fd != -1)
 		close(*temp_fd);
+	if (is_char_in_set(temp->next->content[0], "\'\""))
+	{
+		trim = remove_quotes(temp->next->content);
+		free(temp->next->content);
+		temp->next->content = trim;
+	}
 	*temp_fd = open(temp->next->content, O_RDWR | O_CREAT, 0666);
 	(*has_fd)++;
 }
 
 void	append_case(t_dlist *temp, int *has_fd, int *temp_fd)
 {
+	char	*trim;
+
 	if (*has_fd && *temp_fd != -1)
 		close(*temp_fd);
+	if (is_char_in_set(temp->next->content[0], "\'\""))
+	{
+		trim = ft_strtrim(temp->next->content, "\'\"");
+		free(temp->next->content);
+		temp->next->content = trim;
+	}
 	*temp_fd = open(temp->next->content, O_RDWR | O_APPEND);
 	(*has_fd)++;
 }
@@ -109,17 +131,19 @@ static void	get_fd_out(t_tokens **tok)
 			if (temp_dlst->content[0] == '>'
 				&& ft_strlen(temp_dlst->content) == 1)
 				{
-					fd_str = temp_dlst->next->content;
+					fd_str = remove_quotes(temp_dlst->next->content);
 					simple_out_case(temp_dlst, &has_fd, &temp_fd);
 					handle_fd(temp_fd, fd_str, CMD);
 				}
 			else if (temp_dlst->content[0] == '>'
 				&& ft_strlen(temp_dlst->content) == 2)
 				{
-					fd_str = temp_dlst->next->content;
+					fd_str = remove_quotes(temp_dlst->next->content);
 					append_case(temp_dlst, &has_fd, &temp_fd);
 					handle_fd(temp_fd, fd_str, CMD);
 				}
+				else
+					fd_str = NULL;
 				
 			temp_dlst = temp_dlst->next;
 		}
