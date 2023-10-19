@@ -6,11 +6,13 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 14:01:43 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/18 15:48:04 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/19 14:22:07 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern long long	g_status;
 
 int	check_access(char *path)
 {
@@ -22,6 +24,6 @@ int	check_access(char *path)
 	if (info.st_mode & S_IFDIR)
 		return (show_error(path, "EXEC", 3), 0);
 	if (!(info.st_mode & S_IRUSR) || !(info.st_mode & S_IXUSR))
-		return (show_error(path, "PERMISSION", 0), 0);
+		return (show_error(path, "PERMISSION", 0), g_status = 126, 0);
 	return (1);
 }
