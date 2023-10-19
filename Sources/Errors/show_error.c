@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/19 13:16:04 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/19 14:19:46 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,7 @@ void	show_error(char *cmd, char *type, int error)
 		g_status = 1;
 	}
 	else if (ft_strcmp(type, "PERMISSION") == 0)
-	{
 		ft_dprintf(2, "%s: Permission denied\n", cmd);
-		g_status = 1;
-	}
 	else if (ft_strcmp(type, "SYNTAX") == 0)
 	{
 		ft_dprintf(2, "syntax error near unexpected token `%s'\n", cmd);

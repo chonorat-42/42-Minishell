@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern long long	g_status;
+
 size_t	dlst_size(t_dlist *lst)
 {
 	size_t	res;
@@ -76,7 +78,10 @@ int	handle_fd(int fd, char *file, int type)
 		if (errno == ENOENT)
 			show_error(file, "NO_FILE", 0);
 		else if (errno == EACCES)
+		{
 			show_error(file, "PERMISSION", 0);
+			g_status = 1;
+		}
 		return (1);
 	}
 	return (0);
