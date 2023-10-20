@@ -97,7 +97,7 @@ void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd,
 			// ft_dprintf(2, "dup2 oldfd[1] NOK child management\n");
 		close(new_fd[1]);
 	}
-	manage_fd(temp->fd_in, temp->fd_out);
+	//manage_fd(temp->fd_in, temp->fd_out);
 	if (has_bad_fd(temp))
 	{
 		free_struct(shell);
