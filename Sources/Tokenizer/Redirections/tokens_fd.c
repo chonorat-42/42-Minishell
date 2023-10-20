@@ -39,6 +39,20 @@ void	heredoc_case(t_mshell *shell, t_tokens **tok, t_dlist *temp, int *has_fd, i
 	get_fd_in(shell, tok);
 }
 
+int cmd_has_pipes(t_tokens *lst)
+{
+	t_tokens	*temp;
+
+	temp = lst;
+	while (temp)
+	{
+		if (temp->type == PIPE)
+			return (1);
+		temp = temp->next;
+	}
+	return (0);
+}
+
 void	get_fd_in(t_mshell *shell, t_tokens **tok)
 {
 	t_tokens	*temp_tok;
@@ -47,6 +61,7 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 	int			has_fd;
 	char		*fd_str;
 
+	fd_str = NULL;
 	temp_tok = *tok;
 	while (temp_tok)
 	{
@@ -60,15 +75,23 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 				{
 					fd_str = remove_quotes(temp_dlst->next->content);
 					simple_in_case(temp_dlst, &has_fd, &temp_fd);
+					if (handle_fd(temp_fd, fd_str, CMD) && !cmd_has_pipes(*tok))
+						return (free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
 				}
 			else if (temp_dlst->content[0] == '<'
 				&& ft_strlen(temp_dlst->content) == 2)
 				{
 					fd_str = remove_quotes(temp_dlst->next->content);
 					heredoc_case(shell, tok, temp_dlst, &has_fd, &temp_fd);
+					if (handle_fd(temp_fd, fd_str, CMD) && !cmd_has_pipes(*tok))
+						return (free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
 				}
-			if (handle_fd(temp_fd, fd_str, CMD))
-				return (free_struct(shell), free(shell->input), free_arr(shell->paths), shell->paths = NULL, (get_input_loop(shell)));
+				else
+				{
+					if (fd_str)
+						free(fd_str);
+					 fd_str = NULL;
+				}
 			temp_dlst = temp_dlst->next;
 		}
 		temp_tok->fd_in = temp_fd;
@@ -108,11 +131,11 @@ void	append_case(t_dlist *temp, int *has_fd, int *temp_fd)
 		free(temp->next->content);
 		temp->next->content = trim;
 	}
-	*temp_fd = open(temp->next->content, O_RDWR | O_APPEND);
+	*temp_fd = open(temp->next->content, O_RDWR | O_APPEND | O_CREAT, 0666);
 	(*has_fd)++;
 }
 
-static void	get_fd_out(t_tokens **tok)
+static void	get_fd_out(t_mshell *shell, t_tokens **tok)
 {
 	t_tokens	*temp_tok;
 	t_dlist		*temp_dlst;
@@ -120,6 +143,7 @@ static void	get_fd_out(t_tokens **tok)
 	int			has_fd;
 	char		*fd_str;
 
+	fd_str = NULL;
 	temp_tok = *tok;
 	while (temp_tok)
 	{
@@ -133,17 +157,24 @@ static void	get_fd_out(t_tokens **tok)
 				{
 					fd_str = remove_quotes(temp_dlst->next->content);
 					simple_out_case(temp_dlst, &has_fd, &temp_fd);
-					handle_fd(temp_fd, fd_str, CMD);
+					if (handle_fd(temp_fd, fd_str, CMD) && !cmd_has_pipes(*tok))
+						return (free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
 				}
 			else if (temp_dlst->content[0] == '>'
 				&& ft_strlen(temp_dlst->content) == 2)
 				{
 					fd_str = remove_quotes(temp_dlst->next->content);
 					append_case(temp_dlst, &has_fd, &temp_fd);
-					handle_fd(temp_fd, fd_str, CMD);
+					if (handle_fd(temp_fd, fd_str, CMD) && !cmd_has_pipes(*tok))
+						return (free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
 				}
 				else
-					fd_str = NULL;
+				{
+					if (fd_str)
+						free(fd_str);
+					 fd_str = NULL;
+				}
+					
 				
 			temp_dlst = temp_dlst->next;
 		}
@@ -151,10 +182,12 @@ static void	get_fd_out(t_tokens **tok)
 		temp_tok->fd_out_str = fd_str;
 		temp_tok = temp_tok->next;
 	}
+	if (fd_str)
+		free(fd_str);
 }
 
 void	get_fds(t_mshell *shell, t_tokens **lst)
 {
 	get_fd_in(shell, lst);
-	get_fd_out(lst);
+	get_fd_out(shell, lst);
 }

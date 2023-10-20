@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern long long g_status; 
+
 size_t	count_successive_pipes(t_tokens *temp)
 {
 	size_t	res;
@@ -69,6 +71,13 @@ void	parent_management(t_mshell *shell, t_tokens *temp, pid_t child, int *lpids,
 	}
 }
 
+int	has_bad_fd(t_tokens *temp)
+{
+	if (temp->fd_in == -1 || temp->fd_out == -1)
+		return (1);
+	return (0);
+}
+
 void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd, int *lpids)
 {
 
@@ -89,12 +98,18 @@ void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd,
 		close(new_fd[1]);
 	}
 	manage_fd(temp->fd_in, temp->fd_out);
+	if (has_bad_fd(temp))
+	{
+		free_struct(shell);
+		free(lpids);
+		exit(1);
+	}
 	if (is_builtin(temp))
 	{
 		builtin_forwarding(temp, shell);
 		free_struct(shell);
 		free(lpids);
-		exit(0);
+		exit(g_status);
 	}
 	else
 		bin_exec(shell, temp->cmd_arr);
@@ -144,7 +159,19 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 	while (j < cmd_nbr)
 	{
 		// ft_dprintf(2, "in wait loop, j =%d\n\n", j);
-		waitpid(lpids[j], NULL, 0);
+		if (waitpid(lpids[j], (int *)&g_status, 0) == -1)
+		{
+			perror("waitpid");
+			exit(EXIT_FAILURE);
+		}
+		if (WIFEXITED(g_status))
+			g_status = WEXITSTATUS(g_status);
+		else if (WIFSIGNALED(g_status))
+		{
+			g_status = WTERMSIG(g_status);
+			if (g_status != 131)
+				g_status += 128;
+		}
 		j++;
 	}
 	free(lpids);
