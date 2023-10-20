@@ -54,9 +54,10 @@ void	parent_management(t_mshell *shell, t_tokens *temp, pid_t child, int *lpids,
 {
 	lpids[i] = child;
 
+	// ft_dprintf(2, "got in parent management, temp = %s, i = %d\n\n", temp->content, i);
+
 	(void)shell;
-	(void)temp;
-	if (i != 0)
+	if (temp->prev != NULL)
 	{
 		close(old_fd[0]);
 		close(old_fd[1]);			
@@ -66,60 +67,72 @@ void	parent_management(t_mshell *shell, t_tokens *temp, pid_t child, int *lpids,
 		old_fd[0] = new_fd[0];
 		old_fd[1] = new_fd[1];
 	}
-    if (temp->next && temp->next->type == PIPE)
-	{
-        close(new_fd[0]);
-        close(new_fd[1]);
-    }
 }
 
-void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd)
+void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd, int *lpids)
 {
 
-	(void)old_fd;
-	if (temp != shell->tok_lst)
+	// ft_dprintf(2, "got in child management, temp = %s\n\n", temp->content);
+
+	if (temp->prev != NULL)
 	{
-		dup2(old_fd[0], 0);
+		if (dup2(old_fd[0], 0) == -1)
+			// ft_dprintf(2, "dup2 oldfd[0] NOK child management\n");
 		close(old_fd[0]);
 		close(old_fd[1]);
 	}
 	if (temp->next)
 	{
 		close(new_fd[0]);
-		dup2(new_fd[1], 1);
+		if (dup2(new_fd[1], 1) == -1)
+			// ft_dprintf(2, "dup2 oldfd[1] NOK child management\n");
 		close(new_fd[1]);
 	}
-	if (temp->fd_in == 0)
-		close(0);
 	manage_fd(temp->fd_in, temp->fd_out);
 	if (is_builtin(temp))
+	{
 		builtin_forwarding(temp, shell);
+		free_struct(shell);
+		free(lpids);
+		exit(0);
+	}
 	else
 		bin_exec(shell, temp->cmd_arr);
 }
 
+/*
+cat out | grep m | grep t OK
+cat | ls OK
+cat out | ls OK
+cat | echo hi NOK
+*/
+
 void	handle_pipes(t_mshell *shell, t_tokens *temp)
 {
 	int		new_fd[2];
-	int		old_fd[2] ={0, 1};
+	int		old_fd[2] = {0, 1};
 	pid_t	child;
 	int		*lpids;
 	size_t	i;
 	size_t	pipes_nbr;
-	size_t	j = 0;
 	size_t	cmd_nbr;
+	size_t	j = 0;
 
 	pipes_nbr = count_successive_pipes(temp);
 	cmd_nbr = pipes_nbr + 1;
+
+	// ft_dprintf(2, "in handle pipes, pipes_nbr = %d, cmd_nbr = %d\n\n", pipes_nbr, cmd_nbr);
+
 	lpids = malloc(sizeof(int) * cmd_nbr);
 	i = 0;
 	while (temp)
 	{
+		// ft_dprintf(2, "start of while temp loop, temp->content = %s\n\n", temp->content);
 		if (temp->next)
 			pipe(new_fd);
 		child = fork();
 		if (!child)
-			child_management(shell, temp, new_fd, old_fd);
+			child_management(shell, temp, new_fd, old_fd, lpids);
 		else
 			parent_management(shell, temp, child, lpids, i, new_fd, old_fd);
 		if (temp->next && temp->next->type == PIPE)
@@ -128,13 +141,9 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 			temp = temp->next;
 		i++;
 	}
-	if (cmd_nbr > 2)
+	while (j < cmd_nbr)
 	{
-		close(old_fd[0]);
-		close(old_fd[1]);
-	}
-	while (j < pipes_nbr)
-	{
+		// ft_dprintf(2, "in wait loop, j =%d\n\n", j);
 		waitpid(lpids[j], NULL, 0);
 		j++;
 	}
