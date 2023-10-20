@@ -23,7 +23,7 @@ int	is_builtin(t_tokens *temp)
 		|| !ft_strcmp(temp->cmd_arr[0], "unset")
 		|| !ft_strcmp(temp->cmd_arr[0], "pwd")
 		|| !ft_strcmp(temp->cmd_arr[0], "export"))
-		return (1);
+		return (g_status = 0, 1);
 	return (0);
 }
 
@@ -55,6 +55,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 		return (free_struct(shell), exit(EXIT_FAILURE));
 	if (!child)
 	{
+		exec_sig();
 		manage_fd(temp->fd_in, temp->fd_out);
 		bin_exec(shell, temp->cmd_arr);
 	}

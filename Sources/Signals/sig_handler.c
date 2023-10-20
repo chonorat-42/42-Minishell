@@ -55,6 +55,12 @@ void	ignore_sig(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
+void	exec_sig(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
+
 static void	get_sig(int signum)
 {
 	if (signum == SIGINT)
@@ -66,6 +72,8 @@ static void	get_sig(int signum)
 		rl_redisplay();
 		g_status = 128 + signum;
 	}
+	else if (signum == SIGQUIT)
+		ft_putstr_fd("\b\b  \b\b", 0);
 }
 
 void	sig_handler(void)
@@ -76,5 +84,5 @@ void	sig_handler(void)
 	sig.sa_flags = SA_RESTART;
 	sig.sa_handler = get_sig;
 	sigaction(SIGINT, &sig, NULL);
-	signal(SIGQUIT, SIG_IGN);
+	sigaction(SIGQUIT, &sig, NULL);
 }

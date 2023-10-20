@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/19 16:30:08 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/20 13:46:05 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,4 @@ void	get_svar(t_mshell *shell)
 	free(status.content);
 	free(content);
 	shell->exit_status = g_status;
-	g_status = 0;
 }

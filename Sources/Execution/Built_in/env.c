@@ -21,10 +21,7 @@ void	env_case(t_mshell *shell, char **cmd, int fd)
 	if (check_option(shell, cmd))
 		return ;
 	if (cmd[1])
-	{
-		g_status = 1;
-		return ;
-	}
+		return (g_status = 1, builtin_error(cmd[0], cmd[1], 0));
 	temp = shell->envp;
 	while (temp)
 	{
