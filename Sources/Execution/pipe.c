@@ -97,13 +97,18 @@ void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd,
 			// ft_dprintf(2, "dup2 oldfd[1] NOK child management\n");
 		close(new_fd[1]);
 	}
-	manage_fd(temp->fd_in, temp->fd_out);
+	
 	if (has_bad_fd(temp))
 	{
 		free_struct(shell);
 		free(lpids);
 		exit(1);
 	}
+	if (temp->next && temp->next->fd_in != 0)
+	{
+		exit(g_status);
+	}
+	manage_fd(temp->fd_in, temp->fd_out);
 	if (is_builtin(temp))
 	{
 		builtin_forwarding(temp, shell);
@@ -112,7 +117,10 @@ void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd,
 		exit(g_status);
 	}
 	else
+	{
 		bin_exec(shell, temp->cmd_arr);
+		free(lpids);
+	}
 }
 
 /*
