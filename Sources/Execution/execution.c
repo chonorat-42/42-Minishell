@@ -84,6 +84,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 		return (free_struct(shell), exit(EXIT_FAILURE));
 	if (!child)
 	{
+		exec_sig();
 		manage_fd(temp->fd_in, temp->fd_out);
 		temp->fd_in = 0;
 		temp->fd_out = 1;

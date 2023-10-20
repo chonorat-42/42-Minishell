@@ -105,6 +105,7 @@ typedef struct s_mshell
 void		sig_handler(void);
 void		ignore_sig(void);
 void		heredoc_sig(void);
+void		exec_sig(void);
 
 char		*get_prompt(t_mshell *shell);
 void		update_shlvl(t_mshell *shell);
@@ -237,14 +238,9 @@ void	builtin_forwarding(t_tokens *temp, t_mshell *shell);
 void	executable(t_tokens *temp, t_mshell *shell);
 
 void	manage_fd(int fd_in, int fd_out);
-
 int		handle_fd(int fd, char *file, int type);
-
 void	close_fd(t_mshell *shell);
-
 void	close_all_fds(t_tokens *lst, int *old_fd);
-
 int		has_bad_fd(t_tokens *temp);
-
 
 # endif

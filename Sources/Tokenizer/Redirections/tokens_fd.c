@@ -174,8 +174,6 @@ static void	get_fd_out(t_mshell *shell, t_tokens **tok)
 						free(fd_str);
 					 fd_str = NULL;
 				}
-					
-				
 			temp_dlst = temp_dlst->next;
 		}
 		temp_tok->fd_out = temp_fd;

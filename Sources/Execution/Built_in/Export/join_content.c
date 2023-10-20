@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 16:00:00 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/11 16:25:45 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/20 18:42:55 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,14 @@ void	check_plus(t_mshell *shell, char **arg)
 	while ((*arg)[index])
 	{
 		if ((*arg)[index] == '=' && (*arg)[index - 1])
+		{
 			if ((*arg)[index - 1] == '+')
 				return (prepare_join(shell, arg, index - 1));
+			else
+				break ;
+		}
+		else if ((*arg)[index] == '=')
+			break ;
 		index++;
 	}
 }

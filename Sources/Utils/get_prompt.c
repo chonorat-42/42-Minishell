@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 23:46:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/18 16:53:15 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/20 17:22:09 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	history(char *input)
 // 	char		*path;
 // 	char		*home;
 // 	char		*temp;
-
+//
 // 	path = get_envvar_content(shell, shell->envp, "PWD");
 // 	home = get_envvar_content(shell, shell->envp, "HOME");
 // 	if (home && ft_strlen(home) > 1 && home[ft_strlen(home) - 1] == '/')
@@ -62,9 +62,9 @@ int	history(char *input)
 
 char	*get_prompt(t_mshell *shell)
 {
-	// ft_printf("\n\033[1mMinishell \033[0m");
-	// // print_upper(shell);
-	// ft_printf("\n");
+	//ft_printf("\n\033[1mMinishell \033[0m");
+	//print_upper(shell);
+	//ft_printf("\n");
 	(void)shell;
 	if (g_status != 0)
 		return ("> \033[0;31m$\033[0m ");
