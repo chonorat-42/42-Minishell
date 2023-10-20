@@ -61,11 +61,16 @@ void	parent_management(t_mshell *shell, t_tokens *temp, pid_t child, int *lpids,
 		close(old_fd[0]);
 		close(old_fd[1]);			
 	}
-	// if (temp->next)
-	// {
+	if (temp->next)
+	{
 		old_fd[0] = new_fd[0];
 		old_fd[1] = new_fd[1];
-	// }
+	}
+    if (temp->next && temp->next->type == PIPE)
+	{
+        close(new_fd[0]);
+        close(new_fd[1]);
+    }
 }
 
 void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd)
@@ -84,6 +89,8 @@ void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd)
 		dup2(new_fd[1], 1);
 		close(new_fd[1]);
 	}
+	if (temp->fd_in == 0)
+		close(0);
 	manage_fd(temp->fd_in, temp->fd_out);
 	if (is_builtin(temp))
 		builtin_forwarding(temp, shell);
@@ -94,7 +101,7 @@ void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd)
 void	handle_pipes(t_mshell *shell, t_tokens *temp)
 {
 	int		new_fd[2];
-	int		old_fd[2];
+	int		old_fd[2] ={0, 1};
 	pid_t	child;
 	int		*lpids;
 	size_t	i;
