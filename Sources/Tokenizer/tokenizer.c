@@ -146,9 +146,22 @@ int	tokenizer(t_mshell *shell)
 		return (free(shell->input), get_input_loop(shell), 0);
 	parse_tkn(&shell->tok_lst, shell);
 	split_tokens_into_dlst(&shell->tok_lst, shell);
+
+	// ft_dprintf(2, "just after split tokens into dlst, dlst =\n");
+	// print_dlist(shell->tok_lst->dlst);
+
 	get_fds(shell, &shell->tok_lst);
+
+	// ft_dprintf(2, "after get fd\n");
+
 	create_cmd_arr(&shell->tok_lst, shell);
+
+	// ft_dprintf(2, "after create cmd arr\n");
+
 	manage_quotes_arr(&shell->tok_lst);
+
+	// ft_dprintf(2, "after manage quote arr fd\n");
+
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
 	if (!shell->tok_lst || !shell->tok_lst->cmd_arr

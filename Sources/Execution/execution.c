@@ -48,7 +48,6 @@ void	builtin_forwarding(t_tokens *temp, t_mshell *shell)
 void	executable(t_tokens *temp, t_mshell *shell)
 {
 	pid_t	child;
-	pid_t	wpid;
 
 	child = fork();
 	if (child == -1)
@@ -65,8 +64,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 			close(temp->fd_in);
 		if (temp->fd_out != 1)
 			close(temp->fd_out);
-		wpid = waitpid(child, (int *)&g_status, 0);
-		if (wpid == -1)
+		if (waitpid(child, (int *)&g_status, 0) == -1)
 		{
 			perror("waitpid");
 			exit(EXIT_FAILURE);
@@ -87,6 +85,8 @@ void	executable(t_tokens *temp, t_mshell *shell)
 
 void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 {
+	if (has_bad_fd(temp))
+		return ;
 	if (is_builtin(temp))
 		builtin_forwarding(temp, shell);
 	else

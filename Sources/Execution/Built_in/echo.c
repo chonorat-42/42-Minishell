@@ -53,6 +53,8 @@ void	echo_case(char **cmd, int fd)
 	int	printed;
 	int	arg_count;
 
+	// ft_dprintf(2, "got in echo case, fd = %d\n", fd);
+
 	index = 1;
 	printed = 0;
 	option = 0;
