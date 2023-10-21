@@ -103,5 +103,5 @@ void	execution(t_mshell *shell)
 	else
 		exec_forwarding(temp, shell);
 	free(shell->input);
-	ft_free_tokens(&shell->tok_lst);
+	free_tokens(&shell->tok_lst);
 }
