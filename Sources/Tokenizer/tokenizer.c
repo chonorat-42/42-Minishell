@@ -92,32 +92,23 @@ void	split_on_pipes(t_mshell *shell, char *str)
 	while (str[++i])
 	{
 		if (i == 0 && str[i] == '|')
-		{
-			ft_dprintf(2, "minishell: syntax error near unexpected token `|'\n");
-			return (free(shell->input), free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
-		}
+			return (show_error("|", "SYNTAX", 1), free(shell->input), 
+				free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
 		if (is_char_in_set(str[i], "\'\""))
 			move_to_next_quote(str, &i, str[i]);
 		else if (is_char_in_set(str[i], "|"))
 		{
 			if (str[i + 1] == '|')
 				return (free_tokens(&shell->tok_lst), free(shell->input),
-					ft_dprintf(2, "Operator `||' is not supported\n"),
-					get_input_loop(shell));
+					show_error("||", "OPERATOR", 1), get_input_loop(shell));
 			else if (!str[i + 1])
-			{
-				ft_dprintf(2, "minishell: syntax error near unexpected token `|'\n");
-				return (free_tokens(&shell->tok_lst), free(shell->input), free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
-			}
+				return (show_error("|", "SYNTAX", 1), free_tokens(&shell->tok_lst), free(shell->input), 
+					free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
 			pipe_found(shell, str, &i, &j);
 		}
-		else
-		{
-			if (str[i] == '&')
-				return (free_tokens(&shell->tok_lst), free(shell->input),
-					ft_dprintf(2, "Operator `&' and `&&' are not supported\n"),
-					get_input_loop(shell));
-		}
+		else if (str[i] == '&')
+			return (free_tokens(&shell->tok_lst), free(shell->input),
+				show_error("&&", "OPERATOR", 1), get_input_loop(shell));
 	}
 	if (i != j)
 		create_token(shell, i, j, str);
