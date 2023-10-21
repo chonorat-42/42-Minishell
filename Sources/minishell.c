@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-long long	g_status;
+long long	g_status = 0;
 
 static char	**get_exit(t_mshell *shell)
 {
@@ -41,7 +41,6 @@ void	init_shell(t_mshell *shell)
 	shell->tok_lst = NULL;
 	shell->envp = NULL;
 	shell->export = NULL;
-	g_status = 0;
 }
 
 int	main(int argc, char **argv, char **envp)

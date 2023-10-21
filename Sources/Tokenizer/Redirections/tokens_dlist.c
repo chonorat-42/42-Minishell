@@ -91,7 +91,7 @@ void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *i, size_t *j
 	if (!str[(*i)])
 	{
 		show_error("newline", "SYNTAX", 0);
-		return (ft_free_tokens(&shell->tok_lst), free_arr(shell->paths),
+		return (free_tokens(&shell->tok_lst), free_arr(shell->paths),
 			shell->paths = NULL, get_input_loop(shell));
 	}
 	get_redir(str, i, lst);

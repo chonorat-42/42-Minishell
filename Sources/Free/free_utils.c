@@ -41,7 +41,7 @@ void	free_dlist(t_dlist **head)
 	*(head) = NULL;
 }
 
-void	ft_free_tokens(t_tokens	**head)
+void	free_tokens(t_tokens	**head)
 {
 	t_tokens	*temp;
 

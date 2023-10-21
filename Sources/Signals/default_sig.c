@@ -14,54 +14,14 @@
 
 extern long long	g_status;
 
-static void	hd_sig(int signum)
+void	exec_sig(t_mshell *shell)
 {
-	ft_putstr_fd("\b\b  \b\b", 0);
-	if (signum == SIGINT)
-	{
-		g_status = 128 + signum;
-		ft_putstr_fd("\n", 0);
-		free_struct(adress_keeper(NULL));
-		free_dlist(dlist_keeper(NULL));
-		close(*fd_keeper(NULL));
-		exit(g_status);
-	}
+	if (signal(SIGINT, SIG_DFL) == SIG_ERR
+		|| signal(SIGQUIT, SIG_DFL) == SIG_ERR)
+		return (perror("signal"), free_struct(shell), exit(1));
 }
 
-void	heredoc_sig(void)
-{
-	struct sigaction	sig;
-
-	sigemptyset(&sig.sa_mask);
-	sig.sa_flags = SA_RESTART;
-	sig.sa_handler = hd_sig;
-	sigaction(SIGINT, &sig, NULL);
-	sigaction(SIGQUIT, &sig, NULL);
-}
-
-static void	ign_sig(int signum)
-{
-	(void)signum;
-}
-
-void	ignore_sig(void)
-{
-	struct sigaction	sig;
-
-	sigemptyset(&sig.sa_mask);
-	sig.sa_flags = SA_RESTART;
-	sig.sa_handler = ign_sig;
-	sigaction(SIGINT, &sig, NULL);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-void	exec_sig(void)
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-}
-
-static void	get_sig(int signum)
+static void	dfl_sig(int signum)
 {
 	if (signum == SIGINT)
 	{
@@ -76,13 +36,14 @@ static void	get_sig(int signum)
 		ft_putstr_fd("\b\b  \b\b", 0);
 }
 
-void	sig_handler(void)
+void	default_sig(t_mshell *shell)
 {
 	struct sigaction	sig;
 
 	sigemptyset(&sig.sa_mask);
 	sig.sa_flags = SA_RESTART;
-	sig.sa_handler = get_sig;
-	sigaction(SIGINT, &sig, NULL);
-	sigaction(SIGQUIT, &sig, NULL);
+	sig.sa_handler = dfl_sig;
+	if (sigaction(SIGINT, &sig, NULL)  == -1 
+		|| sigaction(SIGQUIT, &sig, NULL) == -1)
+		return (perror("sigaction"), free_struct(shell), exit(1));
 }

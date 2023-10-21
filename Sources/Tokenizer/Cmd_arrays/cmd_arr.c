@@ -105,7 +105,7 @@ void	handle_bad_fd(t_mshell *shell, t_tokens *lst)
 	}
 	// if (issue)
 	// 	return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
-	// 		ft_free_tokens(&lst), get_input_loop(shell));
+	// 		free_tokens(&lst), get_input_loop(shell));
 	temp = lst;
 	issue = 0;
 	while (temp)
@@ -130,7 +130,7 @@ void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 		get_commands_lst(temp->dlst, &new);
 		if (!new)
 			return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
-				close_fd(shell), ft_free_tokens(tk_lst), get_input_loop(shell));
+				close_fd(shell), free_tokens(tk_lst), get_input_loop(shell));
 		temp->cmd_arr = list_into_arr(new);
 		free_dlist(&new);
 		temp = temp->next;
