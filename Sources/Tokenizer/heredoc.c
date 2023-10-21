@@ -62,13 +62,13 @@ void	heredoc(t_mshell *shell, char *delimiter, int fd_in)
 	}
 	lst = NULL;
 	line = NULL;
-	ignore_sig();
+	ignore_sig(shell);
 	fd_keeper(&fd_in);
 	dlist_keeper(&lst);
 	child = fork();
 	if (!child)
 	{
-		heredoc_sig();
+		heredoc_sig(shell, fd_in);
 		while (1)
 		{
 			ft_dprintf(STDOUT_FILENO, "> ");

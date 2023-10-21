@@ -102,10 +102,10 @@ typedef struct s_mshell
 	t_envp		*export;
 }				t_mshell;
 
-void		sig_handler(void);
-void		ignore_sig(void);
-void		heredoc_sig(void);
-void		exec_sig(void);
+void		default_sig(t_mshell *shell);
+void		ignore_sig(t_mshell *shell);
+void		heredoc_sig(t_mshell *shell, int fd);
+void		exec_sig(t_mshell *shell);
 
 char		*get_prompt(t_mshell *shell);
 void		update_shlvl(t_mshell *shell);
@@ -124,7 +124,6 @@ void		free_arr(char **arr);
 void		bin_exec(t_mshell *shell, char **cmd_arr);
 int 		redirect(t_mshell *shell);
 void 		struct_init(t_mshell *shell);
-void		sig_handler(void);
 int			tokenizer(t_mshell *shell);
 
 int			check_option(t_mshell *shell, char **cmd);

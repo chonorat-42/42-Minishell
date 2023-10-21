@@ -54,7 +54,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 		return (free_struct(shell), exit(EXIT_FAILURE));
 	if (!child)
 	{
-		exec_sig();
+		exec_sig(shell);
 		manage_fd(temp->fd_in, temp->fd_out);
 		bin_exec(shell, temp->cmd_arr);
 	}
@@ -65,10 +65,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 		if (temp->fd_out != 1)
 			close(temp->fd_out);
 		if (waitpid(child, (int *)&g_status, 0) == -1)
-		{
-			perror("waitpid");
-			exit(EXIT_FAILURE);
-		}
+			return (perror("waitpid"), free_struct(shell), exit(EXIT_FAILURE));
 	}
 	if (WIFEXITED(g_status))
 		g_status = WEXITSTATUS(g_status);
@@ -91,7 +88,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 		builtin_forwarding(temp, shell);
 	else
 	{
-		ignore_sig();
+		ignore_sig(shell);
 		executable(temp, shell);
 	}
 }
