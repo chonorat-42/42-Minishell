@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ignore_sig.c                                       :+:      :+:    :+:   */
+/*   multifree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/21 14:48:03 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/22 13:48:25 by chonorat         ###   ########.fr       */
+/*   Created: 2023/10/22 14:02:20 by chonorat          #+#    #+#             */
+/*   Updated: 2023/10/22 14:24:04 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ign_sig(int signum)
+void	multifree(void *ptr1, void *ptr2, void *ptr3, void *ptr4)
 {
-	(void)signum;
-}
-
-void	ignore_sig(t_mshell *shell)
-{
-	struct sigaction	sig;
-
-	sigemptyset(&sig.sa_mask);
-	sig.sa_flags = SA_RESTART;
-	sig.sa_handler = ign_sig;
-	if (sigaction(SIGINT, &sig, NULL) == -1)
-		return (perror("sigaction"), free_struct(shell), exit(1));
-	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-		return (perror("signal"), free_struct(shell), exit(1));
+	if (ptr1)
+		free(ptr1);
+	if (ptr2)
+		free(ptr2);
+	if (ptr3)
+		free(ptr3);
+	if (ptr4)
+		free(ptr4);
 }

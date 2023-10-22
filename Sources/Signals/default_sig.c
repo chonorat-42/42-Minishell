@@ -43,7 +43,7 @@ void	default_sig(t_mshell *shell)
 	sigemptyset(&sig.sa_mask);
 	sig.sa_flags = SA_RESTART;
 	sig.sa_handler = dfl_sig;
-	if (sigaction(SIGINT, &sig, NULL)  == -1 
+	if (sigaction(SIGINT, &sig, NULL) == -1
 		|| sigaction(SIGQUIT, &sig, NULL) == -1)
 		return (perror("sigaction"), free_struct(shell), exit(1));
 }

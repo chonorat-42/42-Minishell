@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 14:48:46 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/21 15:38:02 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/22 13:47:51 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,5 @@ void	heredoc_sig(t_mshell *shell, int fd)
 	sig.sa_handler = hd_sig;
 	if (sigaction(SIGINT, &sig, NULL) == -1
 		|| sigaction(SIGQUIT, &sig, NULL) == -1)
-	return (perror("sigaction"), free_struct(shell), close(fd), exit(1));
+		return (perror("sigaction"), free_struct(shell), close(fd), exit(1));
 }

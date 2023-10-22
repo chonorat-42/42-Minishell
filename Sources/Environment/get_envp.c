@@ -45,11 +45,7 @@ void	create_envp_list(t_mshell *shell, t_var *var)
 	new->var.readable = var->readable;
 	new->var.alterable = var->alterable;
 	if (!shell->envp)
-	{
-		shell->envp = new;
-		new->next = NULL;
-		new->prev = NULL;
-	}
+		return (shell->envp = new, new->next = NULL, new->prev = NULL);
 	else
 		t_envp_addback(&shell->envp, &new);
 }
@@ -67,7 +63,7 @@ void	get_envp(t_mshell *shell, char **envp, char **argv)
 		if (!new.name)
 			return (free_struct(shell), exit(1));
 		new.content = ft_substr(envp[j], find_char_index(envp[j], '=') + 1,
-				ft_strlen(envp[j]));\
+				ft_strlen(envp[j]));
 		if (!new.content)
 			return (free(new.name), free_struct(shell), exit(1));
 		new.readable = 1;

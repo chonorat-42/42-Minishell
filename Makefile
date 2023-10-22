@@ -74,6 +74,7 @@ FILES = minishell\
 		Errors/show_error\
 		Free/free\
 		Free/free_utils\
+		Free/multifree\
 		Utils/get_prompt\
 		Utils/adress_keeper\
 		Utils/check_access\
