@@ -67,14 +67,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 		if (waitpid(child, (int *)&g_status, 0) == -1)
 			return (perror("waitpid"), free_struct(shell), exit(EXIT_FAILURE));
 	}
-	if (WIFEXITED(g_status))
-		g_status = WEXITSTATUS(g_status);
-	else if (WIFSIGNALED(g_status))
-	{
-		g_status = WTERMSIG(g_status);
-		if (g_status != 131)
-			g_status += 128;
-	}
+	get_fork_status();
 	if (temp->cmd_arr)
 		free_arr(temp->cmd_arr);
 	temp->cmd_arr = NULL;

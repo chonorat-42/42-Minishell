@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern long long g_status;
+extern long long	g_status;
 
 void	heredoc_into_infile(t_dlist **lst)
 {

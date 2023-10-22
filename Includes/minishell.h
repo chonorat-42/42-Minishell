@@ -157,6 +157,11 @@ void		split_tokens_into_dlst(t_tokens **lst, t_mshell *shell);
 void		manage_quotes_arr(t_tokens	**lst);
 void		create_cmd_arr(t_tokens **tk_lst, t_mshell *shell);
 void		split_on_pipes(t_mshell *shell, char *str);
+void		tokens_addback(t_tokens **lst, t_tokens *new);
+void		init_new_token(t_tokens **new);
+void		pipe_found(t_mshell *shell, char *str, size_t *i, size_t *j);
+void		give_type(t_tokens **lst);
+void		create_token(t_mshell *shell, int i, int j, char *to_add);
 
 void		split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
 char		*join_dlist(t_dlist	*lst);
@@ -183,6 +188,8 @@ void		builtin_forwarding(t_tokens *temp, t_mshell *shell);
 void		executable(t_tokens *temp, t_mshell *shell);
 int			check_access(char *path);
 int			is_builtin(t_tokens *temp);
+char		*get_exec(char *cmd);
+char		*get_path(char *cmd);
 
 void		handle_pipes(t_mshell *shell, t_tokens *temp);
 
@@ -221,6 +228,7 @@ void		multifree(void *ptr1, void *ptr2, void *ptr3, void *ptr4);
 
 //UTILS
 long int	find_char_index(char *str, int c);
+void		get_fork_status(void);
 
 //!!DEBUG!!//
 void		print_arr(char **arr);

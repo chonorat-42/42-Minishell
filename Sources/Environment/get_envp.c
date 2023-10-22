@@ -21,7 +21,6 @@ void	t_envp_addback(t_envp **envp, t_envp **new)
 		temp = temp->next;
 	(*new)->prev = temp;
 	temp->next = *new;
-	(*new)->next = NULL;
 }
 
 void	create_envp_list(t_mshell *shell, t_var *var)
@@ -44,8 +43,10 @@ void	create_envp_list(t_mshell *shell, t_var *var)
 		return (free(new), free(new->var.content), free_struct(shell), exit(1));
 	new->var.readable = var->readable;
 	new->var.alterable = var->alterable;
+	new->next = NULL;
+	new->prev = NULL;
 	if (!shell->envp)
-		return (shell->envp = new, new->next = NULL, new->prev = NULL);
+		shell->envp = new;
 	else
 		t_envp_addback(&shell->envp, &new);
 }

@@ -78,6 +78,8 @@ FILES = minishell\
 		Utils/get_prompt\
 		Utils/adress_keeper\
 		Utils/check_access\
+		Utils/exec_utils\
+		Utils/token_utils\
 		Utils/resources
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))

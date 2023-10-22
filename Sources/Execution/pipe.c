@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern long long g_status; 
+extern long long	g_status;
 
 size_t	count_successive_pipes(t_tokens *temp)
 {
