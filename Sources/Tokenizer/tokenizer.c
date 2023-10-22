@@ -58,7 +58,7 @@ static void	check_operator(t_mshell *shell, char *str, size_t *i, size_t *j)
 	}
 	else if (str[*i] == '&')
 		return (free_tokens(&shell->tok_lst), free(shell->input),
-			show_error("&&", "OPERATOR", 1), get_input_loop(shell));
+			show_error("&&", "OPERATOR", 2), get_input_loop(shell));
 }
 
 void	split_on_pipes(t_mshell *shell, char *str)
@@ -69,9 +69,7 @@ void	split_on_pipes(t_mshell *shell, char *str)
 	i = -1;
 	j = 0;
 	while (str[++i])
-	{
 		check_operator(shell, str, &i, &j);
-	}
 	if (i != j)
 		create_token(shell, i, j, str);
 }
