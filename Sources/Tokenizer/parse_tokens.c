@@ -46,7 +46,6 @@ void	parse_tkn(t_tokens **tok, t_mshell *shell)
 	t_tokens	*temp;
 
 	temp = *tok;
-
 	if (temp->type == PIPE)
 	{
 		show_error("|", "SYNTAX", 0);

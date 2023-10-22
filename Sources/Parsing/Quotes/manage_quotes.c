@@ -24,9 +24,6 @@ void	manage_quotes_arr(t_tokens	**lst)
 		i = 0;
 		while (temp2->cmd_arr[i])
 		{
-			// ft_dprintf(2, "in manage quotes arr, temp->cmd_arr =\n");
-			// print_arr(temp2->cmd_arr);
-			
 			temp = remove_quotes(temp2->cmd_arr[i]);
 			free(temp2->cmd_arr[i]);
 			if (temp)

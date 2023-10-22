@@ -74,7 +74,6 @@ int	handle_fd(int fd, char *file, int type)
 
 	if (fd == -1 && type == CMD)
 	{
-		// ft_dprintf(2, "file = %s\n", file);
 		stat(file, &sb);
 		if (errno == ENOENT)
 			show_error(file, "NO_FILE", 0);
@@ -98,14 +97,9 @@ void	handle_bad_fd(t_mshell *shell, t_tokens *lst)
 	issue = 0;
 	while (temp)
 	{
-		// ft_dprintf(2, "return = %d\n", handle_fd(temp->fd_in, temp->fd_in_str, temp->type));
 		issue += handle_fd(temp->fd_in, temp->fd_in_str, temp->type);
-		// ft_dprintf(2, "in handle bad fd, issue = %d\n", issue);
 		temp = temp->next;
 	}
-	// if (issue)
-	// 	return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
-	// 		free_tokens(&lst), get_input_loop(shell));
 	temp = lst;
 	issue = 0;
 	while (temp)
@@ -113,9 +107,6 @@ void	handle_bad_fd(t_mshell *shell, t_tokens *lst)
 		issue += handle_fd(temp->fd_out, temp->fd_out_str, temp->type);
 		temp = temp->next;
 	}
-	// if (issue)
-	// 	return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
-	// 		ft_free_tokens(&lst), get_input_loop(shell));
 }
 
 void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
@@ -129,13 +120,13 @@ void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 		new = NULL;
 		get_commands_lst(temp->dlst, &new);
 		if (!new)
-			return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
-				close_fd(shell), free_tokens(tk_lst), get_input_loop(shell));
+			return (free_arr(shell->paths), shell->paths = NULL,
+				free(shell->input), close_fd(shell), free_tokens(tk_lst), 
+				get_input_loop(shell));
 		temp->cmd_arr = list_into_arr(new);
 		free_dlist(&new);
 		temp = temp->next;
 	}
-	// handle_bad_fd(shell, *tk_lst);
 	temp = *tk_lst;
 	while (temp)
 	{
