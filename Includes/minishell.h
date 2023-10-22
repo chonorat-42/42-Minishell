@@ -24,6 +24,8 @@
 # define APPEND 9
 # define HEREDOC 10
 # define HEREDEL 11
+# define NO_FILE 12
+# define PERMISSIONS 13
 
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"
@@ -72,6 +74,12 @@ typedef struct s_dlist
 	struct s_dlist	*next;
 }			t_dlist;
 
+typedef struct s_error
+{
+	char			*content;
+	int				type;
+	struct s_error	*next;
+}			t_error;
 typedef struct s_tokens
 {
 	char 	*content;
@@ -81,7 +89,10 @@ typedef struct s_tokens
 	int		fd_out;
 	char	*fd_out_str;
 	int  	type;
+	int		has_bad_fd;
+	int		is_piped;
 	t_dlist	*dlst;
+	t_error	*errors;
 	struct s_tokens *prev;
 	struct s_tokens *next;
 }			t_tokens;
@@ -238,9 +249,17 @@ void	builtin_forwarding(t_tokens *temp, t_mshell *shell);
 void	executable(t_tokens *temp, t_mshell *shell);
 
 void	manage_fd(int fd_in, int fd_out);
-int		handle_fd(int fd, char *file, int type);
+int		handle_fd(int fd, char *file, int type, t_tokens *temp);
 void	close_fd(t_mshell *shell);
 void	close_all_fds(t_tokens *lst, int *old_fd);
 int		has_bad_fd(t_tokens *temp);
+
+void	builtin_forwarding_pipe(t_tokens *temp, t_mshell *shell);
+
+int		cmd_has_pipes(t_tokens *lst);
+
+void	add_error(char *file, int type, t_tokens *temp);
+
+void	print_errors(t_tokens *lst);
 
 # endif

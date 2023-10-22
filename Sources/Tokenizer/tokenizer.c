@@ -51,6 +51,9 @@ void	init_new_token(t_tokens **new)
 	(*new)->fd_in_str = NULL;
 	(*new)->fd_out_str = NULL;
 	(*new)->dlst = NULL;
+	(*new)->has_bad_fd = 0;
+	(*new)->is_piped = 0;
+	(*new)->errors = NULL;
 }
 
 void	create_token(t_mshell *shell, int i, int j, char *to_add)
@@ -138,6 +141,18 @@ void	close_fd(t_mshell *shell)
 	}
 }
 
+void	get_piped_noob(t_tokens *lst)
+{
+	t_tokens	*temp;
+
+	temp=lst;
+	while (temp)
+	{
+		temp->is_piped++;
+		temp = temp->next;
+	}
+}
+
 int	tokenizer(t_mshell *shell)
 {
 	shell->tok_lst = NULL;
@@ -168,5 +183,7 @@ int	tokenizer(t_mshell *shell)
 		|| !shell->tok_lst->cmd_arr[0][0])
 		return (close_fd(shell), ft_free_tokens(&shell->tok_lst), free(shell->input),
 			get_input_loop(shell), 0);
+	if (cmd_has_pipes(shell->tok_lst))
+		get_piped_noob(shell->tok_lst);
 	return (0);
 }

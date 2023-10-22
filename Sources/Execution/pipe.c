@@ -73,6 +73,7 @@ void	parent_management(t_mshell *shell, t_tokens *temp, pid_t child, int *lpids,
 
 int	has_bad_fd(t_tokens *temp)
 {
+	// ft_dprintf(2, "got in has_bad_fd, in = %d, out = %d\n", temp->fd_in, temp->fd_out);
 	if (temp->fd_in == -1 || temp->fd_out == -1)
 		return (1);
 	return (0);
@@ -111,7 +112,8 @@ void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd,
 	manage_fd(temp->fd_in, temp->fd_out);
 	if (is_builtin(temp))
 	{
-		builtin_forwarding(temp, shell);
+		if (!temp->has_bad_fd)
+			builtin_forwarding_pipe(temp, shell);
 		free_struct(shell);
 		free(lpids);
 		exit(g_status);
@@ -184,4 +186,5 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 	}
 	free(lpids);
 	close_all_fds(shell->tok_lst, old_fd);
+	print_errors(shell->tok_lst);
 }

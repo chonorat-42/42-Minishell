@@ -3,16 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   show_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/20 16:18:57 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/22 21:39:49 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 extern long long	g_status;
+
+void	print_errors(t_tokens *lst)
+{
+	t_tokens	*temp_tok;
+	t_error		*temp_err;
+
+	temp_tok = lst;
+	while (temp_tok)
+	{
+		if (temp_tok->errors)
+		{
+			temp_err = temp_tok->errors;
+			ft_putstr_fd("\033[0;37m\033[1mminishell: ", 2);
+			while (temp_err)
+			{
+				if (temp_err->type == NO_FILE)
+					ft_dprintf(2, "%s: No such file or directory\n", temp_err->content);
+				else if (temp_err->type == PERMISSIONS)
+					ft_dprintf(2, "%s: Permission denied\n", temp_err->content);
+				temp_err = temp_err->next;
+			}
+		}
+		temp_tok = temp_tok->next;
+	}
+}
+void	error_addback(t_tokens *tok, char *file, int type)
+{
+	t_error	*new;
+	t_error	*temp;
+
+	new = malloc(sizeof(new));
+	new->next = NULL;
+	if (!tok->errors)
+		tok->errors = new;
+	else
+	{
+		temp = tok->errors;
+		while (temp->next)
+			temp = temp->next;
+		temp->next = new;
+	}
+	new->type = type;
+	new->content = ft_strdup(file);
+}
+
+void	add_error(char *file, int type, t_tokens *temp)
+{
+	if (type == NO_FILE)
+	{
+		error_addback(temp, file, type);
+	}
+
+}
 
 static void	exec_error(char *cmd, int error)
 {
