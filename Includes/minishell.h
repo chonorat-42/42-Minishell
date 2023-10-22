@@ -217,6 +217,7 @@ void		free_dlist(t_dlist **head);
 void		free_struct(t_mshell *shell);
 void		free_arr(char **arr);
 void		free_export(t_envp **export);
+void		multifree(void *ptr1, void *ptr2, void *ptr3, void *ptr4);
 
 //UTILS
 long int	find_char_index(char *str, int c);

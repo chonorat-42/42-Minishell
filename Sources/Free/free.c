@@ -50,7 +50,7 @@ void	free_struct(t_mshell *shell)
 	free_strings_shell(shell);
 	free_arrays_shell(shell);
 	if (shell->tok_lst)
-		 free_tokens(&shell->tok_lst);
+		free_tokens(&shell->tok_lst);
 	if (shell->envp)
 		free_envp(&shell->envp);
 	if (shell->export)

@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/21 21:19:37 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/22 14:23:26 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	show_error(char *cmd, char *type, int error)
 	if (ft_strcmp(type, "EXEC") == 0)
 		exec_error(cmd, error);
 	else if (ft_strcmp(type, "QUOTES") == 0)
-		return (g_status = 1, (void)ft_putendl_fd("quotes are not closed\033[0m", 2));
+		return (g_status = 1,
+			(void)ft_putendl_fd("quotes are not closed\033[0m", 2));
 	else if (ft_strcmp(type, "HEREDOC") == 0)
 		heredoc_error(cmd);
 	else if (ft_strcmp(type, "NO_FILE") == 0)
@@ -68,5 +69,5 @@ void	show_error(char *cmd, char *type, int error)
 	else if (ft_strcmp(type, "SHLVL") == 0)
 		ft_dprintf(2,
 			"warning: shell level (%d) too high, resetting to 1\n\033[0m",
-				error);
+			error);
 }

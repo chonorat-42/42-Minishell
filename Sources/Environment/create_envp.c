@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_envp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:20:57 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/11 17:37:04 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/22 14:18:11 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static void	underscore(t_mshell *shell, char **argv)
 		return (free_struct(shell), exit(2));
 	dir = getcwd(path, PATH_MAX);
 	if (!dir)
-		return (free(new.name), free_struct(shell), exit(2));
+		return (perror("getcwd"), free(new.name), free_struct(shell), exit(2));
 	join = ft_strjoin(dir, "/");
 	if (!join)
 		return (free(new.name), free_struct(shell), exit(2));
@@ -72,12 +72,11 @@ static void	underscore(t_mshell *shell, char **argv)
 		return (free(new.name), free(join), free_struct(shell), exit(2));
 	new.content = ft_strjoin(join, cmd);
 	if (!new.content)
-		return (free(new.name), free(join), free(cmd), free_struct(shell),
-			exit(2));
+		return (multifree(new.name, join, cmd, 0), free_struct(shell), exit(2));
 	new.readable = 1;
 	new.alterable = 0;
 	create_envp_list(shell, &new);
-	return (free(new.name), free(new.content), free(join), free(cmd));
+	return (multifree(new.name, new.content, join, cmd));
 }
 
 static void	old_pwd(t_mshell *shell)
