@@ -29,14 +29,6 @@ int	is_builtin(t_tokens *temp)
 
 void	builtin_forwarding(t_tokens *temp, t_mshell *shell)
 {
-	pid_t	child;
-
-	child = fork();
-	if (!child)
-	{
-		manage_fd(temp->fd_in, temp->fd_out);
-		temp->fd_in = 0;
-		temp->fd_out = 1;
 		if (!ft_strcmp(temp->cmd_arr[0], "echo"))
 			echo_case(temp->cmd_arr, 1);
 		else if (!ft_strcmp(temp->cmd_arr[0], "cd"))
@@ -51,28 +43,6 @@ void	builtin_forwarding(t_tokens *temp, t_mshell *shell)
 			pwd_case(shell, temp->cmd_arr, 1);
 		else if (!ft_strcmp(temp->cmd_arr[0], "export"))
 			export_case(shell, temp->cmd_arr, 1);
-		exit(g_status);
-	}
-	else
-	{
-		if (temp->fd_in != 0)
-			close(temp->fd_in);
-		if (temp->fd_out != 1)
-			close(temp->fd_out);
-		if (waitpid(child, (int *)&g_status, 0) == -1)
-		{
-			perror("waitpid");
-			exit(EXIT_FAILURE);
-		}
-	}
-	if (WIFEXITED(g_status))
-		g_status = WEXITSTATUS(g_status);
-	else if (WIFSIGNALED(g_status))
-	{
-		g_status = WTERMSIG(g_status);
-		if (g_status != 131)
-			g_status += 128;
-	}
 }
 
 void	executable(t_tokens *temp, t_mshell *shell)

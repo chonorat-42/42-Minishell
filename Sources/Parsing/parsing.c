@@ -36,7 +36,7 @@ int	are_all_quotes_closed(char *str)
 	return (1);
 }
 
-void  parsing(t_mshell *shell)
+void	parsing(t_mshell *shell)
 {
 	if (!are_all_quotes_closed(shell->input))
 	{

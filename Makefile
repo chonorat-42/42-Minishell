@@ -43,7 +43,6 @@ FILES = minishell\
 		Parsing/parsing\
 		Parsing/Quotes/manage_quotes\
 		Parsing/Expand/expand\
-		Parsing/Expand/expand_utils\
 		Tokenizer/tokenizer\
 		Tokenizer/heredoc\
 		Tokenizer/parse_tokens\
@@ -80,6 +79,8 @@ FILES = minishell\
 		Utils/check_access\
 		Utils/exec_utils\
 		Utils/token_utils\
+		Utils/dlist_utils\
+		Utils/expand_utils\
 		Utils/resources
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))

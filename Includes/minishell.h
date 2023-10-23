@@ -166,6 +166,8 @@ void		create_token(t_mshell *shell, int i, int j, char *to_add);
 void		split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
 char		*join_dlist(t_dlist	*lst);
 void		expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst);
+size_t		dlst_size(t_dlist *lst);
+char		**list_into_arr(t_dlist *lst);
 
 //FD
 void		get_fds(t_mshell *shell, t_tokens **lst);
