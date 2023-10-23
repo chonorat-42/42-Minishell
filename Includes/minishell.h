@@ -24,6 +24,8 @@
 # define APPEND 9
 # define HEREDOC 10
 # define HEREDEL 11
+# define NO_FILE 12
+# define PERMISSIONS 13
 
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"
@@ -73,19 +75,28 @@ typedef struct s_dlist
 	struct s_dlist	*next;
 }					t_dlist;
 
-typedef struct s_tokens
+typedef struct s_error
 {
 	char			*content;
-	char			**cmd_arr;
-	int				fd_in;
-	char			*fd_in_str;
-	int				fd_out;
-	char			*fd_out_str;
 	int				type;
-	t_dlist			*dlst;
-	struct s_tokens	*prev;
-	struct s_tokens	*next;
-}					t_tokens;
+	struct s_error	*next;
+}			t_error;
+typedef struct s_tokens
+{
+	char 	*content;
+	char	**cmd_arr;
+	int		fd_in;
+	char	*fd_in_str;
+	int		fd_out;
+	char	*fd_out_str;
+	int  	type;
+	int		has_bad_fd;
+	int		is_piped;
+	t_dlist	*dlst;
+	t_error	*errors;
+	struct s_tokens *prev;
+	struct s_tokens *next;
+}			t_tokens;
 
 typedef struct s_mshell
 {
@@ -194,6 +205,8 @@ char		*get_exec(char *cmd);
 char		*get_path(char *cmd);
 
 void		handle_pipes(t_mshell *shell, t_tokens *temp);
+void    builtin_forwarding_pipe(t_tokens *temp, t_mshell *shell);
+int		  cmd_has_pipes(t_tokens *lst);
 
 //BUILTINS
 void		cd_case(t_mshell *shell, char **cmd);
@@ -216,6 +229,10 @@ int			get_current_location(t_mshell *shell);
 //ERROR
 void		builtin_error(char *cmd, char *arg, int error);
 void		show_error(char *cmd, char *type, int error);
+
+void	add_error(char *file, int type, t_tokens *temp);
+void	print_errors(t_tokens *lst);
+void	print_errors_single(t_tokens *token);
 
 //FREE
 void		free_arr(char **arr);

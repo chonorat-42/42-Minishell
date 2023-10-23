@@ -75,16 +75,20 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 				{
 					fd_str = remove_quotes(temp_dlst->next->content);
 					simple_in_case(temp_dlst, &has_fd, &temp_fd);
-					if (handle_fd(temp_fd, fd_str, CMD) && !cmd_has_pipes(*tok))
-						return (free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
+					if (handle_fd(temp_fd, fd_str, CMD, temp_tok))
+					{
+						temp_tok->has_bad_fd++;
+						if (!cmd_has_pipes(*tok))
+							return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
+					}
 				}
 			else if (temp_dlst->content[0] == '<'
 				&& ft_strlen(temp_dlst->content) == 2)
 				{
 					fd_str = remove_quotes(temp_dlst->next->content);
 					heredoc_case(shell, tok, temp_dlst, &has_fd, &temp_fd);
-					if (handle_fd(temp_fd, fd_str, CMD) && !cmd_has_pipes(*tok))
-						return (free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
+					if (handle_fd(temp_fd, fd_str, CMD, temp_tok) && !cmd_has_pipes(*tok))
+						return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
 				}
 				else
 				{
@@ -157,16 +161,24 @@ static void	get_fd_out(t_mshell *shell, t_tokens **tok)
 				{
 					fd_str = remove_quotes(temp_dlst->next->content);
 					simple_out_case(temp_dlst, &has_fd, &temp_fd);
-					if (handle_fd(temp_fd, fd_str, CMD) && !cmd_has_pipes(*tok))
-						return (free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
+					if (handle_fd(temp_fd, fd_str, CMD, temp_tok))
+					{
+						temp_tok->has_bad_fd++;
+						if (!cmd_has_pipes(*tok))
+							return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
+					}
 				}
 			else if (temp_dlst->content[0] == '>'
 				&& ft_strlen(temp_dlst->content) == 2)
 				{
 					fd_str = remove_quotes(temp_dlst->next->content);
 					append_case(temp_dlst, &has_fd, &temp_fd);
-					if (handle_fd(temp_fd, fd_str, CMD) && !cmd_has_pipes(*tok))
-						return (free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
+					if (handle_fd(temp_fd, fd_str, CMD, temp_tok))
+					{
+						temp_tok->has_bad_fd++;
+						if (!cmd_has_pipes(*tok))
+							return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
+					}
 				}
 				else
 				{

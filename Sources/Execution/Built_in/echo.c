@@ -58,14 +58,14 @@ void	echo_case(char **cmd, int fd)
 	while (index < arg_count)
 	{
 		if (printed)
-			ft_putchar_fd(' ', 1);
+			ft_putchar_fd(' ', fd);
 		if (cmd[index])
-			ft_putstr_fd(cmd[index], 1);
+			ft_putstr_fd(cmd[index], fd);
 		printed = 1;
 		index++;
 	}
 	if (!option)
-		ft_putchar_fd('\n', 1);
+		ft_putchar_fd('\n', fd);
 	if (fd != 1)
 		close(fd);
 }

@@ -31,45 +31,25 @@ void	get_commands_lst(t_dlist *base, t_dlist **new)
 	}
 }
 
-int	handle_fd(int fd, char *file, int type)
+int	handle_fd(int fd, char *file, int type, t_tokens *temp)
 {
 	struct stat	sb;
+
+	// ft_dprintf(2, "in handle fd, fd = %d, file = %s\n", fd, file);
 
 	if (fd == -1 && type == CMD)
 	{
 		stat(file, &sb);
 		if (errno == ENOENT)
-			show_error(file, "NO_FILE", 0);
+			add_error(file, NO_FILE, temp);
 		else if (errno == EACCES)
 		{
-			show_error(file, "PERMISSION", 0);
+			add_error(file, PERMISSIONS, temp);
 			g_status = 1;
 		}
 		return (1);
 	}
 	return (0);
-}
-
-void	handle_bad_fd(t_mshell *shell, t_tokens *lst)
-{
-	t_tokens	*temp;
-	int			issue;
-
-	(void)shell;
-	temp = lst;
-	issue = 0;
-	while (temp)
-	{
-		issue += handle_fd(temp->fd_in, temp->fd_in_str, temp->type);
-		temp = temp->next;
-	}
-	temp = lst;
-	issue = 0;
-	while (temp)
-	{
-		issue += handle_fd(temp->fd_out, temp->fd_out_str, temp->type);
-		temp = temp->next;
-	}
 }
 
 void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
