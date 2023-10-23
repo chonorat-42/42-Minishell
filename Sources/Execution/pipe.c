@@ -160,6 +160,12 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 			child_management(shell, temp, new_fd, old_fd, lpids);
 		else
 			parent_management(shell, temp, child, lpids, i, new_fd, old_fd);
+		if (temp->has_bad_fd)
+		{
+			print_errors_single(temp);
+			close(new_fd[0]);
+			close(new_fd[1]);
+		}
 		if (temp->next && temp->next->type == PIPE)
 			temp = temp->next->next;
 		else
@@ -186,5 +192,5 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 	}
 	free(lpids);
 	close_all_fds(shell->tok_lst, old_fd);
-	print_errors(shell->tok_lst);
+	// print_errors_single(shell->tok_lst);
 }

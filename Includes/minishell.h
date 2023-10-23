@@ -262,4 +262,6 @@ void	add_error(char *file, int type, t_tokens *temp);
 
 void	print_errors(t_tokens *lst);
 
+void	print_errors_single(t_tokens *token);
+
 # endif
