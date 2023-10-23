@@ -85,7 +85,7 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 			else if (temp_dlst->content[0] == '<'
 				&& ft_strlen(temp_dlst->content) == 2)
 				{
-					fd_str = remove_quotes(temp_dlst->next->content);
+					//fd_str = remove_quotes(temp_dlst->next->content);
 					heredoc_case(shell, tok, temp_dlst, &has_fd, &temp_fd);
 					if (handle_fd(temp_fd, fd_str, CMD, temp_tok) && !cmd_has_pipes(*tok))
 						return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
