@@ -83,20 +83,20 @@ typedef struct s_error
 }			t_error;
 typedef struct s_tokens
 {
-	char 	*content;
-	char	**cmd_arr;
-	int		fd_in;
-	char	*fd_in_str;
-	int		fd_out;
-	char	*fd_out_str;
-	int  	type;
-	int		has_bad_fd;
-	int		is_piped;
-	t_dlist	*dlst;
-	t_error	*errors;
-	struct s_tokens *prev;
-	struct s_tokens *next;
-}			t_tokens;
+	char			*content;
+	char			**cmd_arr;
+	int				fd_in;
+	char			*fd_in_str;
+	int				fd_out;
+	char			*fd_out_str;
+	int				type;
+	int				has_bad_fd;
+	int				is_piped;
+	t_dlist			*dlst;
+	t_error			*errors;
+	struct s_tokens	*prev;
+	struct s_tokens	*next;
+}					t_tokens;
 
 typedef struct s_mshell
 {
