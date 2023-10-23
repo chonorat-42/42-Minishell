@@ -41,22 +41,6 @@ void	free_dlist(t_dlist **head)
 	*(head) = NULL;
 }
 
-
-void	free_errors(t_error *error)
-{
-	t_error	*temp;
-
-	while (error)
-	{
-		if (error->content)
-			free(error->content);
-		temp = error;
-		error = temp->next;
-		free(temp);
-	}
-	error = NULL;
-}
-
 void	free_tokens(t_tokens	**head)
 {
 	t_tokens	*temp;

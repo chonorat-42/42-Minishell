@@ -55,6 +55,7 @@ FILES = minishell\
 		Execution/execution\
 		Execution/binary_exec\
 		Execution/pipe\
+		Execution/is_builtin\
 		Execution/Built_in/echo\
 		Execution/Built_in/cd\
 		Execution/Built_in/env\
@@ -71,6 +72,7 @@ FILES = minishell\
 		Signals/ignore_sig\
 		Errors/builtin_error\
 		Errors/show_error\
+		Errors/token_error\
 		Free/free\
 		Free/free_utils\
 		Free/multifree\

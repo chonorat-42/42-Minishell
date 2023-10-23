@@ -78,7 +78,7 @@ void	get_piped_noob(t_tokens *lst)
 {
 	t_tokens	*temp;
 
-	temp=lst;
+	temp = lst;
 	while (temp)
 	{
 		temp->is_piped++;

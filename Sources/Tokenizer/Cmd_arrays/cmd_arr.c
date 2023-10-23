@@ -35,8 +35,6 @@ int	handle_fd(int fd, char *file, int type, t_tokens *temp)
 {
 	struct stat	sb;
 
-	// ft_dprintf(2, "in handle fd, fd = %d, file = %s\n", fd, file);
-
 	if (fd == -1 && type == CMD)
 	{
 		stat(file, &sb);
