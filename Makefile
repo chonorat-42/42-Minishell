@@ -43,7 +43,6 @@ FILES = minishell\
 		Parsing/parsing\
 		Parsing/Quotes/manage_quotes\
 		Parsing/Expand/expand\
-		Parsing/Expand/expand_utils\
 		Tokenizer/tokenizer\
 		Tokenizer/heredoc\
 		Tokenizer/parse_tokens\
@@ -67,14 +66,21 @@ FILES = minishell\
 		Execution/Built_in/pwd\
 		Execution/Built_in/Exit/exit\
 		Execution/Built_in/Exit/exit_utils\
-		Signals/sig_handler\
+		Signals/default_sig\
+		Signals/heredoc_sig\
+		Signals/ignore_sig\
 		Errors/builtin_error\
 		Errors/show_error\
 		Free/free\
 		Free/free_utils\
+		Free/multifree\
 		Utils/get_prompt\
 		Utils/adress_keeper\
 		Utils/check_access\
+		Utils/exec_utils\
+		Utils/token_utils\
+		Utils/dlist_utils\
+		Utils/expand_utils\
 		Utils/resources
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))

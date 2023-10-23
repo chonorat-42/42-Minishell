@@ -14,43 +14,6 @@
 
 extern long long	g_status;
 
-size_t	dlst_size(t_dlist *lst)
-{
-	size_t	res;
-	t_dlist	*temp;
-
-	res = 0;
-	temp = lst;
-	while (temp)
-	{
-		res++;
-		temp = temp->next;
-	}
-	return (res);
-}
-
-char	**list_into_arr(t_dlist *lst)
-{
-	char	**res;
-	t_dlist	*temp;
-	size_t	size;
-	size_t	j;
-
-	res = NULL;
-	temp = lst;
-	size = dlst_size(lst);
-	res = malloc(sizeof(char *) * (size + 1));
-	res[size] = NULL;
-	j = 0;
-	while (j < size)
-	{
-		res[j] = ft_strdup(temp->content);
-		j++;
-		temp = temp->next;
-	}
-	return (res);
-}
-
 void	get_commands_lst(t_dlist *base, t_dlist **new)
 {
 	t_dlist	*temp;
@@ -76,7 +39,6 @@ int	handle_fd(int fd, char *file, int type, t_tokens *temp)
 
 	if (fd == -1 && type == CMD)
 	{
-		// ft_dprintf(2, "file = %s\n", file);
 		stat(file, &sb);
 		if (errno == ENOENT)
 			add_error(file, NO_FILE, temp);
@@ -90,36 +52,6 @@ int	handle_fd(int fd, char *file, int type, t_tokens *temp)
 	return (0);
 }
 
-// void	handle_bad_fd(t_mshell *shell, t_tokens *lst)
-// {
-// 	t_tokens	*temp;
-// 	int			issue;
-
-// 	(void)shell;
-// 	temp = lst;
-// 	issue = 0;
-// 	while (temp)
-// 	{
-// 		// ft_dprintf(2, "return = %d\n", handle_fd(temp->fd_in, temp->fd_in_str, temp->type));
-// 		issue += handle_fd(temp->fd_in, temp->fd_in_str, temp->type);
-// 		// ft_dprintf(2, "in handle bad fd, issue = %d\n", issue);
-// 		temp = temp->next;
-// 	}
-// 	// if (issue)
-// 	// 	return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
-// 	// 		ft_free_tokens(&lst), get_input_loop(shell));
-// 	temp = lst;
-// 	issue = 0;
-// 	while (temp)
-// 	{
-// 		issue += handle_fd(temp->fd_out, temp->fd_out_str, temp->type);
-// 		temp = temp->next;
-// 	}
-// 	// if (issue)
-// 	// 	return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
-// 	// 		ft_free_tokens(&lst), get_input_loop(shell));
-// }
-
 void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 {
 	t_tokens	*temp;
@@ -131,13 +63,13 @@ void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 		new = NULL;
 		get_commands_lst(temp->dlst, &new);
 		if (!new)
-			return (free_arr(shell->paths), shell->paths = NULL, free(shell->input),
-				close_fd(shell), ft_free_tokens(tk_lst), get_input_loop(shell));
+			return (free_arr(shell->paths), shell->paths = NULL,
+				free(shell->input), close_fd(shell), free_tokens(tk_lst),
+				get_input_loop(shell));
 		temp->cmd_arr = list_into_arr(new);
 		free_dlist(&new);
 		temp = temp->next;
 	}
-	// handle_bad_fd(shell, *tk_lst);
 	temp = *tk_lst;
 	while (temp)
 	{

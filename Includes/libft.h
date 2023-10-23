@@ -52,7 +52,6 @@ void		*ft_calloc(size_t count, size_t size);
 char		*ft_strdup(const char *s1);
 int			ft_strcmp(const char *s1, const char *s2);
 
-
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		*ft_strjoin(char const *s1, char const *s2);
 char		*ft_strtrim(char const *s1, char const *set);
@@ -65,8 +64,8 @@ int			ft_putstr_fd(char *s, int fd);
 int			ft_putendl_fd(char *s, int fd);
 int			ft_putnbr_fd(int n, int fd);
 
-size_t  	ft_arr_size(char **arr);
-char    	**ft_arr_copy(char **envp, size_t size);
+size_t		ft_arr_size(char **arr);
+char		**ft_arr_copy(char **envp, size_t size);
 long		ft_char_index(char *str, int c);
 
 t_list		*ft_lstnew(void *content);
@@ -84,15 +83,19 @@ const char	*ft_search_arg(va_list arg, const char *format, size_t *char_count);
 const char	*ft_puttext(size_t *char_count, const char *format);
 void		ft_putchar_pf(int c, size_t *char_count);
 void		ft_putnbr_base_p(size_t n, const char *base, size_t *char_count);
-void		ft_putnbr_base(long long int n, const char *base, size_t *char_count);
+void		ft_putnbr_base(long long int n, const char *base,
+				size_t *char_count);
 void		ft_putstr_pf(const char *s, size_t *char_count);
 
 int			ft_dprintf(int fd, const char *format, ...);
 const char	*ft_puttext_fd(size_t *char_count, const char *format, int fd);
-const char	*ft_search_arg_fd(va_list arg, const char *format, size_t *char_count, int fd);
-void		ft_dputnbr_base(long long int n, const char *base, size_t *char_count, int fd);
+const char	*ft_search_arg_fd(va_list arg, const char *format,
+				size_t *char_count, int fd);
+void		ft_dputnbr_base(long long int n, const char *base,
+				size_t *char_count, int fd);
 void		ft_putchar_dpf(int c, size_t *char_count, int fd);
-void		ft_putnbr_base_dp(size_t n, const char *base, size_t *char_count, int fd);
+void		ft_putnbr_base_dp(size_t n, const char *base,
+				size_t *char_count, int fd);
 void		ft_putstr_dpf(const char *s, size_t *char_count, int fd);
 
 char		*get_next_line(int fd);
@@ -108,7 +111,5 @@ char		*read_save(int fd, char *stash);
 void		ft_free_null(char **str);
 char		*strjoin_free_first(char **s1, char *s2);
 char		*strjoin_free_both(char *s1, char *s2);
-
-
 
 #endif

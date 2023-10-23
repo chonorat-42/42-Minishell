@@ -47,16 +47,6 @@ void	builtin_forwarding_pipe(t_tokens *temp, t_mshell *shell)
 
 void	builtin_forwarding(t_tokens *temp, t_mshell *shell)
 {
-	// pid_t	child;
-
-	// child = fork();
-	// if (!child)
-	// {
-		// manage_fd(temp->fd_in, temp->fd_out);
-		// temp->fd_in = 0;
-		// temp->fd_out = 1;
-	// ft_dprintf(2, "in exec forwarding, fd_out = %d\n", temp->fd_out);
-	
 	if (!ft_strcmp(temp->cmd_arr[0], "echo"))
 		echo_case(temp->cmd_arr, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "cd"))
@@ -71,28 +61,6 @@ void	builtin_forwarding(t_tokens *temp, t_mshell *shell)
 		pwd_case(shell, temp->cmd_arr, temp->fd_out);
 	else if (!ft_strcmp(temp->cmd_arr[0], "export"))
 		export_case(shell, temp->cmd_arr, temp->fd_out);
-		// exit(g_status);
-	// }
-	// else
-	// {
-	// 	if (temp->fd_in != 0)
-	// 		close(temp->fd_in);
-	// 	if (temp->fd_out != 1)
-	// 		close(temp->fd_out);
-	// 	if (waitpid(child, (int *)&g_status, 0) == -1)
-	// 	{
-	// 		perror("waitpid");
-	// 		exit(EXIT_FAILURE);
-	// 	}
-	// }
-	// if (WIFEXITED(g_status))
-	// 	g_status = WEXITSTATUS(g_status);
-	// else if (WIFSIGNALED(g_status))
-	// {
-	// 	g_status = WTERMSIG(g_status);
-	// 	if (g_status != 131)
-	// 		g_status += 128;
-	// }
 }
 
 void	executable(t_tokens *temp, t_mshell *shell)
@@ -104,7 +72,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 		return (free_struct(shell), exit(EXIT_FAILURE));
 	if (!child)
 	{
-		exec_sig();
+		exec_sig(shell);
 		manage_fd(temp->fd_in, temp->fd_out);
 		temp->fd_in = 0;
 		temp->fd_out = 1;
@@ -117,19 +85,9 @@ void	executable(t_tokens *temp, t_mshell *shell)
 		if (temp->fd_out != 1)
 			close(temp->fd_out);
 		if (waitpid(child, (int *)&g_status, 0) == -1)
-		{
-			perror("waitpid");
-			exit(EXIT_FAILURE);
-		}
+			return (perror("waitpid"), free_struct(shell), exit(EXIT_FAILURE));
 	}
-	if (WIFEXITED(g_status))
-		g_status = WEXITSTATUS(g_status);
-	else if (WIFSIGNALED(g_status))
-	{
-		g_status = WTERMSIG(g_status);
-		if (g_status != 131)
-			g_status += 128;
-	}
+	get_fork_status();
 	if (temp->cmd_arr)
 		free_arr(temp->cmd_arr);
 	temp->cmd_arr = NULL;
@@ -147,7 +105,7 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 		builtin_forwarding(temp, shell);
 	else
 	{
-		ignore_sig();
+		ignore_sig(shell);
 		executable(temp, shell);
 	}
 }
@@ -162,5 +120,5 @@ void	execution(t_mshell *shell)
 	else
 		exec_forwarding(temp, shell);
 	free(shell->input);
-	ft_free_tokens(&shell->tok_lst);
+	free_tokens(&shell->tok_lst);
 }

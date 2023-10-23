@@ -16,7 +16,7 @@ void	get_input_loop(t_mshell *shell)
 {
 	while (1)
 	{
-		sig_handler();
+		default_sig(shell);
 		shell->input = readline(get_prompt(shell));
 		get_svar(shell);
 		if (!shell->input)

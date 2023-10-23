@@ -76,13 +76,33 @@ void	create_token(t_mshell *shell, int i, int j, char *to_add)
 	init_new_token(&new);
 }
 
-void	pipe_found(t_mshell *shell, char *str, size_t *i, size_t *j)
+static void	check_operator(t_mshell *shell, char *str, size_t *i, size_t *j)
 {
-	create_token(shell, *i, *j, str);
-	*j = *i;
-	(*i)++;
-	create_token(shell, *i, *j, str);
-	*j = *i;
+	if (str[*i + 1] && (*i == 0 && str[*i] == '|') && str[*i + 1] == '|')
+		return (show_error("||", "OPERATOR", 1), free(shell->input),
+			free_arr(shell->paths), shell->paths = NULL,
+			get_input_loop(shell));
+	else if (*i == 0 && str[*i] == '|')
+		return (show_error("|", "SYNTAX", 1), free(shell->input),
+			free_arr(shell->paths), shell->paths = NULL,
+			get_input_loop(shell));
+	if (is_char_in_set(str[*i], "\'\""))
+		move_to_next_quote(str, i, str[*i]);
+	else if (is_char_in_set(str[*i], "|"))
+	{
+		if (!str[*i + 1])
+			return (show_error("|", "SYNTAX", 1),
+				free_tokens(&shell->tok_lst), free(shell->input),
+				free_arr(shell->paths), shell->paths = NULL,
+				get_input_loop(shell));
+		else if (str[*i + 1] == '|')
+			return (free_tokens(&shell->tok_lst), free(shell->input),
+				show_error("||", "OPERATOR", 1), get_input_loop(shell));
+		pipe_found(shell, str, i, j);
+	}
+	else if (str[*i] == '&')
+		return (free_tokens(&shell->tok_lst), free(shell->input),
+			show_error("&&", "OPERATOR", 2), get_input_loop(shell));
 }
 
 void	split_on_pipes(t_mshell *shell, char *str)
@@ -93,35 +113,7 @@ void	split_on_pipes(t_mshell *shell, char *str)
 	i = -1;
 	j = 0;
 	while (str[++i])
-	{
-		if (i == 0 && str[i] == '|')
-		{
-			ft_dprintf(2, "minishell: syntax error near unexpected token `|'\n");
-			return (free(shell->input), free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
-		}
-		if (is_char_in_set(str[i], "\'\""))
-			move_to_next_quote(str, &i, str[i]);
-		else if (is_char_in_set(str[i], "|"))
-		{
-			if (str[i + 1] == '|')
-				return (ft_free_tokens(&shell->tok_lst), free(shell->input),
-					ft_dprintf(2, "Operator `||' is not supported\n"),
-					get_input_loop(shell));
-			else if (!str[i + 1])
-			{
-				ft_dprintf(2, "minishell: syntax error near unexpected token `|'\n");
-				return (ft_free_tokens(&shell->tok_lst), free(shell->input), free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
-			}
-			pipe_found(shell, str, &i, &j);
-		}
-		else
-		{
-			if (str[i] == '&')
-				return (ft_free_tokens(&shell->tok_lst), free(shell->input),
-					ft_dprintf(2, "Operator `&' and `&&' are not supported\n"),
-					get_input_loop(shell));
-		}
-	}
+		check_operator(shell, str, &i, &j);
 	if (i != j)
 		create_token(shell, i, j, str);
 }
@@ -161,27 +153,15 @@ int	tokenizer(t_mshell *shell)
 		return (free(shell->input), get_input_loop(shell), 0);
 	parse_tkn(&shell->tok_lst, shell);
 	split_tokens_into_dlst(&shell->tok_lst, shell);
-
-	// ft_dprintf(2, "just after split tokens into dlst, dlst =\n");
-	// print_dlist(shell->tok_lst->dlst);
-
 	get_fds(shell, &shell->tok_lst);
-
-	// ft_dprintf(2, "after get fd\n");
-
 	create_cmd_arr(&shell->tok_lst, shell);
-
-	// ft_dprintf(2, "after create cmd arr\n");
-
 	manage_quotes_arr(&shell->tok_lst);
-
-	// ft_dprintf(2, "after manage quote arr fd\n");
-
 	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
 	if (!shell->tok_lst || !shell->tok_lst->cmd_arr
 		|| !shell->tok_lst->cmd_arr[0][0])
-		return (close_fd(shell), ft_free_tokens(&shell->tok_lst), free(shell->input),
+		return (close_fd(shell), free_tokens(&shell->tok_lst),
+			free(shell->input),
 			get_input_loop(shell), 0);
 	if (cmd_has_pipes(shell->tok_lst))
 		get_piped_noob(shell->tok_lst);

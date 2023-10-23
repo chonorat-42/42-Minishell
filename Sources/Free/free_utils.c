@@ -41,6 +41,7 @@ void	free_dlist(t_dlist **head)
 	*(head) = NULL;
 }
 
+
 void	free_errors(t_error *error)
 {
 	t_error	*temp;
@@ -54,10 +55,9 @@ void	free_errors(t_error *error)
 		free(temp);
 	}
 	error = NULL;
-
 }
 
-void	ft_free_tokens(t_tokens	**head)
+void	free_tokens(t_tokens	**head)
 {
 	t_tokens	*temp;
 
