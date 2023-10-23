@@ -43,6 +43,7 @@ FILES = minishell\
 		Parsing/parsing\
 		Parsing/Quotes/manage_quotes\
 		Parsing/Expand/expand\
+		Parsing/Expand/expand_dlst\
 		Tokenizer/tokenizer\
 		Tokenizer/heredoc\
 		Tokenizer/parse_tokens\

@@ -160,6 +160,7 @@ size_t		last_envvar_char(char *str);
 int			is_char_in_set(char c, char *set);
 int			are_all_quotes_closed(char *str);
 void		move_to_next_quote(char *str, size_t *i, char c);
+void		expand_dlst(t_mshell *shell, t_dlist **lst, t_envp *envp);
 
 //TOKENS
 int			tokenizer(t_mshell *shell);
