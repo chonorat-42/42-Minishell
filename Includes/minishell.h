@@ -169,7 +169,7 @@ void		manage_quotes_arr(t_tokens	**lst);
 void		create_cmd_arr(t_tokens **tk_lst, t_mshell *shell);
 void		split_on_pipes(t_mshell *shell, char *str);
 void		tokens_addback(t_tokens **lst, t_tokens *new);
-void		init_new_token(t_tokens **new);
+void		init_new_token(t_tokens *new);
 void		pipe_found(t_mshell *shell, char *str, size_t *i, size_t *j);
 void		give_type(t_tokens **lst);
 void		create_token(t_mshell *shell, int i, int j, char *to_add);
@@ -184,7 +184,7 @@ char		**list_into_arr(t_dlist *lst);
 void		get_fds(t_mshell *shell, t_tokens **lst);
 void		get_fd_in(t_mshell *shell, t_tokens **tok);
 void		manage_fd(int fd_in, int fd_out);
-int			handle_fd(int fd, char *file, int type);
+int			handle_fd(int fd, char *file, int type, t_tokens *temp);
 void		close_fd(t_mshell *shell);
 void		close_all_fds(t_tokens *lst, int *old_fd);
 int			has_bad_fd(t_tokens *temp);
@@ -205,8 +205,8 @@ char		*get_exec(char *cmd);
 char		*get_path(char *cmd);
 
 void		handle_pipes(t_mshell *shell, t_tokens *temp);
-void    builtin_forwarding_pipe(t_tokens *temp, t_mshell *shell);
-int		  cmd_has_pipes(t_tokens *lst);
+void		builtin_forwarding_pipe(t_tokens *temp, t_mshell *shell);
+int			cmd_has_pipes(t_tokens *lst);
 
 //BUILTINS
 void		cd_case(t_mshell *shell, char **cmd);
@@ -230,9 +230,9 @@ int			get_current_location(t_mshell *shell);
 void		builtin_error(char *cmd, char *arg, int error);
 void		show_error(char *cmd, char *type, int error);
 
-void	add_error(char *file, int type, t_tokens *temp);
-void	print_errors(t_tokens *lst);
-void	print_errors_single(t_tokens *token);
+void		add_error(char *file, int type, t_tokens *temp);
+void		print_errors(t_tokens *lst);
+void		print_errors_single(t_tokens *token);
 
 //FREE
 void		free_arr(char **arr);

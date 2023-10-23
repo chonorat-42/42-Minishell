@@ -12,50 +12,6 @@
 
 #include "minishell.h"
 
-void	give_type(t_tokens **lst)
-{
-	t_tokens	*temp;
-
-	temp = *lst;
-	while (temp)
-	{
-		if (temp->content[0] == '|')
-			temp->type = PIPE;
-		else
-			temp->type = CMD;
-		temp = temp->next;
-	}
-}
-
-void	tokens_addback(t_tokens **lst, t_tokens *new)
-{
-	t_tokens	*temp;
-
-	temp = *lst;
-	while (temp->next)
-		temp = temp->next;
-	new->next = NULL;
-	new->prev = temp;
-	temp->next = new;
-}
-
-void	init_new_token(t_tokens **new)
-{
-	(*new)->cmd_arr = NULL;
-	if ((*new)->content[0] == '|')
-		(*new)->type = PIPE;
-	else
-		(*new)->type = CMD;
-	(*new)->fd_in = 0;
-	(*new)->fd_out = 1;
-	(*new)->fd_in_str = NULL;
-	(*new)->fd_out_str = NULL;
-	(*new)->dlst = NULL;
-	(*new)->has_bad_fd = 0;
-	(*new)->is_piped = 0;
-	(*new)->errors = NULL;
-}
-
 void	create_token(t_mshell *shell, int i, int j, char *to_add)
 {
 	t_tokens	*new;
@@ -73,7 +29,7 @@ void	create_token(t_mshell *shell, int i, int j, char *to_add)
 	}
 	else
 		tokens_addback(&shell->tok_lst, new);
-	init_new_token(&new);
+	init_new_token(new);
 }
 
 static void	check_operator(t_mshell *shell, char *str, size_t *i, size_t *j)
@@ -116,21 +72,6 @@ void	split_on_pipes(t_mshell *shell, char *str)
 		check_operator(shell, str, &i, &j);
 	if (i != j)
 		create_token(shell, i, j, str);
-}
-
-void	close_fd(t_mshell *shell)
-{
-	t_tokens	*temp;
-
-	temp = shell->tok_lst;
-	while (temp)
-	{
-		if (temp->fd_in != 0 && temp->fd_in != -1)
-			close (temp->fd_in);
-		if (temp->fd_out != 1 && temp->fd_out != -1)
-			close(temp->fd_out);
-		temp = temp->next;
-	}
 }
 
 void	get_piped_noob(t_tokens *lst)

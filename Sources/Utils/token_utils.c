@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 17:26:44 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/23 12:02:38 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/23 15:00:40 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,20 @@ void	tokens_addback(t_tokens **lst, t_tokens *new)
 	temp->next = new;
 }
 
-void	init_new_token(t_tokens **new)
+void	init_new_token(t_tokens *new)
 {
-	(*new)->cmd_arr = NULL;
-	if ((*new)->content[0] == '|')
-		(*new)->type = PIPE;
+	new->cmd_arr = NULL;
+	if (new->content[0] == '|')
+		new->type = PIPE;
 	else
-		(*new)->type = CMD;
-	(*new)->fd_in = 0;
-	(*new)->fd_out = 1;
-	(*new)->fd_in_str = NULL;
-	(*new)->fd_out_str = NULL;
-	(*new)->dlst = NULL;
+		new->type = CMD;
+	new->fd_in = 0;
+	new->fd_out = 1;
+	new->fd_in_str = NULL;
+	new->fd_out_str = NULL;
+	new->dlst = NULL;
+	new->errors = NULL;
+	new->has_bad_fd = 0;
 }
 
 void	close_fd(t_mshell *shell)

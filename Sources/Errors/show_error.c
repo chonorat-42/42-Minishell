@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   show_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             *
-/*   Updated: 2023/10/23 14:28:00 by pgouasmi         ###   ########.fr       */
+/*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
+/*   Updated: 2023/10/23 15:03:02 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	print_errors(t_tokens *lst)
 	}
 	ft_dprintf(2, "\033[0m");
 }
+
 void	error_addback(t_tokens *tok, char *file, int type)
 {
 	t_error	*new;
