@@ -52,7 +52,10 @@ void	free_tokens(t_tokens	**head)
 		if ((*head)->cmd_arr)
 			free_arr((*head)->cmd_arr);
 		if ((*head)->dlst)
+		{
 			free_dlist(&(*head)->dlst);
+			(*head)->dlst = NULL;
+		}
 		if ((*head)->fd_in_str)
 			free((*head)->fd_in_str);
 		if ((*head)->fd_out != 1)

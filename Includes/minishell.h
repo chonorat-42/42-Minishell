@@ -91,7 +91,8 @@ typedef struct s_error
 	char			*content;
 	int				type;
 	struct s_error	*next;
-}			t_error;
+}					t_error;
+
 typedef struct s_tokens
 {
 	char			*content;
@@ -191,6 +192,8 @@ char		*join_dlist(t_dlist	*lst);
 void		expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst);
 size_t		dlst_size(t_dlist *lst);
 char		**list_into_arr(t_dlist *lst);
+void		get_chevrons(char *str, size_t *i, char c, t_dlist **lst);
+void		move_to_last_quote(char *str, size_t *i, char c);
 
 //FD
 void		get_fds(t_mshell *shell, t_tokens **lst);

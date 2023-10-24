@@ -64,6 +64,7 @@ static void	heredoc_loop(t_mshell *shell, char *delim, int fd_in, int del)
 	trim = NULL;
 	lst = NULL;
 	heredoc_sig(shell, fd_in);
+	dlist_keeper(&lst);
 	while (1)
 	{
 		ft_dprintf(STDOUT_FILENO, "> ");
@@ -73,11 +74,10 @@ static void	heredoc_loop(t_mshell *shell, char *delim, int fd_in, int del)
 			return (close(fd_in), free_struct(shell), free(line), exit(1));
 		if (!ft_strcmp(trim, delim))
 			return (delimiter_found(shell, lst, fd_in, del), close(fd_in),
-				multifree(line, delim, trim, 0), free_struct(shell), exit(0));
+				multifree(line, trim, 0, 0), free_struct(shell), exit(0));
 		else
 		{
 			split_into_dlst(&lst, line, ft_strlen(line), 0);
-			dlist_keeper(&lst);
 			multifree(line, trim, 0, 0);
 		}
 	}
@@ -96,6 +96,8 @@ void	heredoc(t_mshell *shell, char *delim, int fd_in)
 		new_del = remove_quotes(delim);
 		free(delim);
 		delim = new_del;
+		ft_dprintf(2, "in dlst, content =\n");
+		print_dlist(shell->tok_lst->dlst);
 	}
 	ignore_sig(shell);
 	fd_keeper(&fd_in);
