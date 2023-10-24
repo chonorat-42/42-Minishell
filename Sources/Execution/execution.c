@@ -80,9 +80,9 @@ void	executable(t_tokens *temp, t_mshell *shell)
 	}
 	else
 	{
-		if (temp->fd_in != 0)
+		if (temp->fd_in != STDIN_FILENO)
 			close(temp->fd_in);
-		if (temp->fd_out != 1)
+		if (temp->fd_out != STDOUT_FILENO)
 			close(temp->fd_out);
 		if (waitpid(child, (int *)&g_status, 0) == -1)
 			return (perror("waitpid"), free_struct(shell), exit(EXIT_FAILURE));
@@ -95,7 +95,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 
 void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 {
-	// ft_dprintf(2, "in exec forwarding, cmd = %s, fd = %d\n", temp->cmd_arr[0], temp->fd_out);
+	// ft_dprintf(2, "in exec forwarding, cmd = %s, fd out = %d, fd_in = %d\n", temp->cmd_arr[0], temp->fd_out, temp->fd_in);
 	if (has_bad_fd(temp))
 	{
 		g_status = 1;
@@ -114,7 +114,7 @@ void	execution(t_mshell *shell)
 {
 	t_tokens	*temp;
 
-	ft_dprintf(2, "got in execution\n");
+	// ft_dprintf(2, "got in execution\n");
 	temp = shell->tok_lst;
 	if (temp->next && temp->next->type == PIPE)
 		handle_pipes(shell, temp);

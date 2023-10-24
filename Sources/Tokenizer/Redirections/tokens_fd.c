@@ -62,10 +62,13 @@ void	init_fdhandler(t_fdhandler *handler, t_mshell *shell, t_tokens *tokens)
 	handler->fd_str = NULL;
 }
 
-void	init_handler_loop(t_fdhandler *handler)
+void	init_handler_loop(t_fdhandler *handler, int type)
 {
 	handler->has_fd = 0;
-	handler->temp_fd = 0;
+	if (type == 1)
+		handler->temp_fd = 1;
+	else
+		handler->temp_fd = 0;
 	handler->dlist = handler->tok->dlst;
 }
 
@@ -111,7 +114,7 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 	init_fdhandler(&handler, shell, *tok);
 	while(handler.tok)
 	{
-		init_handler_loop(&handler);
+		init_handler_loop(&handler, 0);
 		while (handler.dlist)
 		{
 			if (!ft_strcmp(handler.dlist->content, "<"))
@@ -208,7 +211,7 @@ void	get_fd_out(t_mshell *shell, t_tokens **tok)
 	init_fdhandler(&handler, shell, *tok);
 	while(handler.tok)
 	{
-		init_handler_loop(&handler);
+		init_handler_loop(&handler, 1);
 		while (handler.dlist)
 		{
 			if (!ft_strcmp(handler.dlist->content, ">"))

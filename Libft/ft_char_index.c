@@ -30,7 +30,8 @@ long	ft_char_index(char *str, int c)
 		}
 		if (str[i] == c)
 			return (i);
-		i++;
+		if (str[i])
+			i++;
 	}
 	return (-1);
 }

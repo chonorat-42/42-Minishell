@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 16:56:10 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/22 19:22:24 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/24 14:15:56 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ char	*get_path(char *cmd)
 
 void	manage_fd(int fd_in, int fd_out)
 {
-	if (fd_out != 1)
+	if (fd_out != STDOUT_FILENO)
 	{
 		dup2(fd_out, STDOUT_FILENO);
 		close(fd_out);
 	}
-	if (fd_in != 0)
+	if (fd_in != STDIN_FILENO)
 	{
 		dup2(fd_in, STDIN_FILENO);
 		close(fd_in);
