@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:13:46 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/23 15:16:22 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/24 12:35:18 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void	print_errors_single(t_tokens *token)
 		while (temp_err)
 		{
 			if (temp_err->type == NO_FILE)
-				show_error(temp_err->content, "NO_FILE", 0);
-			else if (temp_err->type == PERMISSIONS)
-				show_error(temp_err->content, "PERMISSION", 0);
+				show_error(temp_err->content, NO_F, 0);
+			else if (temp_err->type == PERM)
+				show_error(temp_err->content, PERM, 0);
 			temp_err = temp_err->next;
 		}
 	}
@@ -44,9 +44,9 @@ void	print_errors(t_tokens *lst)
 			while (temp_err)
 			{
 				if (temp_err->type == NO_FILE)
-					show_error(temp_err->content, "NO_FILE", 0);
+					show_error(temp_err->content, NO_F, 0);
 				else if (temp_err->type == PERMISSIONS)
-					show_error(temp_err->content, "PERMISSION", 0);
+					show_error(temp_err->content, PERM, 0);
 				temp_err = temp_err->next;
 			}
 		}

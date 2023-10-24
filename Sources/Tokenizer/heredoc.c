@@ -49,7 +49,7 @@ static char	*get_hd_input(t_mshell *shell, char *delim, int fd, t_dlist *lst)
 	line = get_next_line(0);
 	if (!line)
 		return ((void)ft_putchar_fd('\n', 0),
-			show_error(delim, "HEREDOC", 0),
+			show_error(delim, HDOC, 0),
 			free_dlist(&lst), free_struct(shell), close(fd), exit(0), NULL);
 	return (line);
 }

@@ -40,7 +40,7 @@ void	parsing(t_mshell *shell)
 {
 	if (!are_all_quotes_closed(shell->input))
 	{
-		show_error(NULL, "QUOTES", 1);
+		show_error(NULL, QUOTES, 1);
 		return (free(shell->input), free_arr(shell->paths),
 			shell->paths = NULL, get_input_loop(shell));
 	}

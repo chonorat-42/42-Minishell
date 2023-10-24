@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 14:01:43 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/22 14:26:56 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/24 12:36:05 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ int	check_access(char *path)
 
 	stat(path, &info);
 	if (access(path, F_OK) == -1)
-		return (show_error(path, "EXEC", 2), 0);
+		return (show_error(path, EXEC, 2), 0);
 	if (info.st_mode & S_IFDIR)
-		return (show_error(path, "EXEC", 3), 0);
+		return (show_error(path, EXEC, 3), 0);
 	if (!(info.st_mode & S_IRUSR) || !(info.st_mode & S_IXUSR))
-		return (show_error(path, "PERMISSION", 0), g_status = 126, 0);
+		return (show_error(path, PERM, 0), g_status = 126, 0);
 	return (1);
 }

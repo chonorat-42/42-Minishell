@@ -13,6 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+//TOKENS
 # define CMD 1
 # define INFILE 2
 # define OUTFILE 3
@@ -26,6 +27,16 @@
 # define HEREDEL 11
 # define NO_FILE 12
 # define PERMISSIONS 13
+
+//ERRORS
+# define EXEC 1
+# define QUOTES 2
+# define HDOC 3
+# define NO_F 4
+# define PERM 5
+# define SYNTAX 6
+# define OPERATOR 7
+# define SHLVL 8
 
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"
@@ -229,7 +240,7 @@ int			get_current_location(t_mshell *shell);
 
 //ERROR
 void		builtin_error(char *cmd, char *arg, int error);
-void		show_error(char *cmd, char *type, int error);
+void		show_error(char *cmd, int type, int error);
 
 void		add_error(char *file, int type, t_tokens *temp);
 void		print_errors(t_tokens *lst);

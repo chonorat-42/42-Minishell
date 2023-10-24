@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/23 15:14:28 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/24 12:34:29 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,27 +46,27 @@ static void	operator_error(char *operator, int error)
 	g_status = 1;
 }
 
-void	show_error(char *cmd, char *type, int error)
+void	show_error(char *cmd, int type, int error)
 {
 	ft_putstr_fd("\033[0;37m\033[1mminishell: ", 2);
-	if (ft_strcmp(type, "EXEC") == 0)
+	if (type == EXEC)
 		exec_error(cmd, error);
-	else if (ft_strcmp(type, "QUOTES") == 0)
+	else if (type == QUOTES)
 		return (g_status = 1,
 			(void)ft_putendl_fd("quotes are not closed\033[0m", 2));
-	else if (ft_strcmp(type, "HEREDOC") == 0)
+	else if (type == HDOC)
 		heredoc_error(cmd);
-	else if (ft_strcmp(type, "NO_FILE") == 0)
+	else if (type == NO_F)
 		return (g_status = 1,
 			(void)ft_dprintf(2, "%s: No such file or directory\n\033[0m", cmd));
-	else if (ft_strcmp(type, "PERMISSION") == 0)
+	else if (type == PERM)
 		ft_dprintf(2, "%s: Permission denied\n\033[0m", cmd);
-	else if (ft_strcmp(type, "SYNTAX") == 0)
+	else if (type == SYNTAX)
 		return (g_status = 2, (void)ft_dprintf(2,
 				"syntax error near unexpected token `%s'\n\033[0m", cmd));
-	else if (ft_strcmp(type, "OPERATOR") == 0)
+	else if (type == OPERATOR)
 		operator_error(cmd, error);
-	else if (ft_strcmp(type, "SHLVL") == 0)
+	else if (type == SHLVL)
 		ft_dprintf(2,
 			"warning: shell level (%d) too high, resetting to 1\n\033[0m",
 			error);
