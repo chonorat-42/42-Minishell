@@ -90,7 +90,10 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 	while (str[index[0]])
 	{
 		if (is_char_in_set(str[index[0]], "\'\""))
-			move_to_last_quote(str, &index[0], str[index[0]++]);
+		{
+			move_to_last_quote(str, &index[0], str[index[0]]);
+			index[0]++;
+		}
 		else if (is_char_in_set(str[index[0]], "<>"))
 			split_redir(shell, lst, str, index);
 		else if (ft_isws(str[index[0]]))
@@ -98,8 +101,7 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 			if (index[1] != index[0])
 				split_into_dlst(lst, str, index[0], index[1]);
 			while (str[index[0]] && ft_isws(str[index[0]]))
-				index[0]++;
-			index[1] = index[0];
+				index[1] = ++index[0];
 		}
 		else
 			index[0]++;
