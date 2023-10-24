@@ -114,6 +114,7 @@ void	execution(t_mshell *shell)
 {
 	t_tokens	*temp;
 
+	ft_dprintf(2, "got in execution\n");
 	temp = shell->tok_lst;
 	if (temp->next && temp->next->type == PIPE)
 		handle_pipes(shell, temp);

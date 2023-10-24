@@ -28,15 +28,17 @@ void	simple_in_case(t_dlist *temp, int *has_fd, int *temp_fd)
 	(*has_fd)++;
 }
 
-void	heredoc_case(t_mshell *shell, t_tokens **tok, t_dlist *temp, int *has_fd, int *temp_fd)
+void	heredoc_case(t_fdhandler *handler)
 {
-	if (*has_fd && *temp_fd != -1)
-		close(*temp_fd);
-	*temp_fd = open("/tmp/temp.heredoc2", O_RDWR | O_CREAT | O_TRUNC, 0666);
-	heredoc(shell, temp->next->content, *temp_fd);
-	heredoc_into_infile(&(*tok)->dlst);
-	close(*temp_fd);
-	get_fd_in(shell, tok);
+	if (handler->has_fd && handler->temp_fd != -1)
+		close(handler->temp_fd);
+	handler->temp_fd = open("/tmp/temp.heredoc2",
+		O_RDWR | O_CREAT | O_TRUNC, 0666);
+	heredoc(handler->shell, handler->dlist->next->content,
+		handler->temp_fd);
+	heredoc_into_infile(&handler->dlist);
+	close(handler->temp_fd);
+	get_fd_in(handler->shell, &handler->tok);
 }
 
 int cmd_has_pipes(t_tokens *lst)
@@ -53,56 +55,86 @@ int cmd_has_pipes(t_tokens *lst)
 	return (0);
 }
 
-void	get_fd_in(t_mshell *shell, t_tokens **tok)
+void	init_fdhandler(t_fdhandler *handler, t_mshell *shell, t_tokens *tokens)
 {
-	t_tokens	*temp_tok;
-	t_dlist		*temp_dlst;
-	int			temp_fd;
-	int			has_fd;
-	char		*fd_str;
+	handler->tok = tokens;
+	handler->shell = shell;
+	handler->fd_str = NULL;
+}
 
-	fd_str = NULL;
-	temp_tok = *tok;
-	while (temp_tok)
+void	init_handler_loop(t_fdhandler *handler)
+{
+	handler->has_fd = 0;
+	handler->temp_fd = 0;
+	handler->dlist = handler->tok->dlst;
+}
+
+void	handle_simple_in(t_fdhandler *handler)
+{
+	handler->fd_str = remove_quotes(handler->dlist->next->content);
+
+	// ft_dprintf(2, "in handle simple in, fd_str = %s\n", handler->fd_str);
+
+	simple_in_case(handler->dlist, &handler->has_fd, &handler->temp_fd);
+
+	// ft_dprintf(2, "out of simple in case\n", handler->fd_str);
+
+	if (handle_fd(handler->temp_fd, handler->fd_str, CMD, handler->tok))
 	{
-		temp_dlst = temp_tok->dlst;
-		has_fd = 0;
-		temp_fd = 0;
-		while (temp_dlst)
-		{
-			if (temp_dlst->content[0] == '<'
-				&& ft_strlen(temp_dlst->content) == 1)
-				{
-					fd_str = remove_quotes(temp_dlst->next->content);
-					simple_in_case(temp_dlst, &has_fd, &temp_fd);
-					if (handle_fd(temp_fd, fd_str, CMD, temp_tok))
-					{
-						temp_tok->has_bad_fd++;
-						if (!cmd_has_pipes(*tok))
-							return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
-					}
-				}
-			else if (temp_dlst->content[0] == '<'
-				&& ft_strlen(temp_dlst->content) == 2)
-				{
-					fd_str = remove_quotes(temp_dlst->next->content);
-					heredoc_case(shell, tok, temp_dlst, &has_fd, &temp_fd);
-					if (handle_fd(temp_fd, fd_str, CMD, temp_tok) && !cmd_has_pipes(*tok))
-						return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
-				}
-				else
-				{
-					if (fd_str)
-						free(fd_str);
-					 fd_str = NULL;
-				}
-			temp_dlst = temp_dlst->next;
-		}
-		temp_tok->fd_in = temp_fd;
-		temp_tok->fd_in_str = fd_str;
-		temp_tok = temp_tok->next;
+		handler->tok->has_bad_fd++;
+		if (!cmd_has_pipes(handler->shell->tok_lst))
+			return (print_errors(handler->shell->tok_lst),
+				free_tokens(&handler->shell->tok_lst),
+				free_arr(handler->shell->paths), handler->shell->paths = NULL,
+				free(handler->shell->input), get_input_loop(handler->shell));
 	}
 }
+
+void	handle_heredoc(t_fdhandler *handler)
+{
+	heredoc_case(handler);
+	if (handle_fd(handler->temp_fd, handler->fd_str, CMD, handler->tok))
+	{
+		handler->tok->has_bad_fd++;
+		if (!cmd_has_pipes(handler->shell->tok_lst))
+			return (print_errors(handler->shell->tok_lst),
+				free_tokens(&handler->shell->tok_lst),
+				free_arr(handler->shell->paths), handler->shell->paths = NULL,
+				free(handler->shell->input), get_input_loop(handler->shell));
+	}
+}
+
+void	get_fd_in(t_mshell *shell, t_tokens **tok)
+{
+	t_fdhandler	handler;
+
+	init_fdhandler(&handler, shell, *tok);
+	while(handler.tok)
+	{
+		init_handler_loop(&handler);
+		while (handler.dlist)
+		{
+			if (!ft_strcmp(handler.dlist->content, "<"))
+				handle_simple_in(&handler);
+			else if (!ft_strcmp(handler.dlist->content, "<<"))
+				handle_heredoc(&handler);
+			else
+			{
+				if (handler.fd_str)
+					free(handler.fd_str);
+				handler.fd_str = NULL;
+			}
+			handler.dlist = handler.dlist->next;
+		}
+		handler.tok->fd_in = handler.temp_fd;
+		handler.tok->fd_in_str = handler.fd_str;
+		handler.tok = handler.tok->next;
+	}
+}
+
+
+
+
 
 void	simple_out_case(t_dlist *temp, int *has_fd, int *temp_fd)
 {
@@ -139,62 +171,120 @@ void	append_case(t_dlist *temp, int *has_fd, int *temp_fd)
 	(*has_fd)++;
 }
 
-static void	get_fd_out(t_mshell *shell, t_tokens **tok)
+void	handle_simple_out(t_fdhandler *handler)
 {
-	t_tokens	*temp_tok;
-	t_dlist		*temp_dlst;
-	int			temp_fd;
-	int			has_fd;
-	char		*fd_str;
-
-	fd_str = NULL;
-	temp_tok = *tok;
-	while (temp_tok)
+	handler->fd_str = remove_quotes(handler->dlist->next->content);
+	simple_out_case(handler->dlist, &handler->has_fd, &handler->temp_fd);
+	if (handle_fd(handler->temp_fd, handler->fd_str, CMD, handler->tok))
 	{
-		temp_dlst = temp_tok->dlst;
-		has_fd = 0;
-		temp_fd = 1;
-		while (temp_dlst)
-		{
-			if (temp_dlst->content[0] == '>'
-				&& ft_strlen(temp_dlst->content) == 1)
-				{
-					fd_str = remove_quotes(temp_dlst->next->content);
-					simple_out_case(temp_dlst, &has_fd, &temp_fd);
-					if (handle_fd(temp_fd, fd_str, CMD, temp_tok))
-					{
-						temp_tok->has_bad_fd++;
-						if (!cmd_has_pipes(*tok))
-							return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
-					}
-				}
-			else if (temp_dlst->content[0] == '>'
-				&& ft_strlen(temp_dlst->content) == 2)
-				{
-					fd_str = remove_quotes(temp_dlst->next->content);
-					append_case(temp_dlst, &has_fd, &temp_fd);
-					if (handle_fd(temp_fd, fd_str, CMD, temp_tok))
-					{
-						temp_tok->has_bad_fd++;
-						if (!cmd_has_pipes(*tok))
-							return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
-					}
-				}
-				else
-				{
-					if (fd_str)
-						free(fd_str);
-					 fd_str = NULL;
-				}
-			temp_dlst = temp_dlst->next;
-		}
-		temp_tok->fd_out = temp_fd;
-		temp_tok->fd_out_str = fd_str;
-		temp_tok = temp_tok->next;
+		handler->tok->has_bad_fd++;
+		if (!cmd_has_pipes(handler->shell->tok_lst))
+			return (print_errors(handler->shell->tok_lst),
+				free_tokens(&handler->shell->tok_lst),
+				free_arr(handler->shell->paths), handler->shell->paths = NULL,
+				free(handler->shell->input), get_input_loop(handler->shell));
 	}
-	if (fd_str)
-		free(fd_str);
 }
+
+void	handle_append(t_fdhandler *handler)
+{
+	handler->fd_str = remove_quotes(handler->dlist->next->content);
+	append_case(handler->dlist, &handler->has_fd, &handler->temp_fd);
+	if (handle_fd(handler->temp_fd, handler->fd_str, CMD, handler->tok))
+	{
+		handler->tok->has_bad_fd++;
+		if (!cmd_has_pipes(handler->shell->tok_lst))
+			return (print_errors(handler->shell->tok_lst),
+				free_tokens(&handler->shell->tok_lst),
+				free_arr(handler->shell->paths), handler->shell->paths = NULL,
+				free(handler->shell->input), get_input_loop(handler->shell));
+	}
+}
+
+void	get_fd_out(t_mshell *shell, t_tokens **tok)
+{
+	t_fdhandler	handler;
+
+	init_fdhandler(&handler, shell, *tok);
+	while(handler.tok)
+	{
+		init_handler_loop(&handler);
+		while (handler.dlist)
+		{
+			if (!ft_strcmp(handler.dlist->content, ">"))
+				handle_simple_out(&handler);
+			else if (!ft_strcmp(handler.dlist->content, ">>"))
+				handle_append(&handler);
+			else
+			{
+				if (handler.fd_str)
+					free(handler.fd_str);
+				handler.fd_str = NULL;
+			}
+			handler.dlist = handler.dlist->next;
+		}
+		handler.tok->fd_out = handler.temp_fd;
+		handler.tok->fd_out_str = handler.fd_str;
+		handler.tok = handler.tok->next;
+	}
+}
+
+// static void	get_fd_out(t_mshell *shell, t_tokens **tok)
+// {
+// 	t_tokens	*temp_tok;
+// 	t_dlist		*temp_dlst;
+// 	int			temp_fd;
+// 	int			has_fd;
+// 	char		*fd_str;
+
+// 	fd_str = NULL;
+// 	temp_tok = *tok;
+// 	while (temp_tok)
+// 	{
+// 		temp_dlst = temp_tok->dlst;
+// 		has_fd = 0;
+// 		temp_fd = 1;
+// 		while (temp_dlst)
+// 		{
+// 			if (temp_dlst->content[0] == '>'
+// 				&& ft_strlen(temp_dlst->content) == 1)
+// 				{
+// 					fd_str = remove_quotes(temp_dlst->next->content);
+// 					simple_out_case(temp_dlst, &has_fd, &temp_fd);
+// 					if (handle_fd(temp_fd, fd_str, CMD, temp_tok))
+// 					{
+// 						temp_tok->has_bad_fd++;
+// 						if (!cmd_has_pipes(*tok))
+// 							return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
+// 					}
+// 				}
+// 			else if (temp_dlst->content[0] == '>'
+// 				&& ft_strlen(temp_dlst->content) == 2)
+// 				{
+// 					fd_str = remove_quotes(temp_dlst->next->content);
+// 					append_case(temp_dlst, &has_fd, &temp_fd);
+// 					if (handle_fd(temp_fd, fd_str, CMD, temp_tok))
+// 					{
+// 						temp_tok->has_bad_fd++;
+// 						if (!cmd_has_pipes(*tok))
+// 							return (print_errors(shell->tok_lst), free_struct(shell), free_arr(shell->paths), shell->paths = NULL, free(shell->input), get_input_loop(shell));
+// 					}
+// 				}
+// 				else
+// 				{
+// 					if (fd_str)
+// 						free(fd_str);
+// 					 fd_str = NULL;
+// 				}
+// 			temp_dlst = temp_dlst->next;
+// 		}
+// 		temp_tok->fd_out = temp_fd;
+// 		temp_tok->fd_out_str = fd_str;
+// 		temp_tok = temp_tok->next;
+// 	}
+// 	if (fd_str)
+// 		free(fd_str);
+// }
 
 void	get_fds(t_mshell *shell, t_tokens **lst)
 {
