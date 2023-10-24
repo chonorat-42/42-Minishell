@@ -35,10 +35,12 @@ size_t	count_successive_pipes(t_tokens *temp)
 	return (res);
 }
 
-void	close_all_fds(t_tokens *lst, int *old_fd)
+void	close_all_fds_parent(t_tokens *lst, int *old_fd, int *new_fd)
 {
 	t_tokens	*temp;
 
+	close(new_fd[0]);
+	close(new_fd[1]);
 	close(old_fd[0]);
 	close(old_fd[1]);
 	temp = lst;
@@ -50,6 +52,28 @@ void	close_all_fds(t_tokens *lst, int *old_fd)
 			close (temp->fd_out);
 		temp = temp->next;
 	}
+}
+
+void	close_all_fds_child(t_tokens *lst, int *old_fd, int *new_fd)
+{
+	t_tokens	*temp;
+
+	close(new_fd[0]);
+	close(new_fd[1]);
+	close(old_fd[0]);
+	close(old_fd[1]);
+	temp = lst;
+	while (temp)
+	{
+		if (temp->fd_in != 0 && temp->fd_in != -1)
+			close(temp->fd_in);
+		if (temp->fd_out != 1 && temp->fd_out != -1)
+			close (temp->fd_out);
+		temp = temp->next;
+	}
+	close(0);
+	close(1);
+	close(2);
 }
 
 void	parent_management(t_mshell *shell, t_tokens *temp, pid_t child, int *lpids, size_t i, int *new_fd, int *old_fd)
@@ -121,6 +145,7 @@ void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd,
 	else
 	{
 		bin_exec(shell, temp->cmd_arr);
+		close_all_fds_child(temp, old_fd, new_fd);
 		free(lpids);
 	}
 }
@@ -191,6 +216,6 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 		j++;
 	}
 	free(lpids);
-	close_all_fds(shell->tok_lst, old_fd);
+	close_all_fds_parent(shell->tok_lst, old_fd, new_fd);
 	// print_errors_single(shell->tok_lst);
 }

@@ -197,7 +197,7 @@ void		get_fd_in(t_mshell *shell, t_tokens **tok);
 void		manage_fd(int fd_in, int fd_out);
 int			handle_fd(int fd, char *file, int type, t_tokens *temp);
 void		close_fd(t_mshell *shell);
-void		close_all_fds(t_tokens *lst, int *old_fd);
+void		close_all_fds(t_tokens *lst, int *old_fd, int *new_fd);
 int			has_bad_fd(t_tokens *temp);
 
 //HEREDOC
