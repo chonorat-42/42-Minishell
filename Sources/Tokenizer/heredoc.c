@@ -54,7 +54,7 @@ static char	*get_hd_input(t_mshell *shell, char *delim, int fd, t_dlist *lst)
 	return (line);
 }
 
-static void	heredoc_loop(t_mshell *shell, char *delimiter, int fd_in, int del)
+static void	heredoc_loop(t_mshell *shell, char *delim, int fd_in, int del)
 {
 	char	*line;
 	char	*trim;
@@ -67,13 +67,13 @@ static void	heredoc_loop(t_mshell *shell, char *delimiter, int fd_in, int del)
 	while (1)
 	{
 		ft_dprintf(STDOUT_FILENO, "> ");
-		line = get_hd_input(shell, delimiter, fd_in, lst);
+		line = get_hd_input(shell, delim, fd_in, lst);
 		trim = ft_strtrim(line, "\n");
 		if (!trim)
 			return (close(fd_in), free_struct(shell), free(line), exit(1));
-		if (!ft_strcmp(trim, delimiter))
+		if (!ft_strcmp(trim, delim))
 			return (delimiter_found(shell, lst, fd_in, del), close(fd_in),
-				free(line), free_struct(shell), free(delimiter), free(trim), exit(0));
+				multifree(line, delim, trim, 0), free_struct(shell), exit(0));
 		else
 		{
 			split_into_dlst(&lst, line, ft_strlen(line), 0);
@@ -83,25 +83,25 @@ static void	heredoc_loop(t_mshell *shell, char *delimiter, int fd_in, int del)
 	}
 }
 
-void	heredoc(t_mshell *shell, char *delimiter, int fd_in)
+void	heredoc(t_mshell *shell, char *delim, int fd_in)
 {
 	int		del_quote;
 	char	*new_del;
 	pid_t	child;
 
 	del_quote = 0;
-	if (is_char_in_set(delimiter[0], "\'\""))
+	if (is_char_in_set(delim[0], "\'\""))
 	{
 		del_quote = 1;
-		new_del = remove_quotes(delimiter);
-		free(delimiter);
-		delimiter = new_del;
+		new_del = remove_quotes(delim);
+		free(delim);
+		delim = new_del;
 	}
 	ignore_sig(shell);
 	fd_keeper(&fd_in);
 	child = fork();
 	if (!child)
-		heredoc_loop(shell, delimiter, fd_in, del_quote);
+		heredoc_loop(shell, delim, fd_in, del_quote);
 	else
 	{
 		if (waitpid(child, (int *)&g_status, 0) == -1)
