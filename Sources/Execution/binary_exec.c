@@ -56,7 +56,7 @@ void	browse_paths(t_mshell *shell, char **cmd_arr)
 			free(temp);
 		j++;
 	}
-	show_error(cmd_arr[0], "EXEC", 1);
+	show_error(cmd_arr[0], EXEC, 1);
 }
 
 void	bin_exec(t_mshell *shell, char **cmd_arr)
@@ -66,7 +66,7 @@ void	bin_exec(t_mshell *shell, char **cmd_arr)
 	if (shell->paths)
 		browse_paths(shell, cmd_arr);
 	else
-		show_error(cmd_arr[0], "EXEC", 2);
+		show_error(cmd_arr[0], EXEC, 2);
 	free_struct(shell);
 	exit(g_status);
 }
