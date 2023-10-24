@@ -58,7 +58,7 @@ void	free_tokens(t_tokens	**head)
 		}
 		if ((*head)->fd_in_str)
 			free((*head)->fd_in_str);
-		if ((*head)->fd_out != 1)
+		if ((*head)->fd_out_str)
 			free((*head)->fd_out_str);
 		if ((*head)->errors)
 			free_errors((*head)->errors);

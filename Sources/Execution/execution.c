@@ -31,9 +31,9 @@ void	executable(t_tokens *temp, t_mshell *shell)
 	}
 	else
 	{
-		if (temp->fd_in != 0)
+		if (temp->fd_in != STDIN_FILENO)
 			close(temp->fd_in);
-		if (temp->fd_out != 1)
+		if (temp->fd_out != STDOUT_FILENO)
 			close(temp->fd_out);
 		if (waitpid(child, (int *)&g_status, 0) == -1)
 			return (perror("waitpid"), free_struct(shell), exit(EXIT_FAILURE));
@@ -63,6 +63,7 @@ void	execution(t_mshell *shell)
 {
 	t_tokens	*temp;
 
+	// ft_dprintf(2, "got in execution\n");
 	temp = shell->tok_lst;
 	if (temp->next && temp->next->type == PIPE)
 		handle_pipes(shell, temp);

@@ -36,8 +36,7 @@ void	binary_with_path(t_mshell *shell, char **cmd_arr)
 			free(path), exit(EXIT_FAILURE));
 	free(path);
 	if (!check_access(temp))
-		return (free(exec), free(temp), free_arr(exec_split),
-			free_struct(shell), exit(g_status));
+		return (free(exec), free(temp), free_arr(exec_split));
 	if (execve(temp, exec_split, shell->menvp) == -1)
 		return (free(exec), free_arr(exec_split), free(temp));
 }

@@ -126,6 +126,16 @@ typedef struct s_mshell
 	t_envp		*export;
 }				t_mshell;
 
+typedef struct s_fdhandler
+{
+	t_tokens	*tok;
+	t_dlist		*dlist;
+	t_mshell	*shell;
+	char		*fd_str;
+	int			has_fd;
+	int			temp_fd;
+}			t_fdhandler;
+
 extern long long	g_status;
 
 //LOOP
