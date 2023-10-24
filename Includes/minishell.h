@@ -13,6 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+//TOKENS
 # define CMD 1
 # define INFILE 2
 # define OUTFILE 3
@@ -26,6 +27,16 @@
 # define HEREDEL 11
 # define NO_FILE 12
 # define PERMISSIONS 13
+
+//ERRORS
+# define EXEC 1
+# define QUOTES 2
+# define HDOC 3
+# define NO_F 4
+# define PERM 5
+# define SYNTAX 6
+# define OPERATOR 7
+# define SHLVL 8
 
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"
@@ -80,24 +91,24 @@ typedef struct s_error
 	char			*content;
 	int				type;
 	struct s_error	*next;
-}			t_error;
+}					t_error;
 
 typedef struct s_tokens
 {
-	char 	*content;
-	char	**cmd_arr;
-	int		fd_in;
-	char	*fd_in_str;
-	int		fd_out;
-	char	*fd_out_str;
-	int  	type;
-	int		has_bad_fd;
-	int		is_piped;
-	t_dlist	*dlst;
-	t_error	*errors;
-	struct s_tokens *prev;
-	struct s_tokens *next;
-}			t_tokens;
+	char			*content;
+	char			**cmd_arr;
+	int				fd_in;
+	char			*fd_in_str;
+	int				fd_out;
+	char			*fd_out_str;
+	int				type;
+	int				has_bad_fd;
+	int				is_piped;
+	t_dlist			*dlst;
+	t_error			*errors;
+	struct s_tokens	*prev;
+	struct s_tokens	*next;
+}					t_tokens;
 
 typedef struct s_mshell
 {
@@ -171,6 +182,7 @@ size_t		last_envvar_char(char *str);
 int			is_char_in_set(char c, char *set);
 int			are_all_quotes_closed(char *str);
 void		move_to_next_quote(char *str, size_t *i, char c);
+void		expand_dlst(t_mshell *shell, t_dlist **lst, t_envp *envp);
 
 //TOKENS
 int			tokenizer(t_mshell *shell);
@@ -190,6 +202,8 @@ char		*join_dlist(t_dlist	*lst);
 void		expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst);
 size_t		dlst_size(t_dlist *lst);
 char		**list_into_arr(t_dlist *lst);
+void		get_chevrons(char *str, size_t *i, char c, t_dlist **lst);
+void		move_to_last_quote(char *str, size_t *i, char c);
 
 //FD
 void		get_fds(t_mshell *shell, t_tokens **lst);
@@ -239,7 +253,7 @@ int			get_current_location(t_mshell *shell);
 
 //ERROR
 void		builtin_error(char *cmd, char *arg, int error);
-void		show_error(char *cmd, char *type, int error);
+void		show_error(char *cmd, int type, int error);
 
 void		add_error(char *file, int type, t_tokens *temp);
 void		print_errors(t_tokens *lst);
@@ -254,6 +268,7 @@ void		free_dlist(t_dlist **head);
 void		free_struct(t_mshell *shell);
 void		free_arr(char **arr);
 void		free_export(t_envp **export);
+void		free_errors(t_error *error);
 void		multifree(void *ptr1, void *ptr2, void *ptr3, void *ptr4);
 
 //UTILS

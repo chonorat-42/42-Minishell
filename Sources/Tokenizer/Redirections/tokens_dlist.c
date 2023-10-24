@@ -12,13 +12,6 @@
 
 #include "minishell.h"
 
-void	move_to_last_quote(char *str, size_t *i, char c)
-{
-	(*i) = ft_strlen(str);
-	while (*i && str[(*i)] != c)
-		(*i)--;
-}
-
 void	get_redir(char *str, size_t *i, t_dlist **lst)
 {
 	size_t	j;
@@ -32,30 +25,18 @@ void	get_redir(char *str, size_t *i, t_dlist **lst)
 		{
 			move_to_next_quote(str, i, str[j]);
 			if (ft_isws(str[(*i + 1)]) || !str[(*i + 1)])
-			{
-				(*i)++;
-				split_into_dlst(lst, str, *i, j);
-			}
+				split_into_dlst(lst, str, ++(*i), j);
 			else
 				(*i)++;
 		}
 	}
 	else
 	{
-		while (str[(*i)] && !ft_isws(str[(*i)]) && !is_char_in_set(str[(*i)], "<>"))
+		while (str[(*i)] && !ft_isws(str[(*i)])
+			&& !is_char_in_set(str[(*i)], "<>"))
 			(*i)++;
 		split_into_dlst(lst, str, *i, j);
 	}
-}
-
-void	get_chevrons(char *str, size_t *i, char c, t_dlist **lst)
-{
-	size_t	j;
-
-	j = *i;
-	while (str[(*i)] == c)
-		(*i)++;
-	split_into_dlst(lst, str, *i, j);
 }
 
 void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
@@ -81,54 +62,50 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 	}
 }
 
-void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *i, size_t *j)
+void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *index)
 {
-	if (*i != *j)
-		split_into_dlst(lst, str, *i, *j);
-	while (ft_isws(str[(*i)]))
-		i++;
-	get_chevrons(str, i, str[(*i)], lst);
-	if (!str[(*i)])
+	if (index[0] != index[1])
+		split_into_dlst(lst, str, index[0], index[1]);
+	while (ft_isws(str[index[0]]))
+		index[0]++;
+	get_chevrons(str, &index[0], str[index[0]], lst);
+	if (!str[index[0]])
 	{
-		show_error("newline", "SYNTAX", 0);
+		show_error("newline", SYNTAX, 0);
 		return (free_tokens(&shell->tok_lst), free_arr(shell->paths),
 			shell->paths = NULL, get_input_loop(shell));
 	}
-	get_redir(str, i, lst);
-	while (str[(*i)] && ft_isws(str[(*i)]))
-		(*i)++;
-	*j = *i;
+	get_redir(str, &index[0], lst);
+	while (str[index[0]] && ft_isws(str[index[0]]))
+		index[0]++;
+	index[1] = index[0];
 }
 
 void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 {
-	size_t	i;
-	size_t	j;
+	size_t	index[2];
 
-	i = 0;
-	j = 0;
-	while (str[i])
+	index[0] = 0;
+	index[1] = 0;
+	while (str[index[0]])
 	{
-		if (is_char_in_set(str[i], "\'\""))
+		if (is_char_in_set(str[index[0]], "\'\""))
+			move_to_last_quote(str, &index[0], str[index[0]++]);
+		else if (is_char_in_set(str[index[0]], "<>"))
+			split_redir(shell, lst, str, index);
+		else if (ft_isws(str[index[0]]))
 		{
-			move_to_last_quote(str, &i, str[i]);
-			i++;
-		}
-		else if (is_char_in_set(str[i], "<>"))
-			split_redir(shell, lst, str, &i, &j);
-		else if (ft_isws(str[i]))
-		{
-			if (j != i)
-				split_into_dlst(lst, str, i, j);
-			while (str[i] && ft_isws(str[i]))
-				i++;
-			j = i;
+			if (index[1] != index[0])
+				split_into_dlst(lst, str, index[0], index[1]);
+			while (str[index[0]] && ft_isws(str[index[0]]))
+				index[0]++;
+			index[1] = index[0];
 		}
 		else
-			i++;
+			index[0]++;
 	}
-	if (i - j)
-		split_into_dlst(lst, str, i, j);
+	if (index[0] - index[1])
+		split_into_dlst(lst, str, index[0], index[1]);
 }
 
 void	split_tokens_into_dlst(t_tokens **lst, t_mshell *shell)
@@ -140,9 +117,6 @@ void	split_tokens_into_dlst(t_tokens **lst, t_mshell *shell)
 	{
 		temp->dlst = NULL;
 		split_words_and_redir(&temp->dlst, temp->content, shell);
-
-		// ft_dprintf(2, "after split words and redir, dlst =\n");
-		// print_dlist(temp->dlst);
 		temp = temp->next;
 	}
 }

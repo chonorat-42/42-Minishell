@@ -43,6 +43,7 @@ FILES = minishell\
 		Parsing/parsing\
 		Parsing/Quotes/manage_quotes\
 		Parsing/Expand/expand\
+		Parsing/Expand/expand_dlst\
 		Tokenizer/tokenizer\
 		Tokenizer/heredoc\
 		Tokenizer/parse_tokens\
@@ -55,6 +56,7 @@ FILES = minishell\
 		Execution/execution\
 		Execution/binary_exec\
 		Execution/pipe\
+		Execution/is_builtin\
 		Execution/Built_in/echo\
 		Execution/Built_in/cd\
 		Execution/Built_in/env\
@@ -71,6 +73,7 @@ FILES = minishell\
 		Signals/ignore_sig\
 		Errors/builtin_error\
 		Errors/show_error\
+		Errors/token_error\
 		Free/free\
 		Free/free_utils\
 		Free/multifree\
@@ -81,6 +84,7 @@ FILES = minishell\
 		Utils/token_utils\
 		Utils/dlist_utils\
 		Utils/expand_utils\
+		Utils/token_dlist_utils\
 		Utils/resources
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))

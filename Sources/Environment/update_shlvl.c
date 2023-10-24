@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 01:28:10 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/19 14:05:19 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/24 12:29:48 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	prepare_shlvl(char *content, int *shlvl)
 			*shlvl = 0;
 		if (*shlvl >= 1000)
 		{
-			show_error(NULL, "SHLVL", *shlvl);
+			show_error(NULL, SHLVL, *shlvl);
 			*shlvl = 1;
 		}
 	}
