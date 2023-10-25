@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:28:31 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/25 17:46:06 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/25 21:56:33 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,8 @@ void	get_chevrons(char *str, size_t *i, char c, t_dlist **lst)
 
 void	move_to_last_quote(char *str, size_t *i, char c)
 {
-	size_t	j;
 	size_t	q_count;
 
-	j = *i;
 	q_count = 1;
 	(*i)++;
 	while (str[(*i)])
