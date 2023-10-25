@@ -79,6 +79,7 @@ void	remove_quotes_redir(t_dlist *lst)
 	temp = lst;
 	while (!is_char_in_set(temp->content[0], "<>"))
 		temp = temp->next;
+	temp = temp->next;
 	str = remove_quotes(temp->content);
 	free(temp->content);
 	temp->content = str;
