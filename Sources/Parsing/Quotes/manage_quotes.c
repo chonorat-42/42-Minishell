@@ -90,6 +90,8 @@ char	*remove_quotes(char *str)
 	temp = NULL;
 	i = 0;
 	j = 0;
+
+	ft_dprintf(2, "in remove quotes, str = %s\n", str);
 	while (str[i])
 	{
 		if (is_char_in_set(str[i], "\'\""))
@@ -99,7 +101,16 @@ char	*remove_quotes(char *str)
 			while (str[i] && !is_char_in_set(str[i], "\'\""))
 				i++;
 			split_into_dlst(&temp, str, i, j);
+			if (str[i])
+				i++;
+			j = i;
 		}
+	}
+	if (str[i])
+	{
+		while (str[i])
+			i++;
+		split_into_dlst(&temp, str, i, j);
 	}
 	result = join_dlist(temp);
 	return (free_dlist(&temp), result);

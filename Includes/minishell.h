@@ -282,4 +282,10 @@ void		print_single_token(t_tokens *tkn);
 void		print_tkns_down(t_tokens *lst);
 void		print_dlist(t_dlist	*lst);
 
+
+
+
+
+void	move_to_last_quote2(char *str, size_t *i, char c);
+
 #endif

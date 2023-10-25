@@ -12,6 +12,20 @@
 
 #include "minishell.h"
 
+void	last_quote_redir(char *str, t_dlist **lst, size_t *i, size_t *j)
+{
+	while (is_char_in_set(str[(*i)], "\'\""))
+	{
+		move_to_next_quote(str, i, str[*j]);
+		if (ft_isws(str[(*i + 1)]) || !str[(*i + 1)] || is_char_in_set(str[(*i + 1)], "<>"))
+		{
+			split_into_dlst(lst, str, ++(*i), *j);
+			return ;
+		}
+		else
+			(*i)++;
+	}
+}
 void	get_redir(char *str, size_t *i, t_dlist **lst)
 {
 	size_t	j;
@@ -19,23 +33,18 @@ void	get_redir(char *str, size_t *i, t_dlist **lst)
 	while (str[(*i)] && ft_isws(str[(*i)]))
 		(*i)++;
 	j = *i;
-	if (is_char_in_set(str[(*i)], "\'\""))
+	while (1)
 	{
-		while (is_char_in_set(str[(*i)], "\'\""))
+		if (is_char_in_set(str[(*i)], "\'\""))
+			last_quote_redir(str, lst, i, &j);
+		else
 		{
-			move_to_next_quote(str, i, str[j]);
-			if (ft_isws(str[(*i + 1)]) || !str[(*i + 1)])
-				split_into_dlst(lst, str, ++(*i), j);
-			else
+			while (str[(*i)] && !ft_isws(str[(*i)])
+				&& !is_char_in_set(str[(*i)], "<>"))
 				(*i)++;
+			split_into_dlst(lst, str, *i, j);
+			return ;
 		}
-	}
-	else
-	{
-		while (str[(*i)] && !ft_isws(str[(*i)])
-			&& !is_char_in_set(str[(*i)], "<>"))
-			(*i)++;
-		split_into_dlst(lst, str, *i, j);
 	}
 }
 
@@ -62,6 +71,19 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 	}
 }
 
+void	remove_quotes_redir(t_dlist *lst)
+{
+	t_dlist	*temp;
+	char	*str;
+
+	temp = lst;
+	while (!is_char_in_set(temp->content[0], "<>"))
+		temp = temp->next;
+	str = remove_quotes(temp->content);
+	free(temp->content);
+	temp->content = str;
+}
+
 void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *index)
 {
 	if (index[0] != index[1])
@@ -76,6 +98,7 @@ void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *index)
 			shell->paths = NULL, get_input_loop(shell));
 	}
 	get_redir(str, &index[0], lst);
+	remove_quotes_redir(*lst);
 	while (str[index[0]] && ft_isws(str[index[0]]))
 		index[0]++;
 	index[1] = index[0];
