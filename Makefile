@@ -85,6 +85,7 @@ FILES = minishell\
 		Utils/dlist_utils\
 		Utils/expand_utils\
 		Utils/token_dlist_utils\
+		Utils/pipe_utils\
 		Utils/resources
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))

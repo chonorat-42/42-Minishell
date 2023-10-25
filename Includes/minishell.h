@@ -93,6 +93,12 @@ typedef struct s_error
 	struct s_error	*next;
 }					t_error;
 
+typedef struct s_pipe
+{
+	int	*lpids;
+	int	fd[2][2];
+}				t_pipe;
+
 typedef struct s_tokens
 {
 	char			*content;
@@ -232,6 +238,10 @@ char		*get_path(char *cmd);
 void		handle_pipes(t_mshell *shell, t_tokens *temp);
 void		builtin_forwarding_pipe(t_tokens *temp, t_mshell *shell);
 int			cmd_has_pipes(t_tokens *lst);
+int			has_bad_fd(t_tokens *temp);
+size_t		count_successive_pipes(t_tokens *temp);
+void		close_all_fds_parent(t_tokens *lst, t_pipe *data);
+void		close_all_fds_child(t_tokens *lst, t_pipe *data);
 
 //BUILTINS
 void		cd_case(t_mshell *shell, char **cmd);
@@ -282,10 +292,6 @@ void		print_single_token(t_tokens *tkn);
 void		print_tkns_down(t_tokens *lst);
 void		print_dlist(t_dlist	*lst);
 
-
-
-
-
-void	move_to_last_quote2(char *str, size_t *i, char c);
+void		move_to_last_quote2(char *str, size_t *i, char c);
 
 #endif

@@ -90,8 +90,6 @@ char	*remove_quotes(char *str)
 	temp = NULL;
 	i = 0;
 	j = 0;
-
-	ft_dprintf(2, "in remove quotes, str = %s\n", str);
 	while (str[i])
 	{
 		if (is_char_in_set(str[i], "\'\""))
