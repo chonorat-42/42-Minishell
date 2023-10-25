@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern long long g_status;
+
 void	simple_in_case(t_dlist *temp, int *has_fd, int *temp_fd)
 {
 	char	*trim;
@@ -173,6 +175,7 @@ void	append_case(t_dlist *temp, int *has_fd, int *temp_fd)
 void	handle_simple_out(t_fdhandler *handler)
 {
 	handler->fd_str = remove_quotes(handler->dlist->next->content);
+	handler->tok->fd_out_str = handler->fd_str;
 	simple_out_case(handler->dlist, &handler->has_fd, &handler->temp_fd);
 	if (handle_fd(handler->temp_fd, handler->fd_str, CMD, handler->tok))
 	{
@@ -228,8 +231,71 @@ void	get_fd_out(t_mshell *shell, t_tokens **tok)
 	}
 }
 
+int has_redirect(t_tokens *lst, char c)
+{
+	t_tokens	*temp_t;
+	t_dlist		*temp_d;
+
+	temp_t = lst;
+	while (temp_t)
+	{
+		temp_d = temp_t->dlst;
+		while (temp_d)
+		{
+			if (temp_d->content && temp_d->content[0] == c)
+				return (1);
+			temp_d = temp_d->next;
+		}
+		temp_t = temp_t->next;
+	}
+	return (0);
+}
+
+void	remove_empty_nodes(t_tokens *lst)
+{
+	t_tokens	*temp_t;
+	t_dlist		*temp_d;
+
+	temp_t = lst;
+	while (temp_t)
+	{
+		temp_d = temp_t->dlst;
+		while (temp_d)
+		{
+			if (!temp_d->content)
+			{
+				if (temp_d == temp_t->dlst)
+				{
+					temp_t->dlst = temp_d->next;
+					free(temp_d);
+					temp_d = temp_t->dlst;
+				}
+				else if (!temp_d->next)
+				{
+					temp_d->prev->next = NULL;
+					free(temp_d);
+					break ;
+				}
+				else
+				{
+					temp_d->prev->next = temp_d->next;
+					temp_d = temp_d->prev;
+					free(temp_d->next);
+				}
+			}
+			if (temp_d)
+				temp_d = temp_d->next;
+		}
+		temp_t = temp_t->next;
+	}
+}
+
 void	get_fds(t_mshell *shell, t_tokens **lst)
 {
-	get_fd_in(shell, lst);
-	get_fd_out(shell, lst);
+	remove_empty_nodes(*lst);
+	g_status = 0;
+	if (has_redirect(*lst, '<'))
+		get_fd_in(shell, lst);
+	if (has_redirect(*lst, '>'))
+		get_fd_out(shell, lst);
 }
