@@ -220,12 +220,14 @@ void		close_fd(t_mshell *shell);
 void		close_all_fds(t_tokens *lst, int *old_fd, int *new_fd);
 int			has_bad_fd(t_tokens *temp);
 int			empty_node_found(t_tokens *temp_t, t_dlist *temp_d);
-void		handle_simple_out(t_fdhandler *handler);
+int			handle_simple_out(t_fdhandler *handler);
 void		handle_append(t_fdhandler *handler);
 void		handle_simple_in(t_fdhandler *handler);
 void		handle_heredoc(t_fdhandler *handler);
 void		init_fdhandler(t_fdhandler *handler, t_mshell *shell, t_tokens *tokens);
 void		init_handler_loop(t_fdhandler *handler, int type);
+int			fdin_access(char *path);
+int			fdout_access(char *path);
 
 //HEREDOC
 void		heredoc(t_mshell *shell, char *delimiter, int fd_in);
@@ -237,10 +239,10 @@ void		bin_exec(t_mshell *shell, char **cmd_arr);
 void		exec_forwarding(t_tokens *temp, t_mshell *shell);
 void		builtin_forwarding(t_tokens *temp, t_mshell *shell);
 void		executable(t_tokens *temp, t_mshell *shell);
-int			check_access(char *path);
 int			is_builtin(t_tokens *temp);
 char		*get_exec(char *cmd);
 char		*get_path(char *cmd);
+int			check_access(char *path);
 
 void		handle_pipes(t_mshell *shell, t_tokens *temp);
 void		builtin_forwarding_pipe(t_tokens *temp, t_mshell *shell);

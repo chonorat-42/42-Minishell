@@ -53,7 +53,10 @@ void	get_fd_out(t_mshell *shell, t_tokens **tok)
 		while (handler.dlist)
 		{
 			if (!ft_strcmp(handler.dlist->content, ">"))
-				handle_simple_out(&handler);
+			{
+				if (!handle_simple_out(&handler))
+					break ;
+			}
 			else if (!ft_strcmp(handler.dlist->content, ">>"))
 				handle_append(&handler);
 			else

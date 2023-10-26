@@ -59,8 +59,7 @@ void	child_management(t_mshell *shell, t_tokens *temp, t_pipe *data)
 	child_fd(shell, temp, data);
 	if (is_builtin(temp))
 	{
-		if (!temp->has_bad_fd)
-			builtin_forwarding_pipe(temp, shell);
+		builtin_forwarding_pipe(temp, shell);
 		free_struct(shell);
 		free(data->lpids);
 		exit(g_status);
@@ -73,13 +72,15 @@ void	child_management(t_mshell *shell, t_tokens *temp, t_pipe *data)
 	}
 }
 
-void	fork_pipe(t_mshell *shell, t_tokens **temp, int i, t_pipe *data)
+int	fork_pipe(t_mshell *shell, t_tokens **temp, int i, t_pipe *data)
 {
 	pid_t	child;
 
 	if ((*temp)->next)
 		pipe(data->fd[0]);
 	child = fork();
+	if (child == -1)
+		return (0);
 	if (!child)
 		child_management(shell, *temp, data);
 	else
@@ -94,6 +95,7 @@ void	fork_pipe(t_mshell *shell, t_tokens **temp, int i, t_pipe *data)
 		*temp = (*temp)->next->next;
 	else
 		*temp = (*temp)->next;
+	return (1);
 }
 
 void	handle_pipes(t_mshell *shell, t_tokens *temp)
@@ -109,7 +111,8 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 	index[0] = 0;
 	index[1] = 0;
 	while (temp)
-		fork_pipe(shell, &temp, index[0]++, &data);
+		if (!fork_pipe(shell, &temp, index[0]++, &data))
+			return (free_struct(shell), free(data.lpids), exit(1));
 	while (index[1] < (count_successive_pipes(shell->tok_lst) + 1))
 	{
 		if (waitpid(data.lpids[index[1]], (int *)&g_status, 0) == -1)

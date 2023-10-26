@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   fd_out_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:54:58 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/10/25 15:56:45 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/26 16:15:20 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	simple_out_case(t_dlist *temp, int *has_fd, int *temp_fd)
+int	simple_out_case(t_dlist *temp, int *has_fd, int *temp_fd, t_tokens **tok)
 {
 	char	*trim;
 
@@ -24,8 +24,15 @@ void	simple_out_case(t_dlist *temp, int *has_fd, int *temp_fd)
 		free(temp->next->content);
 		temp->next->content = trim;
 	}
+	if (!fdout_access(temp->next->content))
+	{
+		g_status = 1;
+		(*tok)->has_bad_fd = 1;
+		return (0);
+	}
 	*temp_fd = open(temp->next->content, O_RDWR | O_CREAT, 0666);
 	(*has_fd)++;
+	return (1);
 }
 
 void	append_case(t_dlist *temp, int *has_fd, int *temp_fd)
@@ -40,15 +47,18 @@ void	append_case(t_dlist *temp, int *has_fd, int *temp_fd)
 		free(temp->next->content);
 		temp->next->content = trim;
 	}
+	if (!fdin_access(temp->next->content))
+		ft_printf(":OK\n");
 	*temp_fd = open(temp->next->content, O_RDWR | O_APPEND | O_CREAT, 0666);
 	(*has_fd)++;
 }
 
-void	handle_simple_out(t_fdhandler *handler)
+int	handle_simple_out(t_fdhandler *handler)
 {
 	handler->fd_str = remove_quotes(handler->dlist->next->content);
 	handler->tok->fd_out_str = handler->fd_str;
-	simple_out_case(handler->dlist, &handler->has_fd, &handler->temp_fd);
+	if (!simple_out_case(handler->dlist, &handler->has_fd, &handler->temp_fd, &handler->tok))
+		return (0);
 	if (handle_fd(handler->temp_fd, handler->fd_str, CMD, handler->tok))
 	{
 		handler->tok->has_bad_fd++;
@@ -56,8 +66,9 @@ void	handle_simple_out(t_fdhandler *handler)
 			return (print_errors(handler->shell->tok_lst),
 				free_tokens(&handler->shell->tok_lst),
 				free_arr(handler->shell->paths), handler->shell->paths = NULL,
-				free(handler->shell->input), get_input_loop(handler->shell));
+				free(handler->shell->input), get_input_loop(handler->shell), 0);
 	}
+	return (1);
 }
 
 void	handle_append(t_fdhandler *handler)

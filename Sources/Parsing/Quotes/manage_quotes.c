@@ -105,25 +105,33 @@ char	*remove_quotes(char *str)
 	temp = NULL;
 	i = 0;
 	j = 0;
+	// ft_dprintf(2, "bginning of rm quotes, str = %s\n", str);
 	while (str[i])
 	{
 		if (is_char_in_set(str[i], "\'\""))
 		{
-			j = i;
 			i++;
 			while (str[i] && str[i] != str[j])
 				i++;
 			split_into_dlst(&temp, str, i, j + 1);
 			j = i;
+			// ft_dprintf(2, "in quotes before while i = %d, j = %d\n", i, j);
+			while (str[i] && str[i] != str[j - 1])
+				i++;
+			// ft_dprintf(2, "in quotes after while, i = %d, j = %d\n", i, j);
+			split_into_dlst(&temp, str, i, j);
 			i++;
+			j = i;
 			
 		}
 		else
 		{
-			// j = i;
+			j = i;
 			// i++;
+			// ft_dprintf(2, "in else before while, i = %d, j = %d\n", i, j);
 			while (str[i] && !is_char_in_set(str[i], "\'\""))
 				i++;
+			// ft_dprintf(2, "in else after while, i = %d, j = %d\n", i, j);
 			split_into_dlst(&temp, str, i, j);
 			// if (str[i])
 			// 	i++;
@@ -132,7 +140,6 @@ char	*remove_quotes(char *str)
 	}
 	if (j != i)
 			split_into_dlst(&temp, str, i + 1, j - 1);
-	print_dlist(temp);
 	if (temp)
 	{
 		result = join_dlist(temp);
