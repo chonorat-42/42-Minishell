@@ -136,8 +136,7 @@ void	child_management(t_mshell *shell, t_tokens *temp, int *new_fd, int *old_fd,
 	manage_fd(temp->fd_in, temp->fd_out);
 	if (is_builtin(temp))
 	{
-		if (!temp->has_bad_fd)
-			builtin_forwarding_pipe(temp, shell);
+		builtin_forwarding_pipe(temp, shell);
 		free_struct(shell);
 		free(lpids);
 		exit(g_status);
@@ -178,6 +177,7 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 	while (temp)
 	{
 		// ft_dprintf(2, "start of while temp loop, temp->content = %s\n\n", temp->content);
+		g_status = 0;
 		if (temp->next)
 			pipe(new_fd);
 		child = fork();

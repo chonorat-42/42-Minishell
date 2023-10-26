@@ -16,7 +16,7 @@ void	last_quote_redir(char *str, t_dlist **lst, size_t *i, size_t *j)
 {
 	while (is_char_in_set(str[(*i)], "\'\""))
 	{
-		move_to_next_quote(str, i, str[*j]);
+		move_to_last_quote(str, i, str[*j]);
 		if (ft_isws(str[(*i + 1)]) || !str[(*i + 1)] || is_char_in_set(str[(*i + 1)], "<>"))
 		{
 			split_into_dlst(lst, str, ++(*i), *j);
@@ -60,7 +60,7 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 	new->next = NULL;
 	new->content = ft_substr(str, j, i - j);
 
-	ft_dprintf(2, "in split into dlst, content = %s\n\n", new->content);
+	// ft_dprintf(2, "in split into dlst, content = %s\n\n", new->content);
 	if (!*lst)
 	{
 		*lst = new;
@@ -92,6 +92,7 @@ void	remove_quotes_redir(t_dlist *lst)
 
 void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *index)
 {
+	// ft_dprintf(2 ,"in split redir, index = %d\n", *index);
 	if (index[0] != index[1])
 		split_into_dlst(lst, str, index[0], index[1]);
 	while (ft_isws(str[index[0]]))
@@ -178,9 +179,9 @@ void	split_tokens_into_dlst(t_tokens **lst, t_mshell *shell)
 		split_words_and_redir(&temp->dlst, temp->content, shell);
 		temp = temp->next;
 	}
-	ft_dprintf(2, "after split tokens, dlst =\n");
-	print_dlist((*lst)->dlst);
+	// ft_dprintf(2, "after split tokens, dlst =\n");
+	// print_dlist((*lst)->dlst);
 	// remove_quotes_dlist(*lst);
-	ft_dprintf(2, "after remove quotes dlist, dlst =\n");
-	print_dlist((*lst)->dlst);
+	// ft_dprintf(2, "after remove quotes dlist, dlst =\n");
+	// print_dlist((*lst)->dlst);
 }

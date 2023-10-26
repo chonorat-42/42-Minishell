@@ -63,10 +63,13 @@ void	bin_exec(t_mshell *shell, char **cmd_arr)
 {
 	if (ft_strchr(cmd_arr[0], '/'))
 		binary_with_path(shell, cmd_arr);
-	if (shell->paths)
-		browse_paths(shell, cmd_arr);
-	else
-		show_error(cmd_arr[0], EXEC, 2);
+	if (!g_status)
+	{
+		if (shell->paths)
+			browse_paths(shell, cmd_arr);
+		else
+			show_error(cmd_arr[0], EXEC, 2);
+	}
 	free_struct(shell);
 	exit(g_status);
 }
