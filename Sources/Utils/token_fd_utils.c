@@ -6,13 +6,13 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:35:54 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/10/25 16:13:57 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/26 16:01:47 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int cmd_has_pipes(t_tokens *lst)
+int	cmd_has_pipes(t_tokens *lst)
 {
 	t_tokens	*temp;
 
@@ -26,7 +26,8 @@ int cmd_has_pipes(t_tokens *lst)
 	return (0);
 }
 
-void	init_fdhandler(t_fdhandler *handler, t_mshell *shell, t_tokens *tokens)
+void	init_fdhandler(t_fdhandler *handler, t_mshell *shell,
+	t_tokens *tokens)
 {
 	handler->tok = tokens;
 	handler->shell = shell;

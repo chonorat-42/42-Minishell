@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:54:58 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/10/26 14:42:40 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/26 15:05:52 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	simple_out_case(t_dlist *temp, int *has_fd, int *temp_fd, t_tokens *tok)
 	}
 	*temp_fd = open(temp->next->content, O_RDWR | O_CREAT, 0666);
 	(*has_fd)++;
-	if (temp_fd == -1)
+	if (*temp_fd == -1)
 	{
 		fdout_access(temp->next->content);
 		ft_printf("!fd_out access, content = %s, tok_has_badfd = %d\n", tok->content, tok->has_bad_fd);

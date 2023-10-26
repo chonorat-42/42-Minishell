@@ -84,8 +84,6 @@ int	expand(t_mshell *shell, char *cmd)
 	char	*temp;
 
 	temp = NULL;
-	// if (!cmd)
-	// 	return (0);
 	if (ft_char_index(cmd, '$') >= 0)
 	{
 		temp = expand_envvar(shell, cmd, shell->envp);

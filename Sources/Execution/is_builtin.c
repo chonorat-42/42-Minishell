@@ -6,13 +6,13 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:22:33 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/26 14:34:43 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/26 15:56:45 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern long long g_status;
+extern long long	g_status;
 
 int	is_builtin(t_tokens *temp)
 {
@@ -29,7 +29,6 @@ int	is_builtin(t_tokens *temp)
 
 void	builtin_forwarding_pipe(t_tokens *temp, t_mshell *shell)
 {
-	ft_dprintf(2, "temp = %s, has bad fd = %d\n", temp->content, temp->has_bad_fd);
 	if (!temp->has_bad_fd)
 	{
 		if (!ft_strcmp(temp->cmd_arr[0], "echo"))

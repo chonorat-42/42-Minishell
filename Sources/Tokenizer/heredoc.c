@@ -96,8 +96,6 @@ void	heredoc(t_mshell *shell, char *delim, int fd_in)
 		new_del = remove_quotes(delim);
 		free(delim);
 		delim = new_del;
-		// ft_dprintf(2, "in dlst, content =\n");
-		// print_dlist(shell->tok_lst->dlst);
 	}
 	ignore_sig(shell);
 	fd_keeper(&fd_in);

@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:58:04 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/10/25 16:15:09 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/26 16:03:52 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	heredoc_case(t_fdhandler *handler)
 	if (handler->has_fd && handler->temp_fd != -1)
 		close(handler->temp_fd);
 	handler->temp_fd = open("/tmp/temp.heredoc2",
-		O_RDWR | O_CREAT | O_TRUNC, 0666);
+			O_RDWR | O_CREAT | O_TRUNC, 0666);
 	heredoc(handler->shell, handler->dlist->next->content,
 		handler->temp_fd);
 	heredoc_into_infile(&handler->dlist);
