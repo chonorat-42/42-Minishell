@@ -68,22 +68,6 @@ void	print_dlist(t_dlist	*lst)
 	ft_printf("\n");
 }
 
-void	print_tkns_up(t_tokens *lst)
-{
-	t_tokens	*temp;
-
-	if (!lst)
-		return ;
-	temp = lst;
-	while (temp->next)
-		temp = temp->next;
-	while (temp)
-	{
-		ft_printf("%s\n", temp->content);
-		temp = temp->prev;
-	}
-}
-
 void	print_tkns_down(t_tokens *lst)
 {
 	t_tokens	*temp;

@@ -19,7 +19,7 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 	t_fdhandler	handler;
 
 	init_fdhandler(&handler, shell, *tok);
-	while(handler.tok)
+	while (handler.tok)
 	{
 		init_handler_loop(&handler, 0);
 		while (handler.dlist)
@@ -47,7 +47,7 @@ void	get_fd_out(t_mshell *shell, t_tokens **tok)
 	t_fdhandler	handler;
 
 	init_fdhandler(&handler, shell, *tok);
-	while(handler.tok)
+	while (handler.tok)
 	{
 		init_handler_loop(&handler, 1);
 		while (handler.dlist)
@@ -73,7 +73,7 @@ void	get_fd_out(t_mshell *shell, t_tokens **tok)
 	}
 }
 
-int has_redirect(t_tokens *lst, char c)
+int	has_redirect(t_tokens *lst, char c)
 {
 	t_tokens	*temp_t;
 	t_dlist		*temp_d;

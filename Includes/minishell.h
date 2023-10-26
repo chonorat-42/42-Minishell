@@ -210,6 +210,7 @@ size_t		dlst_size(t_dlist *lst);
 char		**list_into_arr(t_dlist *lst);
 void		get_chevrons(char *str, size_t *i, char c, t_dlist **lst);
 void		move_to_last_quote(char *str, size_t *i, char c);
+void		last_quote_redir(char *str, t_dlist **lst, size_t *i, size_t *j);
 
 //FD
 void		get_fds(t_mshell *shell, t_tokens **lst);
@@ -224,7 +225,8 @@ int			handle_simple_out(t_fdhandler *handler);
 void		handle_append(t_fdhandler *handler);
 void		handle_simple_in(t_fdhandler *handler);
 void		handle_heredoc(t_fdhandler *handler);
-void		init_fdhandler(t_fdhandler *handler, t_mshell *shell, t_tokens *tokens);
+void		init_fdhandler(t_fdhandler *handler, t_mshell *shell,
+				t_tokens *tokens);
 void		init_handler_loop(t_fdhandler *handler, int type);
 int			fdin_access(char *path);
 int			fdout_access(char *path);
