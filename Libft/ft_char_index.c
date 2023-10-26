@@ -26,7 +26,8 @@ long	ft_char_index(char *str, int c)
 			i++;
 			while (str[i] && str[i] != '\'')
 				i++;
-			i++;
+			if (str[i])
+				i++;
 		}
 		if (str[i] == c)
 			return (i);

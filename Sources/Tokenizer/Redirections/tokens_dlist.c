@@ -59,6 +59,7 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 	new = malloc(sizeof(t_dlist));
 	new->next = NULL;
 	new->content = ft_substr(str, j, i - j);
+
 	if (!*lst)
 	{
 		*lst = new;
@@ -102,10 +103,17 @@ void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *index)
 			shell->paths = NULL, get_input_loop(shell));
 	}
 	get_redir(str, &index[0], lst);
-	// remove_quotes_redir(*lst);
 	while (str[index[0]] && ft_isws(str[index[0]]))
 		index[0]++;
 	index[1] = index[0];
+}
+
+void	ws_found(t_dlist **lst, char *str, size_t *index)
+{
+	if (index[1] != index[0])
+		split_into_dlst(lst, str, index[0], index[1]);
+	while (str[index[0]] && ft_isws(str[index[0]]))
+		index[1] = ++index[0];
 }
 
 void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
@@ -121,23 +129,11 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 			move_to_last_quote(str, &index[0], str[index[0]]);
 			if (str[index[0]] && !ft_isws(str[index[0]] && !is_char_in_set(str[index[0]], "<>")))
 				index[0]++;
-			// ft_dprintf(2, "in split words, i = %d, str[i] = %c\n", index[0], str[index[0]]);
 		}
 		else if (is_char_in_set(str[index[0]], "<>"))
-		{
 			split_redir(shell, lst, str, index);
-
-			// ft_dprintf(2, "after split redir, dlst =\n");
-			// print_dlist(*lst);
-		}
-
 		else if (ft_isws(str[index[0]]))
-		{
-			if (index[1] != index[0])
-				split_into_dlst(lst, str, index[0], index[1]);
-			while (str[index[0]] && ft_isws(str[index[0]]))
-				index[1] = ++index[0];
-		}
+			ws_found(lst, str, index);
 		else
 		{
 			if (str[index[0]])
@@ -146,8 +142,6 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 	}
 	if (index[0] - index[1])
 		split_into_dlst(lst, str, index[0], index[1]);
-	// ft_dprintf(2, "end of split words and redir, dlst =\n");
-	// print_dlist(*lst);
 }
 
 void	remove_quotes_dlist(t_tokens *lst)
@@ -183,7 +177,5 @@ void	split_tokens_into_dlst(t_tokens **lst, t_mshell *shell)
 		split_words_and_redir(&temp->dlst, temp->content, shell);
 		temp = temp->next;
 	}
-	remove_quotes_dlist(*lst);
-	// ft_dprintf(2, "end of split tokens, dlst =\n");
-	// print_dlist((*lst)->dlst);
+	// remove_quotes_dlist(*lst);
 }

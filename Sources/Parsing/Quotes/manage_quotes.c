@@ -75,8 +75,8 @@ void	quote_found(t_dlist **temp, char *str, size_t *i, size_t *j)
 {
 	*j = *i + 1;
 	move_to_next_quote(str, i, str[(*i)]);
-	if (*j - *i)
-		split_into_dlst(temp, str, *i, *j);
+	// if (*j - *i)
+	split_into_dlst(temp, str, *i, *j);
 	if (str[(*i)])
 		(*i)++;
 	*j = *i;
@@ -94,6 +94,52 @@ int	not_a_quote_case(char *str, t_dlist *temp, size_t *i, size_t *j)
 	*j = *i;
 	return (0);
 }
+/*
+char	*remove_quotes(char *str)
+{
+	t_dlist	*temp;
+	char	*result;
+	size_t	i;
+	size_t	j;
+
+	temp = NULL;
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (is_char_in_set(str[i], "\'\""))
+		{
+			j = i;
+			i++;
+			while (str[i] && str[i] != str[j])
+				i++;
+			split_into_dlst(&temp, str, i, j + 1);
+			j = i;
+			i++;
+			
+		}
+		else
+		{
+			// j = i;
+			// i++;
+			while (str[i] && !is_char_in_set(str[i], "\'\""))
+				i++;
+			split_into_dlst(&temp, str, i, j);
+			// if (str[i])
+			// 	i++;
+			j = i;
+		}		
+	}
+	if (j != i)
+			split_into_dlst(&temp, str, i + 1, j - 1);
+	print_dlist(temp);
+	if (temp)
+	{
+		result = join_dlist(temp);
+		return (free_dlist(&temp), result);
+	}
+	return (NULL);
+}*/
 
 char	*remove_quotes(char *str)
 {
@@ -108,14 +154,11 @@ char	*remove_quotes(char *str)
 	while (str[i])
 	{
 		if (is_char_in_set(str[i], "\'\""))
+		{
 			quote_found(&temp, str, &i, &j);
+		}
 		else
 		{
-			// if (not_a_quote_case(str, temp, &i, &j))
-			// {
-			// 	j = i;
-			// 	break ;
-			// }
 			while (str[i] && !is_char_in_set(str[i], "\'\""))
 				i++;
 			split_into_dlst(&temp, str, i, j);

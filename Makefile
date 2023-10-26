@@ -6,7 +6,7 @@
 #    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/10/25 22:02:56 by chonorat         ###   ########.fr        #
+#    Updated: 2023/10/26 12:32:00 by chonorat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,6 +82,9 @@ FILES = minishell\
 		Utils/check_access\
 		Utils/exec_utils\
 		Utils/token_utils\
+		Utils/token_fd_utils\
+		Utils/fd_out_utils\
+		Utils/fd_in_utils\
 		Utils/dlist_utils\
 		Utils/expand_utils\
 		Utils/token_dlist_utils\

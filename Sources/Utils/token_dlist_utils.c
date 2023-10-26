@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:28:31 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/25 22:02:23 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/26 12:30:41 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,4 @@ void	move_to_last_quote(char *str, size_t *i, char c)
 		}
 		(*i)++;
 	}
-}
-
-void	move_to_last_quote2(char *str, size_t *i, char c)
-{
-	(*i) = ft_strlen(str);
-	while (*i && str[(*i)] != c)
-		(*i)--;
 }
