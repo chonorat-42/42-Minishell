@@ -6,7 +6,7 @@
 #    By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/10/25 13:58:29 by pgouasmi         ###   ########.fr        #
+#    Updated: 2023/10/25 15:58:45 by pgouasmi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,6 +82,9 @@ FILES = minishell\
 		Utils/check_access\
 		Utils/exec_utils\
 		Utils/token_utils\
+		Utils/token_fd_utils\
+		Utils/fd_out_utils\
+		Utils/fd_in_utils\
 		Utils/dlist_utils\
 		Utils/expand_utils\
 		Utils/token_dlist_utils\

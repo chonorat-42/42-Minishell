@@ -213,6 +213,13 @@ int			handle_fd(int fd, char *file, int type, t_tokens *temp);
 void		close_fd(t_mshell *shell);
 void		close_all_fds(t_tokens *lst, int *old_fd, int *new_fd);
 int			has_bad_fd(t_tokens *temp);
+int			empty_node_found(t_tokens *temp_t, t_dlist *temp_d);
+void		handle_simple_out(t_fdhandler *handler);
+void		handle_append(t_fdhandler *handler);
+void		handle_simple_in(t_fdhandler *handler);
+void		handle_heredoc(t_fdhandler *handler);
+void		init_fdhandler(t_fdhandler *handler, t_mshell *shell, t_tokens *tokens);
+void		init_handler_loop(t_fdhandler *handler, int type);
 
 //HEREDOC
 void		heredoc(t_mshell *shell, char *delimiter, int fd_in);
@@ -281,11 +288,5 @@ void		print_lst(t_list *lst);
 void		print_single_token(t_tokens *tkn);
 void		print_tkns_down(t_tokens *lst);
 void		print_dlist(t_dlist	*lst);
-
-
-
-
-
-void	move_to_last_quote2(char *str, size_t *i, char c);
 
 #endif

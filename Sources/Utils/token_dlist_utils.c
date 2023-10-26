@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:28:31 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/25 14:21:07 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/25 16:19:55 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,4 @@ void	move_to_last_quote(char *str, size_t *i, char c)
 		}
 		(*i)++;
 	}
-}
-
-void	move_to_last_quote2(char *str, size_t *i, char c)
-{
-	(*i) = ft_strlen(str);
-	while (*i && str[(*i)] != c)
-		(*i)--;
 }
