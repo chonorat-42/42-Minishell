@@ -25,7 +25,10 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 		while (handler.dlist)
 		{
 			if (!ft_strcmp(handler.dlist->content, "<"))
-				handle_simple_in(&handler);
+			{
+				if (!handle_simple_in(&handler))
+					break ;
+			}
 			else if (!ft_strcmp(handler.dlist->content, "<<"))
 				handle_heredoc(&handler);
 			else

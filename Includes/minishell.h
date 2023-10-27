@@ -222,8 +222,8 @@ void		close_all_fds(t_tokens *lst, int *old_fd, int *new_fd);
 int			has_bad_fd(t_tokens *temp);
 int			empty_node_found(t_tokens *temp_t, t_dlist *temp_d);
 int			handle_simple_out(t_fdhandler *handler);
-void		handle_append(t_fdhandler *handler);
-void		handle_simple_in(t_fdhandler *handler);
+int			handle_append(t_fdhandler *handler);
+int			handle_simple_in(t_fdhandler *handler);
 void		handle_heredoc(t_fdhandler *handler);
 void		init_fdhandler(t_fdhandler *handler, t_mshell *shell,
 				t_tokens *tokens);
