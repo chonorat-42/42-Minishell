@@ -37,6 +37,9 @@
 # define SYNTAX 6
 # define OPERATOR 7
 # define SHLVL 8
+# define CMD_NF 9
+# define NSFOD 10
+# define ISADIR 11
 
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"
@@ -219,6 +222,8 @@ void		manage_fd(int fd_in, int fd_out);
 int			handle_fd(int fd, char *file, int type, t_tokens *temp);
 void		close_fd(t_mshell *shell);
 void		close_all_fds(t_tokens *lst, int *old_fd, int *new_fd);
+void		close_fd_final(t_tokens *lst);
+void		close_std_fds(void);
 int			has_bad_fd(t_tokens *temp);
 int			empty_node_found(t_tokens *temp_t, t_dlist *temp_d);
 int			handle_simple_out(t_fdhandler *handler);

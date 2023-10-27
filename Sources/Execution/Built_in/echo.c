@@ -20,6 +20,8 @@ static int	is_option(char *arg)
 	if (arg[index] != '-')
 		return (0);
 	index++;
+	if (!arg[index])
+		return (0);
 	while (arg[index])
 	{
 		if (arg[index] != 'n')

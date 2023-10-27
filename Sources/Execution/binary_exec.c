@@ -71,5 +71,6 @@ void	bin_exec(t_mshell *shell, char **cmd_arr)
 			show_error(cmd_arr[0], EXEC, 2);
 	}
 	free_struct(shell);
+	close_std_fds();
 	exit(g_status);
 }

@@ -20,11 +20,11 @@ static char	**get_exit(t_mshell *shell)
 
 	arr = malloc(sizeof(char *) * 2);
 	if (!arr)
-		return (free_struct(shell), exit(2), NULL);
+		return (free_struct(shell), exit(1), NULL);
 	arr[1] = NULL;
 	arr[0] = ft_strdup("exit");
 	if (!arr[0])
-		return (free(arr), free_struct(shell), exit(2), NULL);
+		return (free(arr), free_struct(shell), exit(1), NULL);
 	return (arr);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_envp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:20:57 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/22 14:18:11 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/27 15:00:18 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ static void	pwd(t_mshell *shell)
 
 	new.name = ft_strdup("PWD");
 	if (!new.name)
-		return (free_struct(shell), exit(2));
+		return (free_struct(shell), exit(1));
 	new.content = getcwd(path, PATH_MAX);
 	if (!new.content)
-		return (free(new.name), free_struct(shell), exit(2));
+		return (free(new.name), free_struct(shell), exit(1));
 	if (new.content[0] == '\0')
 		new.content = NULL;
 	new.readable = 1;
@@ -63,16 +63,16 @@ static void	underscore(t_mshell *shell, char **argv)
 		return (free_struct(shell), exit(2));
 	dir = getcwd(path, PATH_MAX);
 	if (!dir)
-		return (perror("getcwd"), free(new.name), free_struct(shell), exit(2));
+		return (perror("getcwd"), free(new.name), free_struct(shell), exit(1));
 	join = ft_strjoin(dir, "/");
 	if (!join)
-		return (free(new.name), free_struct(shell), exit(2));
+		return (free(new.name), free_struct(shell), exit(1));
 	cmd = ft_strdup(argv[0]);
 	if (!cmd)
-		return (free(new.name), free(join), free_struct(shell), exit(2));
+		return (free(new.name), free(join), free_struct(shell), exit(1));
 	new.content = ft_strjoin(join, cmd);
 	if (!new.content)
-		return (multifree(new.name, join, cmd, 0), free_struct(shell), exit(2));
+		return (multifree(new.name, join, cmd, 0), free_struct(shell), exit(1));
 	new.readable = 1;
 	new.alterable = 0;
 	create_envp_list(shell, &new);
@@ -85,7 +85,7 @@ static void	old_pwd(t_mshell *shell)
 
 	new.name = ft_strdup("OLDPWD");
 	if (!new.name)
-		return (free_struct(shell), exit(2));
+		return (free_struct(shell), exit(1));
 	new.content = NULL;
 	new.readable = 0;
 	new.alterable = 1;

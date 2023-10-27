@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:13:46 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/24 12:35:18 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/27 14:12:38 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ void	print_errors_single(t_tokens *token)
 				show_error(temp_err->content, NO_F, 0);
 			else if (temp_err->type == PERM)
 				show_error(temp_err->content, PERM, 0);
+			else if (temp_err->type == CMD_NF)
+				show_error(temp_err->content, EXEC, 1);
+			else if (temp_err->type == NSFOD)
+				show_error(temp_err->content, EXEC, 2);
+			else if (temp_err->type == ISADIR)
+				show_error(temp_err->content, EXEC, 3);
 			temp_err = temp_err->next;
 		}
 	}

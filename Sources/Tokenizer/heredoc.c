@@ -90,25 +90,24 @@ void	heredoc(t_mshell *shell, char *delim, int fd_in)
 	pid_t	child;
 
 	del_quote = 0;
-	if (!g_status)
+	if (g_status)
+		return ;
+	if (is_char_in_set(delim[0], "\'\""))
 	{
-		if (is_char_in_set(delim[0], "\'\""))
-		{
-			del_quote = 1;
-			new_del = remove_quotes(delim);
-			free(delim);
-			delim = new_del;
-		}
-		ignore_sig(shell);
-		fd_keeper(&fd_in);
-		child = fork();
-		if (!child)
-			heredoc_loop(shell, delim, fd_in, del_quote);
-		else
-		{
-			if (waitpid(child, (int *)&g_status, 0) == -1)
-				return (perror("waitpid"), exit(EXIT_FAILURE));
-			get_fork_status();
-		}
+		del_quote = 1;
+		new_del = remove_quotes(delim);
+		free(delim);
+		delim = new_del;
+	}
+	ignore_sig(shell);
+	fd_keeper(&fd_in);
+	child = fork();
+	if (!child)
+		heredoc_loop(shell, delim, fd_in, del_quote);
+	else
+	{
+		if (waitpid(child, (int *)&g_status, 0) == -1)
+			return (perror("waitpid"), exit(EXIT_FAILURE));
+		get_fork_status();
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 13:59:01 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/09 17:41:09 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/27 13:27:38 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,5 @@ void	exit_case(t_mshell *shell, char **cmd)
 	}
 	else
 		g_status = shell->exit_status;
-	return (free_struct(shell), exit(g_status % 256));
+	return (free_struct(shell), close_std_fds(), exit(g_status % 256));
 }

@@ -45,6 +45,7 @@ static void	child_fd(t_mshell *shell, t_tokens *temp, t_pipe *data)
 	}
 	if (has_bad_fd(temp))
 	{
+		close_std_fds();
 		free_struct(shell);
 		free(data->lpids);
 		exit(1);
@@ -62,12 +63,12 @@ void	child_management(t_mshell *shell, t_tokens *temp, t_pipe *data)
 		builtin_forwarding_pipe(temp, shell);
 		free_struct(shell);
 		free(data->lpids);
+		close_std_fds();
 		exit(g_status);
 	}
 	else
 	{
 		bin_exec(shell, temp->cmd_arr);
-		close_all_fds_child(temp, data);
 		free(data->lpids);
 	}
 }

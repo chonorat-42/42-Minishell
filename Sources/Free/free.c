@@ -45,8 +45,31 @@ void	free_strings_shell(t_mshell *shell)
 	}
 }
 
+void	close_std_fds(void)
+{
+	close(0);
+	close(1);
+	close(2);
+}
+
+void	close_fd_final(t_tokens *lst)
+{
+	t_tokens	*temp;
+
+	temp = lst;
+	while (temp)
+	{
+		if (temp->fd_in != STDIN_FILENO && temp->fd_in != -1)
+			close(temp->fd_in);
+		if (temp->fd_out != STDOUT_FILENO && temp->fd_out != -1)
+			close(temp->fd_out);
+		temp = temp->next;
+	}
+}
+
 void	free_struct(t_mshell *shell)
 {
+	close_fd_final(shell->tok_lst);
 	free_strings_shell(shell);
 	free_arrays_shell(shell);
 	if (shell->tok_lst)
