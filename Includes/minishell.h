@@ -296,6 +296,7 @@ void		free_arr(char **arr);
 void		free_export(t_envp **export);
 void		free_errors(t_error *error);
 void		multifree(void *ptr1, void *ptr2, void *ptr3, void *ptr4);
+void		remove_hdoc(t_mshell *shell);
 
 //UTILS
 long int	find_char_index(char *str, int c);

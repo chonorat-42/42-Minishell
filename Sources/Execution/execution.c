@@ -68,6 +68,7 @@ void	execution(t_mshell *shell)
 		handle_pipes(shell, temp);
 	else
 		exec_forwarding(temp, shell);
+	remove_hdoc(shell);
 	free(shell->input);
 	free_tokens(&shell->tok_lst);
 }

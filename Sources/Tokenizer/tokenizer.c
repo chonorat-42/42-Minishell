@@ -66,8 +66,16 @@ void	split_on_pipes(t_mshell *shell, char *str)
 	size_t	i;
 	size_t	j;
 
-	i = -1;
+	i = 0;
 	j = 0;
+	while (str[i] && ft_isws(str[i]))
+		i++;
+	if (str[i] == '|')
+		return (show_error("|", SYNTAX, 1),
+			free_tokens(&shell->tok_lst), free(shell->input),
+			free_arr(shell->paths), shell->paths = NULL,
+			get_input_loop(shell));
+	i = -1;
 	while (str[++i])
 		check_operator(shell, str, &i, &j);
 	if (i != j)
