@@ -102,6 +102,10 @@ int	tokenizer(t_mshell *shell)
 		return (free(shell->input), get_input_loop(shell), 0);
 	parse_tkn(&shell->tok_lst, shell);
 	split_tokens_into_dlst(&shell->tok_lst, shell);
+
+	ft_dprintf(2, "dlst = \n");
+	print_dlist(shell->tok_lst->dlst);
+
 	get_fds(shell, &shell->tok_lst);
 	create_cmd_arr(&shell->tok_lst, shell);
 	manage_quotes_arr(&shell->tok_lst);
@@ -114,5 +118,7 @@ int	tokenizer(t_mshell *shell)
 			get_input_loop(shell), 0);
 	if (cmd_has_pipes(shell->tok_lst))
 		get_piped_noob(shell->tok_lst);
+
+
 	return (0);
 }

@@ -43,7 +43,7 @@ void	heredoc_case(t_fdhandler *handler)
 
 void	handle_simple_in(t_fdhandler *handler)
 {
-	handler->fd_str = remove_quotes(handler->dlist->next->content);
+	// handler->fd_str = remove_quotes(handler->dlist->next->content);
 	simple_in_case(handler->dlist, &handler->has_fd, &handler->temp_fd);
 	if (handle_fd(handler->temp_fd, handler->fd_str, CMD, handler->tok))
 	{
