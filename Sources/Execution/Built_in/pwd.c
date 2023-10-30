@@ -24,7 +24,10 @@ int	check_option(t_mshell *shell, char **cmd)
 		return (0);
 	if (cmd[1][1])
 	{
-		option = ft_substr(cmd[1], 0, 2);
+		if (cmd[1][1] && cmd[1][1] == '-')
+			option = ft_substr(cmd[1], 0, ft_strlen(cmd[1]));
+		else
+			option = ft_substr(cmd[1], 0, 2);
 		if (!option)
 			return (free_struct(shell), exit(EXIT_FAILURE), 1);
 		builtin_error(cmd[0], option, -1);

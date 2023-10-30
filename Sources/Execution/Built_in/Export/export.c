@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern int	g_status;
+extern long long	g_status;
 
 static int	add_to_export(t_envp **temp, t_envp *env_cell)
 {

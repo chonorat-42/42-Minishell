@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 13:20:57 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/11 17:37:04 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/27 15:00:18 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ static void	pwd(t_mshell *shell)
 
 	new.name = ft_strdup("PWD");
 	if (!new.name)
-		return (free_struct(shell), exit(2));
+		return (free_struct(shell), exit(1));
 	new.content = getcwd(path, PATH_MAX);
 	if (!new.content)
-		return (free(new.name), free_struct(shell), exit(2));
+		return (free(new.name), free_struct(shell), exit(1));
 	if (new.content[0] == '\0')
 		new.content = NULL;
 	new.readable = 1;
@@ -63,21 +63,20 @@ static void	underscore(t_mshell *shell, char **argv)
 		return (free_struct(shell), exit(2));
 	dir = getcwd(path, PATH_MAX);
 	if (!dir)
-		return (free(new.name), free_struct(shell), exit(2));
+		return (perror("getcwd"), free(new.name), free_struct(shell), exit(1));
 	join = ft_strjoin(dir, "/");
 	if (!join)
-		return (free(new.name), free_struct(shell), exit(2));
+		return (free(new.name), free_struct(shell), exit(1));
 	cmd = ft_strdup(argv[0]);
 	if (!cmd)
-		return (free(new.name), free(join), free_struct(shell), exit(2));
+		return (free(new.name), free(join), free_struct(shell), exit(1));
 	new.content = ft_strjoin(join, cmd);
 	if (!new.content)
-		return (free(new.name), free(join), free(cmd), free_struct(shell),
-			exit(2));
+		return (multifree(new.name, join, cmd, 0), free_struct(shell), exit(1));
 	new.readable = 1;
 	new.alterable = 0;
 	create_envp_list(shell, &new);
-	return (free(new.name), free(new.content), free(join), free(cmd));
+	return (multifree(new.name, new.content, join, cmd));
 }
 
 static void	old_pwd(t_mshell *shell)
@@ -86,7 +85,7 @@ static void	old_pwd(t_mshell *shell)
 
 	new.name = ft_strdup("OLDPWD");
 	if (!new.name)
-		return (free_struct(shell), exit(2));
+		return (free_struct(shell), exit(1));
 	new.content = NULL;
 	new.readable = 0;
 	new.alterable = 1;

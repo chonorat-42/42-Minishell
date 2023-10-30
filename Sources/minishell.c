@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-long long	g_status;
+long long	g_status = 0;
 
 static char	**get_exit(t_mshell *shell)
 {
@@ -20,11 +20,11 @@ static char	**get_exit(t_mshell *shell)
 
 	arr = malloc(sizeof(char *) * 2);
 	if (!arr)
-		return (free_struct(shell), exit(2), NULL);
+		return (free_struct(shell), exit(1), NULL);
 	arr[1] = NULL;
 	arr[0] = ft_strdup("exit");
 	if (!arr[0])
-		return (free(arr), free_struct(shell), exit(2), NULL);
+		return (free(arr), free_struct(shell), exit(1), NULL);
 	return (arr);
 }
 
@@ -41,7 +41,6 @@ void	init_shell(t_mshell *shell)
 	shell->tok_lst = NULL;
 	shell->envp = NULL;
 	shell->export = NULL;
-	g_status = 0;
 }
 
 int	main(int argc, char **argv, char **envp)

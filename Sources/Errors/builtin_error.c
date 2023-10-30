@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 13:17:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/17 16:05:07 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/20 14:54:25 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void	builtin_error(char *cmd, char *arg, int error)
 		return (g_status = 1,
 			(void)ft_dprintf(2, "`%s': not a valid identifier\n\033[0m", arg));
 	else if (ft_strcmp(cmd, "pwd") == 0)
-		ft_dprintf(2, "pwd: error retrieving current directory");
+		ft_dprintf(2, "error retrieving current directory");
+	else if (ft_strcmp(cmd, "env") == 0)
+		ft_dprintf(2, "%s: arguments are not supported\n", arg);
 	ft_printf("\033[0m");
 }

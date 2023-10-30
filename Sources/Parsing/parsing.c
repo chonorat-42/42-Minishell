@@ -36,13 +36,13 @@ int	are_all_quotes_closed(char *str)
 	return (1);
 }
 
-void  parsing(t_mshell *shell)
+void	parsing(t_mshell *shell)
 {
 	if (!are_all_quotes_closed(shell->input))
 	{
-		show_error("", "QUOTES", 1);
+		show_error(NULL, QUOTES, 1);
 		return (free(shell->input), free_arr(shell->paths),
-			get_input_loop(shell));
+			shell->paths = NULL, get_input_loop(shell));
 	}
 	if (shell->input[0] != '\0')
 	{

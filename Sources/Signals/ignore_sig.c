@@ -1,43 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   adress_keeper.c                                    :+:      :+:    :+:   */
+/*   ignore_sig.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/17 12:51:28 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/22 14:27:05 by chonorat         ###   ########.fr       */
+/*   Created: 2023/10/21 14:48:03 by chonorat          #+#    #+#             */
+/*   Updated: 2023/10/22 13:48:25 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_mshell	*adress_keeper(t_mshell *shell)
+static void	ign_sig(int signum)
 {
-	static t_mshell	*shell_adr;
-
-	if (!shell)
-		return (shell_adr);
-	shell_adr = shell;
-	return (shell_adr);
+	(void)signum;
 }
 
-int	*fd_keeper(int *fd)
+void	ignore_sig(t_mshell *shell)
 {
-	static int	*fd_adress;
+	struct sigaction	sig;
 
-	if (fd == NULL)
-		return (fd_adress);
-	fd_adress = fd;
-	return (fd);
-}
-
-t_dlist	**dlist_keeper(t_dlist **lst)
-{
-	static t_dlist	**lst_adress;
-
-	if (lst == NULL)
-		return (lst_adress);
-	lst_adress = lst;
-	return (lst);
+	sigemptyset(&sig.sa_mask);
+	sig.sa_flags = SA_RESTART;
+	sig.sa_handler = ign_sig;
+	if (sigaction(SIGINT, &sig, NULL) == -1)
+		return (perror("sigaction"), free_struct(shell), exit(1));
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+		return (perror("signal"), free_struct(shell), exit(1));
 }

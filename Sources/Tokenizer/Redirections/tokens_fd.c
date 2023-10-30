@@ -12,113 +12,110 @@
 
 #include "minishell.h"
 
-void	simple_in_case(t_dlist *temp, int *has_fd, int *temp_fd)
-{
-	if (*has_fd)
-		close(*temp_fd);
-	*temp_fd = open(temp->next->content, O_RDWR);
-	(*has_fd)++;
-}
-
-void	heredoc_case(t_mshell *shell, t_tokens **tok, t_dlist *temp, int *has_fd, int *temp_fd)
-{
-	if (*has_fd)
-		close(*temp_fd);
-	*temp_fd = open("/tmp/temp.heredoc2", O_RDWR | O_CREAT | O_TRUNC, 0666);
-	heredoc(shell, temp->next->content, *temp_fd);
-	heredoc_into_infile(&(*tok)->dlst);
-	close(*temp_fd);
-	get_fd_in(shell, tok);
-}
+extern long long	g_status;
 
 void	get_fd_in(t_mshell *shell, t_tokens **tok)
 {
-	t_tokens	*temp_tok;
-	t_dlist		*temp_dlst;
-	int			temp_fd;
-	int			has_fd;
-	char		*fd_str;
+	t_fdhandler	handler;
 
-	temp_tok = *tok;
-	while (temp_tok)
+	init_fdhandler(&handler, shell, *tok);
+	while (handler.tok)
 	{
-		temp_dlst = temp_tok->dlst;
-		has_fd = 0;
-		temp_fd = 0;
-		while (temp_dlst)
+		init_handler_loop(&handler, 0);
+		while (handler.dlist)
 		{
-			if (temp_dlst->content[0] == '<'
-				&& ft_strlen(temp_dlst->content) == 1)
-				{
-					fd_str = temp_dlst->next->content;
-					simple_in_case(temp_dlst, &has_fd, &temp_fd);
-				}
-			else if (temp_dlst->content[0] == '<'
-				&& ft_strlen(temp_dlst->content) == 2)
-					heredoc_case(shell, tok, temp_dlst, &has_fd, &temp_fd);
-			temp_dlst = temp_dlst->next;
+			if (!ft_strcmp(handler.dlist->content, "<"))
+			{
+				if (!handle_simple_in(&handler))
+					break ;
+			}
+			else if (!ft_strcmp(handler.dlist->content, "<<"))
+				handle_heredoc(&handler);
+			handler.dlist = handler.dlist->next;
 		}
-		temp_tok->fd_in = temp_fd;
-		temp_tok->fd_in_str = fd_str;
-		temp_tok = temp_tok->next;
+		handler.tok->fd_in = handler.temp_fd;
+		handler.tok->fd_in_str = handler.fd_str;
+		handler.tok = handler.tok->next;
 	}
 }
 
-void	simple_out_case(t_dlist *temp, int *has_fd, int *temp_fd)
+void	get_fd_out(t_mshell *shell, t_tokens **tok)
 {
-	if (*has_fd)
-		close(*temp_fd);
-	*temp_fd = open(temp->next->content, O_RDWR | O_CREAT, 0666);
-	(*has_fd)++;
-}
+	t_fdhandler	handler;
 
-void	append_case(t_dlist *temp, int *has_fd, int *temp_fd)
-{
-	if (*has_fd)
-		close(*temp_fd);
-	*temp_fd = open(temp->next->content, O_RDWR | O_APPEND);
-	(*has_fd)++;
-}
-
-static void	get_fd_out(t_tokens **tok)
-{
-	t_tokens	*temp_tok;
-	t_dlist		*temp_dlst;
-	int			temp_fd;
-	int			has_fd;
-	char		*fd_str;
-
-	temp_tok = *tok;
-	while (temp_tok)
+	init_fdhandler(&handler, shell, *tok);
+	while (handler.tok)
 	{
-		temp_dlst = temp_tok->dlst;
-		has_fd = 0;
-		temp_fd = 1;
-		while (temp_dlst)
+		init_handler_loop(&handler, 1);
+		while (handler.dlist)
 		{
-			if (temp_dlst->content[0] == '>'
-				&& ft_strlen(temp_dlst->content) == 1)
-				{
-					fd_str = temp_dlst->next->content;
-					simple_out_case(temp_dlst, &has_fd, &temp_fd);
-				}
-			else if (temp_dlst->content[0] == '>'
-				&& ft_strlen(temp_dlst->content) == 2)
-				{
-					fd_str = temp_dlst->next->content;
-					append_case(temp_dlst, &has_fd, &temp_fd);
-				}
-				
-			temp_dlst = temp_dlst->next;
+			if (!ft_strcmp(handler.dlist->content, ">"))
+			{
+				if (!handle_simple_out(&handler))
+					break ;
+			}
+			else if (!ft_strcmp(handler.dlist->content, ">>"))
+			{
+				if (!handle_append(&handler))
+					break ;
+			}
+			handler.dlist = handler.dlist->next;
 		}
-		temp_tok->fd_out = temp_fd;
-		temp_tok->fd_out_str = fd_str;
-		temp_tok = temp_tok->next;
+		handler.tok->fd_out = handler.temp_fd;
+		handler.tok->fd_out_str = handler.fd_str;
+		handler.tok = handler.tok->next;
+	}
+}
+
+int	has_redirect(t_tokens *lst, char c)
+{
+	t_tokens	*temp_t;
+	t_dlist		*temp_d;
+
+	temp_t = lst;
+	while (temp_t)
+	{
+		temp_d = temp_t->dlst;
+		while (temp_d)
+		{
+			if (temp_d->content && temp_d->content[0] == c)
+				return (1);
+			temp_d = temp_d->next;
+		}
+		temp_t = temp_t->next;
+	}
+	return (0);
+}
+
+void	remove_empty_nodes(t_tokens *lst)
+{
+	t_tokens	*temp_t;
+	t_dlist		*temp_d;
+
+	temp_t = lst;
+	while (temp_t)
+	{
+		temp_d = temp_t->dlst;
+		while (temp_d)
+		{
+			if (!temp_d->content)
+			{
+				if (!empty_node_found(temp_t, temp_d))
+					break ;
+			}
+			if (temp_d)
+				temp_d = temp_d->next;
+		}
+		temp_t = temp_t->next;
 	}
 }
 
 void	get_fds(t_mshell *shell, t_tokens **lst)
 {
-	get_fd_in(shell, lst);
-	get_fd_out(lst);
+	remove_empty_nodes(*lst);
+	g_status = 0;
+	if (has_redirect(*lst, '<'))
+		get_fd_in(shell, lst);
+	if (has_redirect(*lst, '>'))
+		get_fd_out(shell, lst);
 }

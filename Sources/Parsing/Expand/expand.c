@@ -12,24 +12,6 @@
 
 #include "minishell.h"
 
-void	expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst)
-{
-	t_dlist	*temp;
-	char	*expanded;
-
-	temp = *lst;
-	while (temp)
-	{
-		if (find_char_index(temp->content, '$') >= 0)
-		{
-			expanded = expand_envvar(shell, temp->content, envp);
-			free(temp->content);
-			temp->content = expanded;
-		}
-		temp = temp->next;
-	}
-}
-
 void	split_envvar(char *str, t_dlist **lst)
 {
 	size_t	i;
@@ -53,33 +35,6 @@ void	split_envvar(char *str, t_dlist **lst)
 	}
 	if (j != i)
 		split_into_dlst(lst, str, i, j);
-}
-
-void	expand_dlst(t_mshell *shell, t_dlist **lst, t_envp *envp)
-{
-	t_dlist	*temp;
-	char	*name;
-	char	*content;
-
-	temp = *lst;
-	while (temp)
-	{
-		if (temp->content[0] == '$')
-		{
-			name = ft_substr(temp->content, 1, ft_strlen(temp->content));
-			content = get_envvar_content(shell, envp, name);
-			free(name);
-			free(temp->content);
-			if (content)
-			{
-				temp->content = ft_strdup(content);
-				free(content);
-			}
-			else
-				temp->content = ft_strdup("");
-		}
-		temp = temp->next;
-	}
 }
 
 char	*join_dlist(t_dlist	*lst)
@@ -133,7 +88,10 @@ int	expand(t_mshell *shell, char *cmd)
 	{
 		temp = expand_envvar(shell, cmd, shell->envp);
 		free(shell->input);
-		shell->input = ft_strdup(temp);
+		if (temp)
+			shell->input = ft_strdup(temp);
+		else
+			shell->input = ft_strdup("");
 		free(temp);
 	}
 	return (0);

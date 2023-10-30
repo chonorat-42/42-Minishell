@@ -12,47 +12,6 @@
 
 #include "minishell.h"
 
-void	give_type(t_tokens **lst)
-{
-	t_tokens	*temp;
-
-	temp = *lst;
-	while (temp)
-	{
-		if (temp->content[0] == '|')
-			temp->type = PIPE;
-		else
-			temp->type = CMD;
-		temp = temp->next;
-	}
-}
-
-void	tokens_addback(t_tokens **lst, t_tokens *new)
-{
-	t_tokens	*temp;
-
-	temp = *lst;
-	while (temp->next)
-		temp = temp->next;
-	new->next = NULL;
-	new->prev = temp;
-	temp->next = new;
-}
-
-void	init_new_token(t_tokens **new)
-{
-	(*new)->cmd_arr = NULL;
-	if ((*new)->content[0] == '|')
-		(*new)->type = PIPE;
-	else
-		(*new)->type = CMD;
-	(*new)->fd_in = 0;
-	(*new)->fd_out = 1;
-	(*new)->fd_in_str = NULL;
-	(*new)->fd_out_str = NULL;
-	(*new)->dlst = NULL;
-}
-
 void	create_token(t_mshell *shell, int i, int j, char *to_add)
 {
 	t_tokens	*new;
@@ -64,19 +23,42 @@ void	create_token(t_mshell *shell, int i, int j, char *to_add)
 	free(str);
 	new->next = NULL;
 	if (!shell->tok_lst)
+	{
 		shell->tok_lst = new;
+		new->prev = NULL;
+	}
 	else
 		tokens_addback(&shell->tok_lst, new);
-	init_new_token(&new);
+	init_new_token(new);
 }
 
-void	pipe_found(t_mshell *shell, char *str, size_t *i, size_t *j)
+static void	check_operator(t_mshell *shell, char *str, size_t *i, size_t *j)
 {
-	create_token(shell, *i, *j, str);
-	*j = *i;
-	(*i)++;
-	create_token(shell, *i, *j, str);
-	*j = *i;
+	if (str[*i + 1] && (*i == 0 && str[*i] == '|') && str[*i + 1] == '|')
+		return (show_error("||", OPERATOR, 1), free(shell->input),
+			free_arr(shell->paths), shell->paths = NULL,
+			get_input_loop(shell));
+	else if (*i == 0 && str[*i] == '|')
+		return (show_error("|", SYNTAX, 1), free(shell->input),
+			free_arr(shell->paths), shell->paths = NULL,
+			get_input_loop(shell));
+	if (is_char_in_set(str[*i], "\'\""))
+		move_to_next_quote(str, i, str[*i]);
+	else if (is_char_in_set(str[*i], "|"))
+	{
+		if (!str[*i + 1])
+			return (show_error("|", SYNTAX, 1),
+				free_tokens(&shell->tok_lst), free(shell->input),
+				free_arr(shell->paths), shell->paths = NULL,
+				get_input_loop(shell));
+		else if (str[*i + 1] == '|')
+			return (free_tokens(&shell->tok_lst), free(shell->input),
+				show_error("||", OPERATOR, 1), get_input_loop(shell));
+		pipe_found(shell, str, i, j);
+	}
+	else if (str[*i] == '&')
+		return (free_tokens(&shell->tok_lst), free(shell->input),
+			show_error("&&", OPERATOR, 2), get_input_loop(shell));
 }
 
 void	split_on_pipes(t_mshell *shell, char *str)
@@ -84,53 +66,30 @@ void	split_on_pipes(t_mshell *shell, char *str)
 	size_t	i;
 	size_t	j;
 
-	i = -1;
+	i = 0;
 	j = 0;
+	while (str[i] && ft_isws(str[i]))
+		i++;
+	if (str[i] == '|')
+		return (show_error("|", SYNTAX, 1),
+			free_tokens(&shell->tok_lst), free(shell->input),
+			free_arr(shell->paths), shell->paths = NULL,
+			get_input_loop(shell));
+	i = -1;
 	while (str[++i])
-	{
-		if (i == 0 && str[i] == '|')
-		{
-			ft_dprintf(2, "minishell: syntax error near unexpected token `|'\n");
-			return (free(shell->input), free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
-		}
-		if (is_char_in_set(str[i], "\'\""))
-			move_to_next_quote(str, &i, str[i]);
-		else if (is_char_in_set(str[i], "|"))
-		{
-			if (str[i + 1] == '|')
-				return (ft_free_tokens(&shell->tok_lst), free(shell->input),
-					ft_dprintf(2, "Operator `||' is not supported\n"),
-					get_input_loop(shell));
-			else if (!str[i + 1])
-			{
-				ft_dprintf(2, "minishell: syntax error near unexpected token `|'\n");
-				return (ft_free_tokens(&shell->tok_lst), free(shell->input), free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
-			}
-			pipe_found(shell, str, &i, &j);
-		}
-		else
-		{
-			if (str[i] == '&')
-				return (ft_free_tokens(&shell->tok_lst), free(shell->input),
-					ft_dprintf(2, "Operator `&' and `&&' are not supported\n"),
-					get_input_loop(shell));
-		}
-	}
+		check_operator(shell, str, &i, &j);
 	if (i != j)
 		create_token(shell, i, j, str);
 }
 
-void	close_fd(t_mshell *shell)
+void	get_piped_noob(t_tokens *lst)
 {
 	t_tokens	*temp;
 
-	temp = shell->tok_lst;
+	temp = lst;
 	while (temp)
 	{
-		if (temp->fd_in != 0 && temp->fd_in != -1)
-			close (temp->fd_in);
-		if (temp->fd_out != 1 && temp->fd_out != -1)
-			close(temp->fd_out);
+		temp->is_piped++;
 		temp = temp->next;
 	}
 }
@@ -150,7 +109,10 @@ int	tokenizer(t_mshell *shell)
 	give_type(&shell->tok_lst);
 	if (!shell->tok_lst || !shell->tok_lst->cmd_arr
 		|| !shell->tok_lst->cmd_arr[0][0])
-		return (close_fd(shell), ft_free_tokens(&shell->tok_lst), free(shell->input),
+		return (close_fd(shell), free_tokens(&shell->tok_lst),
+			free(shell->input),
 			get_input_loop(shell), 0);
+	if (cmd_has_pipes(shell->tok_lst))
+		get_piped_noob(shell->tok_lst);
 	return (0);
 }

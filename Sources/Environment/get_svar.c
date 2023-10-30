@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_svar.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/11 17:39:37 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/20 13:46:05 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int	g_status;
+extern long long	g_status;
 
 void	get_svar(t_mshell *shell)
 {
@@ -20,8 +20,14 @@ void	get_svar(t_mshell *shell)
 	char	*content;
 
 	content = ft_itoa(g_status);
+	if (!content)
+		return (free_struct(shell), exit(1));
 	status.name = ft_strdup("?");
+	if (!status.name)
+		return (free(content), free_struct(shell), exit(1));
 	status.content = ft_strdup(content);
+	if (!status.content)
+		return (free(content), free(status.name), free_struct(shell), exit(1));
 	status.readable = 0;
 	status.alterable = 0;
 	if (shell->envp && var_exist(shell, "?"))
@@ -31,5 +37,4 @@ void	get_svar(t_mshell *shell)
 	free(status.content);
 	free(content);
 	shell->exit_status = g_status;
-	g_status = 0;
 }

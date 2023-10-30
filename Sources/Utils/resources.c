@@ -12,6 +12,20 @@
 
 #include "minishell.h"
 
+extern long long	g_status;
+
+void	get_fork_status(void)
+{
+	if (WIFEXITED(g_status))
+		g_status = WEXITSTATUS(g_status);
+	else if (WIFSIGNALED(g_status))
+	{
+		g_status = WTERMSIG(g_status);
+		if (g_status != 131)
+			g_status += 128;
+	}
+}
+
 long int	find_char_index(char *str, int c)
 {
 	long int	i;

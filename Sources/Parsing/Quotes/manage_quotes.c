@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manage_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/20 13:59:48 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/08/24 18:09:57 by pgouasmi         ###   ########.fr       */
+/*   Created: 2023/10/26 17:22:52 by chonorat          #+#    #+#             */
+/*   Updated: 2023/10/26 17:22:52 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,46 +37,24 @@ void	manage_quotes_arr(t_tokens	**lst)
 	}
 }
 
-char	*get_other(char *str, size_t *i)
-{
-	size_t	j;
-	char	*temp;
-
-	j = *i + 1;
-	while (str[j] && str[j] != '\'' && str[j] != '\"')
-		j++;
-	temp = ft_substr(str, (*i), j - (*i));
-	if (!temp)
-		return (NULL);
-	*i = j;
-	return (temp);
-}
-
-char	*get_between_quotes(char *str, int c, size_t *i)
-{
-	char	*result;
-	int		j;
-
-	j = *i;
-	if (str[j] == c)
-	{
-		result = ft_strdup("");
-		return (result);
-	}
-	while (str[(*i)] && str[(*i)] != c)
-		(*i)++;
-	result = ft_substr(str, j, *i - j);
-	if (!result)
-		return (NULL);
-	return (result);
-}
-
 void	quote_found(t_dlist **temp, char *str, size_t *i, size_t *j)
 {
-	*j = *i + 1;
-	move_to_next_quote(str, i, str[(*i)]);
-	split_into_dlst(temp, str, *i, *j);
 	(*i)++;
+	*j = *i;
+	while (str[(*i)] && str[(*i)] != str[*j - 1])
+		(*i)++;
+	split_into_dlst(temp, str, *i, *j);
+	if (str[(*i)])
+		(*i)++;
+	*j = *i;
+}
+
+void	not_a_quote_case(char *str, t_dlist **temp, size_t *i, size_t *j)
+{
+	*j = *i;
+	while (str[(*i)] && !is_char_in_set(str[(*i)], "\'\""))
+		(*i)++;
+	split_into_dlst(temp, str, *i, *j);
 	*j = *i;
 }
 
@@ -95,12 +73,12 @@ char	*remove_quotes(char *str)
 		if (is_char_in_set(str[i], "\'\""))
 			quote_found(&temp, str, &i, &j);
 		else
-		{
-			while (str[i] && !is_char_in_set(str[i], "\'\""))
-				i++;
-			split_into_dlst(&temp, str, i, j);
-		}
+			not_a_quote_case(str, &temp, &i, &j);
 	}
-	result = join_dlist(temp);
-	return (free_dlist(&temp), result);
+	if (temp)
+	{
+		result = join_dlist(temp);
+		return (free_dlist(&temp), result);
+	}
+	return (NULL);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+         #
+#    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/08/24 18:25:25 by pgouasmi         ###   ########.fr        #
+#    Updated: 2023/10/26 12:32:00 by chonorat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,7 @@ FILES = minishell\
 		Parsing/parsing\
 		Parsing/Quotes/manage_quotes\
 		Parsing/Expand/expand\
-		Parsing/Expand/expand_utils\
+		Parsing/Expand/expand_dlst\
 		Tokenizer/tokenizer\
 		Tokenizer/heredoc\
 		Tokenizer/parse_tokens\
@@ -56,6 +56,7 @@ FILES = minishell\
 		Execution/execution\
 		Execution/binary_exec\
 		Execution/pipe\
+		Execution/is_builtin\
 		Execution/Built_in/echo\
 		Execution/Built_in/cd\
 		Execution/Built_in/env\
@@ -67,13 +68,27 @@ FILES = minishell\
 		Execution/Built_in/pwd\
 		Execution/Built_in/Exit/exit\
 		Execution/Built_in/Exit/exit_utils\
-		Signals/sig_handler\
+		Signals/default_sig\
+		Signals/heredoc_sig\
+		Signals/ignore_sig\
 		Errors/builtin_error\
 		Errors/show_error\
+		Errors/token_error\
 		Free/free\
 		Free/free_utils\
+		Free/multifree\
 		Utils/get_prompt\
 		Utils/adress_keeper\
+		Utils/check_access\
+		Utils/exec_utils\
+		Utils/token_utils\
+		Utils/token_fd_utils\
+		Utils/fd_out_utils\
+		Utils/fd_in_utils\
+		Utils/dlist_utils\
+		Utils/expand_utils\
+		Utils/token_dlist_utils\
+		Utils/pipe_utils\
 		Utils/resources
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
