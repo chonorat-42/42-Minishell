@@ -17,14 +17,17 @@ void	last_quote_redir(char *str, t_dlist **lst, size_t *i, size_t *j)
 	while (is_char_in_set(str[(*i)], "\'\""))
 	{
 		move_to_last_quote(str, i, str[*j]);
-		if (ft_isws(str[(*i + 1)]) || !str[(*i + 1)]
-			|| is_char_in_set(str[(*i + 1)], "<>"))
+		if ((!str[(*i)] || !str[(*i + 1)] || ft_isws(str[(*i + 1)])
+				|| is_char_in_set(str[(*i + 1)], "<>")))
 		{
 			split_into_dlst(lst, str, ++(*i), *j);
 			return ;
 		}
 		else
-			(*i)++;
+		{
+			if (str[(*i)])
+				(*i)++;
+		}
 	}
 }
 
@@ -71,14 +74,11 @@ void	move_to_last_quote(char *str, size_t *i, char c)
 	{
 		if (str[(*i)] == c)
 			q_count++;
-		if (str[*i + 1]
-			&& (ft_isws(str[*i + 1]) || is_char_in_set(str[(*i + 1)], "<>"))
+		if ((!str[*i + 1]
+				|| (ft_isws(str[*i + 1])
+					|| is_char_in_set(str[(*i + 1)], "<>")))
 			&& !(q_count % 2))
-		{
-			if (!is_char_in_set(str[(*i + 1)], "<>") && !ft_isws(str[(*i + 1)]))
-				(*i)++;
 			return ;
-		}
 		(*i)++;
 	}
 }

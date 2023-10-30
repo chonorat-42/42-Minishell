@@ -27,7 +27,7 @@ void	executable(t_tokens *temp, t_mshell *shell)
 		manage_fd(temp->fd_in, temp->fd_out);
 		temp->fd_in = 0;
 		temp->fd_out = 1;
-		bin_exec(shell, temp->cmd_arr);
+		bin_exec(shell, temp->cmd_arr, NULL);
 	}
 	else
 	{

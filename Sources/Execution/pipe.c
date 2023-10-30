@@ -51,7 +51,10 @@ static void	child_fd(t_mshell *shell, t_tokens *temp, t_pipe *data)
 		exit(1);
 	}
 	if (temp->next && temp->next->fd_in != 0)
+	{
+		free(data->lpids);
 		exit(g_status);
+	}
 	manage_fd(temp->fd_in, temp->fd_out);
 }
 
@@ -68,7 +71,7 @@ void	child_management(t_mshell *shell, t_tokens *temp, t_pipe *data)
 	}
 	else
 	{
-		bin_exec(shell, temp->cmd_arr);
+		bin_exec(shell, temp->cmd_arr, data->lpids);
 		free(data->lpids);
 	}
 }
@@ -85,17 +88,19 @@ int	fork_pipe(t_mshell *shell, t_tokens **temp, int i, t_pipe *data)
 	if (!child)
 		child_management(shell, *temp, data);
 	else
-		parent_management(*temp, child, i, data);
-	if ((*temp)->has_bad_fd)
 	{
-		print_errors_single(*temp);
-		close(data->fd[0][0]);
-		close(data->fd[0][1]);
+		parent_management(*temp, child, i, data);
+		if ((*temp)->has_bad_fd)
+		{
+			print_errors_single(*temp);
+			close(data->fd[0][0]);
+			close(data->fd[0][1]);
+		}
+		if ((*temp)->next && (*temp)->next->type == PIPE)
+			*temp = (*temp)->next->next;
+		else
+			*temp = (*temp)->next;
 	}
-	if ((*temp)->next && (*temp)->next->type == PIPE)
-		*temp = (*temp)->next->next;
-	else
-		*temp = (*temp)->next;
 	return (1);
 }
 

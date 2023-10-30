@@ -114,7 +114,5 @@ int	tokenizer(t_mshell *shell)
 			get_input_loop(shell), 0);
 	if (cmd_has_pipes(shell->tok_lst))
 		get_piped_noob(shell->tok_lst);
-
-
 	return (0);
 }

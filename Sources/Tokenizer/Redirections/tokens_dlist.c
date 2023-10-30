@@ -41,7 +41,7 @@ void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *index)
 {
 	if (index[0] != index[1])
 		split_into_dlst(lst, str, index[0], index[1]);
-	while (ft_isws(str[index[0]]))
+	while (str[index[0]] && ft_isws(str[index[0]]))
 		index[0]++;
 	get_chevrons(str, &index[0], str[index[0]], lst);
 	if (!str[index[0]])

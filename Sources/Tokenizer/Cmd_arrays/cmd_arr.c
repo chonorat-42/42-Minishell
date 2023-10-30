@@ -37,6 +37,9 @@ int	handle_fd(int fd, char *file, int type, t_tokens *temp)
 
 	if (fd == -1 && type == CMD)
 	{
+		if (temp->fd_in_str)
+			free(temp->fd_in_str);
+		temp->fd_in_str = NULL;
 		stat(file, &sb);
 		if (errno == ENOENT)
 			add_error(file, NO_FILE, temp);

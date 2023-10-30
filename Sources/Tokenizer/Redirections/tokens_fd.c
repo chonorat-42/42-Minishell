@@ -25,15 +25,12 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 		while (handler.dlist)
 		{
 			if (!ft_strcmp(handler.dlist->content, "<"))
-				handle_simple_in(&handler);
+			{
+				if (!handle_simple_in(&handler))
+					break ;
+			}
 			else if (!ft_strcmp(handler.dlist->content, "<<"))
 				handle_heredoc(&handler);
-			else
-			{
-				if (handler.fd_str)
-					free(handler.fd_str);
-				handler.fd_str = NULL;
-			}
 			handler.dlist = handler.dlist->next;
 		}
 		handler.tok->fd_in = handler.temp_fd;
@@ -58,12 +55,9 @@ void	get_fd_out(t_mshell *shell, t_tokens **tok)
 					break ;
 			}
 			else if (!ft_strcmp(handler.dlist->content, ">>"))
-				handle_append(&handler);
-			else
 			{
-				if (handler.fd_str)
-					free(handler.fd_str);
-				handler.fd_str = NULL;
+				if (!handle_append(&handler))
+					break ;
 			}
 			handler.dlist = handler.dlist->next;
 		}

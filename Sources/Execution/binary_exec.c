@@ -59,7 +59,7 @@ void	browse_paths(t_mshell *shell, char **cmd_arr)
 	show_error(cmd_arr[0], EXEC, 1);
 }
 
-void	bin_exec(t_mshell *shell, char **cmd_arr)
+void	bin_exec(t_mshell *shell, char **cmd_arr, int *pid)
 {
 	if (ft_strchr(cmd_arr[0], '/'))
 		binary_with_path(shell, cmd_arr);
@@ -72,5 +72,7 @@ void	bin_exec(t_mshell *shell, char **cmd_arr)
 	}
 	free_struct(shell);
 	close_std_fds();
+	if (pid)
+		free(pid);
 	exit(g_status);
 }

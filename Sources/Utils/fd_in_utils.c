@@ -3,29 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   fd_in_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:58:04 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/10/26 16:03:52 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/10/27 15:59:41 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	simple_in_case(t_dlist *temp, int *has_fd, int *temp_fd)
+static int	simple_in_case(t_fdhandler *handler)
 {
 	char	*trim;
 
-	if (*has_fd && *temp_fd != -1)
-		close(*temp_fd);
-	if (is_char_in_set(temp->next->content[0], "\'\""))
+	if (handler->has_fd && handler->temp_fd != -1)
+		close(handler->temp_fd);
+	if (is_char_in_set(handler->dlist->next->content[0], "\'\""))
 	{
-		trim = ft_strtrim(temp->next->content, "\'\"");
-		free(temp->next->content);
-		temp->next->content = trim;
+		trim = ft_strtrim(handler->dlist->next->content, "\'\"");
+		free(handler->dlist->next->content);
+		handler->dlist->next->content = trim;
 	}
-	*temp_fd = open(temp->next->content, O_RDWR);
-	(*has_fd)++;
+	if (!fdin_access(handler->dlist->next->content))
+	{
+		g_status = 1;
+		handler->tok->has_bad_fd = 1;
+		return (0);
+	}
+	handler->temp_fd = open(handler->dlist->next->content, O_RDONLY);
+	handler->has_fd++;
+	return (1);
 }
 
 void	heredoc_case(t_fdhandler *handler)
@@ -41,19 +48,25 @@ void	heredoc_case(t_fdhandler *handler)
 	get_fd_in(handler->shell, &handler->tok);
 }
 
-void	handle_simple_in(t_fdhandler *handler)
+int	handle_simple_in(t_fdhandler *handler)
 {
-	// handler->fd_str = remove_quotes(handler->dlist->next->content);
-	simple_in_case(handler->dlist, &handler->has_fd, &handler->temp_fd);
+	handler->fd_str = remove_quotes(handler->dlist->next->content);
+	if (!simple_in_case(handler))
+	{
+		bad_fd(handler);
+		return (0);
+	}
 	if (handle_fd(handler->temp_fd, handler->fd_str, CMD, handler->tok))
 	{
 		handler->tok->has_bad_fd++;
 		if (!cmd_has_pipes(handler->shell->tok_lst))
 			return (print_errors(handler->shell->tok_lst),
+				handler->tok->fd_in_str = NULL,
 				free_tokens(&handler->shell->tok_lst),
 				free_arr(handler->shell->paths), handler->shell->paths = NULL,
-				free(handler->shell->input), get_input_loop(handler->shell));
+				free(handler->shell->input), get_input_loop(handler->shell), 0);
 	}
+	return (1);
 }
 
 void	handle_heredoc(t_fdhandler *handler)
