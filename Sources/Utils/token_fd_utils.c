@@ -44,6 +44,7 @@ void	init_fdhandler(t_fdhandler *handler, t_mshell *shell,
 void	init_handler_loop(t_fdhandler *handler, int type)
 {
 	handler->has_fd = 0;
+	handler->fd_str = NULL;
 	if (type == 1)
 		handler->temp_fd = 1;
 	else
