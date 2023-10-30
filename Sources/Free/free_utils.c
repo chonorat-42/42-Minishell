@@ -33,7 +33,10 @@ void	free_dlist(t_dlist **head)
 	while (*head)
 	{
 		if ((*head)->content)
+		{
 			free((*head)->content);
+			(*head)->content = NULL;
+		}
 		temp = *head;
 		*head = temp->next;
 		free(temp);

@@ -105,7 +105,6 @@ int	tokenizer(t_mshell *shell)
 	get_fds(shell, &shell->tok_lst);
 	create_cmd_arr(&shell->tok_lst, shell);
 	manage_quotes_arr(&shell->tok_lst);
-	free_tokens_dlist(&shell->tok_lst);
 	give_type(&shell->tok_lst);
 	if (!shell->tok_lst || !shell->tok_lst->cmd_arr
 		|| !shell->tok_lst->cmd_arr[0][0])

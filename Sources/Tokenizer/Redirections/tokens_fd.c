@@ -34,7 +34,10 @@ void	get_fd_in(t_mshell *shell, t_tokens **tok)
 			handler.dlist = handler.dlist->next;
 		}
 		handler.tok->fd_in = handler.temp_fd;
-		handler.tok->fd_in_str = handler.fd_str;
+		if (handler.fd_str)
+			handler.tok->fd_in_str = ft_strdup(handler.fd_str);
+		free(handler.fd_str);
+		handler.fd_str = NULL;
 		handler.tok = handler.tok->next;
 	}
 }

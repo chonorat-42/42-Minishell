@@ -15,8 +15,10 @@
 void	bad_fd(t_fdhandler *handler)
 {
 	if (handler->fd_str)
+	{
 		free(handler->fd_str);
-	handler->fd_str = NULL;
+		handler->fd_str = NULL;
+	}
 }
 
 int	cmd_has_pipes(t_tokens *lst)

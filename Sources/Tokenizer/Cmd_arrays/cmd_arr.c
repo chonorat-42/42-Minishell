@@ -71,10 +71,4 @@ void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 		free_dlist(&new);
 		temp = temp->next;
 	}
-	temp = *tk_lst;
-	while (temp)
-	{
-		free_dlist(&temp->dlst);
-		temp = temp->next;
-	}
 }

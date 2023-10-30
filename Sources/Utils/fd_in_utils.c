@@ -50,11 +50,7 @@ void	heredoc_case(t_fdhandler *handler)
 
 int	handle_simple_in(t_fdhandler *handler)
 {
-	if (ft_char_index(handler->dlist->next->content, '\'') >= 0
-		|| ft_char_index(handler->dlist->next->content, '\'') >= 0)
-		handler->fd_str = remove_quotes(handler->dlist->next->content);
-	else
-		handler->fd_str = handler->dlist->next->content;
+	handler->fd_str = remove_quotes(handler->dlist->next->content);
 	if (!simple_in_case(handler))
 	{
 		bad_fd(handler);
