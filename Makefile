@@ -6,7 +6,7 @@
 #    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/10/26 12:32:00 by chonorat         ###   ########.fr        #
+#    Updated: 2023/10/30 14:50:52 by chonorat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ LIBFT = Libft/libft.a
 MAKE_LIBFT = @make -C Libft
 CLEAN_LIBFT = @make clean -C Libft
 FCLEAN_LIBFT = @make fclean -C Libft
-NORM = @norminette | awk '$$NF!="OK!" {print "$(RED)" $$0 "\033[0;0m"}'
+NORM = @norminette | awk '$$NF!="OK!" {print "$(_RED)" $$0 "\033[0;0m"}'
 FILES = minishell\
 		Environment/get_envp\
 		Environment/get_paths\
@@ -93,12 +93,17 @@ FILES = minishell\
 SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 
-$(NAME): $(OBJS)
-	$(PRINT) "\n${_YELLOW}Checking Libft...${_END}"
-	$(MAKE_LIBFT)
+$(NAME): $(OBJS) $(LIBFT)
+	$(PRINT) "\n${_BOLD}Waiting for norminette...${_END}"
+	$(NORM)
+	$(PRINT) "${_BOLD}Norminette done.${_END}"
 	$(PRINT) "\n${_YELLOW}Making $(NAME)...${_END}"
 	$(CC) $(OBJS) -lreadline -o $(NAME) $(LIBFT)
 	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.\a${_END}"
+
+$(LIBFT): force
+	$(PRINT) "\n${_YELLOW}Checking Libft...${_END}"
+	$(MAKE_LIBFT)
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
 	$(DIR) Objects
@@ -130,15 +135,6 @@ fclean:
 
 re: fclean all
 
-exec : all
-	./minishell
+force:
 
-val : all
-	valgrind --leak-check=full --show-reachable=no --track-origins=yes -s --track-fds=yes ./minishell
-
-# debug: $(OBJS)
-# 	$(PRINT) "${_RED}----------DEBUG----------${_END}"
-# 	$(NORM)
-# 	leaks_r 
-
-.PHONY: all clean fclean re exec val
+.PHONY: all clean fclean re force
