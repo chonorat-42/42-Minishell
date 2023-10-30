@@ -35,7 +35,7 @@ size_t	last_envvar_char(char *str)
 		return (i + 1);
 	while (str[i])
 	{
-		if (ft_isws(str[i]) || is_char_in_set(str[i], "\"\'=$"))
+		if (!ft_isalnum(str[i]) || is_char_in_set(str[i], "_"))
 			return (i);
 		i++;
 	}

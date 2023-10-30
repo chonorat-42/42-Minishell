@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_mshell	*adress_keeper(t_mshell *shell)
+t_mshell	*shell_keeper(t_mshell *shell)
 {
 	static t_mshell	*shell_adr;
 

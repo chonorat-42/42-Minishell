@@ -57,9 +57,9 @@ static void	option_error(char *cmd, char *arg)
 	if (ft_strcmp(cmd, "export") == 0)
 		ft_dprintf(2, "%s: usage: %s [name[=value] ...]\n", cmd, cmd);
 	else if (ft_strcmp(cmd, "unset") == 0)
-		ft_dprintf(2, "%s: usage: %s [name ...]\n", cmd);
+		ft_dprintf(2, "%s: usage: %s [name ...]\n", cmd, cmd);
 	else if (ft_strcmp(cmd, "cd") == 0)
-		ft_dprintf(2, "%s: usage: %s [dir]\n", cmd);
+		ft_dprintf(2, "%s: usage: %s [dir]\n", cmd, cmd);
 	g_status = 2;
 }
 

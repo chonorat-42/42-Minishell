@@ -21,7 +21,7 @@ static void	hd_sig(int signum)
 	{
 		g_status = 128 + signum;
 		ft_putstr_fd("\n", 0);
-		free_struct(adress_keeper(NULL));
+		free_struct(shell_keeper(NULL));
 		free_dlist(dlist_keeper(NULL));
 		close(*fd_keeper(NULL));
 		exit(g_status);

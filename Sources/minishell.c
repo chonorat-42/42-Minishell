@@ -51,7 +51,7 @@ int	main(int argc, char **argv, char **envp)
 		return (ft_printf("minishell: %s: No such file or directory\n",
 				argv[1]), 1);
 	init_shell(&shell);
-	adress_keeper(&shell);
+	shell_keeper(&shell);
 	get_envp(&shell, envp, argv);
 	update_shlvl(&shell);
 	shell.exit = get_exit(&shell);

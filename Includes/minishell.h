@@ -171,11 +171,11 @@ int			find_envvar_index(char **envp, const char *str);
 void		get_svar(t_mshell *shell);
 int			var_exist(t_mshell *shell, char *var);
 int			delete_envvar(t_envp **envp, char *var, int ign_param);
-
 void		get_paths(t_mshell *shell);
 
 //KEEPER
-t_mshell	*adress_keeper(t_mshell *shell);
+void		*adress_keeper(void	*var);
+t_mshell	*shell_keeper(t_mshell *shell);
 int			*fd_keeper(int *fd);
 t_dlist		**dlist_keeper(t_dlist **lst);
 
