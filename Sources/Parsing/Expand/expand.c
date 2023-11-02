@@ -12,6 +12,24 @@
 
 #include "minishell.h"
 
+int	is_between_simple(char *str)
+{
+	size_t	i;
+	size_t	s_quote_count;
+
+	i = 0;
+	s_quote_count = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'')
+			s_quote_count++;
+		if ((str[i]) == '$')
+			return (s_quote_count % 2);
+		i++;
+	}
+	return (0);
+}
+
 void	split_envvar(char *str, t_dlist **lst)
 {
 	size_t	i;
@@ -21,7 +39,7 @@ void	split_envvar(char *str, t_dlist **lst)
 	j = 0;
 	while (str[i])
 	{
-		if (str[i] == '$')
+		if (str[i] == '$' && !is_between_simple(str))
 		{
 			if (j != i)
 				split_into_dlst(lst, str, i, j);
@@ -87,11 +105,21 @@ int	expand(t_mshell *shell, char *cmd)
 	if (ft_char_index(cmd, '$') >= 0)
 	{
 		temp = expand_envvar(shell, cmd, shell->envp);
+		if (!temp)
+			return (1);
 		free(shell->input);
 		if (temp)
+		{
 			shell->input = ft_strdup(temp);
+			if (!shell->input)
+				return (free(temp), 1);
+		}
 		else
+		{
 			shell->input = ft_strdup("");
+			if (!shell->input)
+				return (free(temp), 1);
+		}
 		free(temp);
 	}
 	return (0);

@@ -44,35 +44,43 @@ static void	child_fd(t_mshell *shell, t_tokens *temp, t_pipe *data)
 		close(data->fd[0][1]);
 	}
 	if (has_bad_fd(temp))
-	{
-		close_std_fds();
-		free_struct(shell);
-		free(data->lpids);
-		exit(1);
-	}
+		return (close_std_fds(), free_struct(shell),
+			free(data->lpids), exit(1));
 	if (temp->next && temp->next->fd_in != 0)
 	{
 		free(data->lpids);
 		exit(g_status);
 	}
+	adress_keeper(data->lpids);
 	manage_fd(temp->fd_in, temp->fd_out);
 }
 
 void	child_management(t_mshell *shell, t_tokens *temp, t_pipe *data)
 {
 	child_fd(shell, temp, data);
-	if (is_builtin(temp))
+	pipe_sig(shell);
+	fd_keeper(&data->lpids_freed);
+	if (temp->cmd_arr)
 	{
-		builtin_forwarding_pipe(temp, shell);
-		free_struct(shell);
-		free(data->lpids);
-		close_std_fds();
-		exit(g_status);
+		if (is_builtin(temp))
+		{
+			builtin_forwarding_pipe(temp, shell);
+			if (!data->lpids_freed)
+				free(data->lpids);
+			return (free_struct(shell), close_std_fds(), exit(g_status));
+		}
+		else
+		{
+			bin_exec(shell, temp->cmd_arr, data->lpids);
+			if (!data->lpids_freed)
+				free(data->lpids);
+		}
 	}
 	else
 	{
-		bin_exec(shell, temp->cmd_arr, data->lpids);
-		free(data->lpids);
+		if (!data->lpids_freed)
+			free(data->lpids);
+		return (free_struct(shell), close_std_fds(), exit(g_status));
 	}
 }
 
@@ -114,6 +122,7 @@ void	handle_pipes(t_mshell *shell, t_tokens *temp)
 	data.lpids = malloc(sizeof(int) * (count_successive_pipes(temp) + 1));
 	if (!data.lpids)
 		return (free_struct(shell), exit(1));
+	data.lpids_freed = 0;
 	index[0] = 0;
 	index[1] = 0;
 	while (temp)

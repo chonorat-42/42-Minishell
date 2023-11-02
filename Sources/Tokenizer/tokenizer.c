@@ -18,8 +18,14 @@ void	create_token(t_mshell *shell, int i, int j, char *to_add)
 	char		*str;
 
 	new = malloc(sizeof(t_tokens));
+	if (!new)
+		return (free_struct(shell), free(to_add), exit(1));
 	str = ft_substr((const char *)to_add, j, (i - j));
+	if (!str)
+		return (free_struct(shell), free(to_add), free(new), exit(1));
 	new->content = ft_strtrim(str, " \n\t\b");
+	if (!new->content)
+		return (free_struct(shell), multifree(to_add, new, str, 0), exit(1));
 	free(str);
 	new->next = NULL;
 	if (!shell->tok_lst)
@@ -82,7 +88,7 @@ void	split_on_pipes(t_mshell *shell, char *str)
 		create_token(shell, i, j, str);
 }
 
-void	get_piped_noob(t_tokens *lst)
+void	add_pipes_flag(t_tokens *lst)
 {
 	t_tokens	*temp;
 
@@ -106,12 +112,7 @@ int	tokenizer(t_mshell *shell)
 	create_cmd_arr(&shell->tok_lst, shell);
 	manage_quotes_arr(&shell->tok_lst);
 	give_type(&shell->tok_lst);
-	if (!shell->tok_lst || !shell->tok_lst->cmd_arr
-		|| !shell->tok_lst->cmd_arr[0][0])
-		return (close_fd(shell), free_tokens(&shell->tok_lst),
-			free(shell->input),
-			get_input_loop(shell), 0);
 	if (cmd_has_pipes(shell->tok_lst))
-		get_piped_noob(shell->tok_lst);
+		add_pipes_flag(shell->tok_lst);
 	return (0);
 }

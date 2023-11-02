@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   adress_keeper.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 12:51:28 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/22 14:27:05 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/02 13:32:52 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	*adress_keeper(void *adress)
+{
+	static void	*adr;
+
+	if (!adress)
+		return (adr);
+	adr = adress;
+	return (adr);
+}
 
 t_mshell	*shell_keeper(t_mshell *shell)
 {

@@ -99,6 +99,7 @@ typedef struct s_error
 typedef struct s_pipe
 {
 	int	*lpids;
+	int	lpids_freed;
 	int	fd[2][2];
 }				t_pipe;
 
@@ -119,6 +120,16 @@ typedef struct s_tokens
 	struct s_tokens	*next;
 }					t_tokens;
 
+typedef struct s_fdhandler
+{
+	t_tokens		*tok;
+	t_dlist			*dlist;
+	struct s_mshell	*shell;
+	char			*fd_str;
+	int				has_fd;
+	int				temp_fd;
+}			t_fdhandler;
+
 typedef struct s_mshell
 {
 	char		*input;
@@ -133,17 +144,8 @@ typedef struct s_mshell
 	t_tokens	*tok_lst;
 	t_envp		*envp;
 	t_envp		*export;
+	t_fdhandler	handler;
 }				t_mshell;
-
-typedef struct s_fdhandler
-{
-	t_tokens	*tok;
-	t_dlist		*dlist;
-	t_mshell	*shell;
-	char		*fd_str;
-	int			has_fd;
-	int			temp_fd;
-}			t_fdhandler;
 
 extern long long	g_status;
 
@@ -157,6 +159,7 @@ void		default_sig(t_mshell *shell);
 void		ignore_sig(t_mshell *shell);
 void		heredoc_sig(t_mshell *shell, int fd);
 void		exec_sig(t_mshell *shell);
+void		pipe_sig(t_mshell *shell);
 
 //ENVIRONMENT
 void		get_envp(t_mshell *shell, char **envp, char **argv);
@@ -174,7 +177,7 @@ int			delete_envvar(t_envp **envp, char *var, int ign_param);
 void		get_paths(t_mshell *shell);
 
 //KEEPER
-void		*adress_keeper(void	*var);
+void		*adress_keeper(void *adress);
 t_mshell	*shell_keeper(t_mshell *shell);
 int			*fd_keeper(int *fd);
 t_dlist		**dlist_keeper(t_dlist **lst);
@@ -206,11 +209,11 @@ void		pipe_found(t_mshell *shell, char *str, size_t *i, size_t *j);
 void		give_type(t_tokens **lst);
 void		create_token(t_mshell *shell, int i, int j, char *to_add);
 
-void		split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
+int			split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j);
 char		*join_dlist(t_dlist	*lst);
 void		expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst);
 size_t		dlst_size(t_dlist *lst);
-char		**list_into_arr(t_dlist *lst);
+char		**list_into_arr(t_mshell *shell, t_dlist *lst);
 void		get_chevrons(char *str, size_t *i, char c, t_dlist **lst);
 void		move_to_last_quote(char *str, size_t *i, char c);
 void		last_quote_redir(char *str, t_dlist **lst, size_t *i, size_t *j);
@@ -233,6 +236,7 @@ void		handle_heredoc(t_fdhandler *handler);
 void		init_fdhandler(t_fdhandler *handler, t_mshell *shell,
 				t_tokens *tokens);
 void		init_handler_loop(t_fdhandler *handler, int type);
+void		handler_end_loop(t_fdhandler *handler, int type);
 int			fdin_access(char *path);
 int			fdout_access(char *path);
 void		bad_fd(t_fdhandler *handler);
@@ -296,6 +300,7 @@ void		free_struct(t_mshell *shell);
 void		free_arr(char **arr);
 void		free_export(t_envp **export);
 void		free_errors(t_error *error);
+void		free_handler(t_fdhandler *handler);
 void		multifree(void *ptr1, void *ptr2, void *ptr3, void *ptr4);
 void		remove_hdoc(t_mshell *shell);
 

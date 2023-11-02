@@ -41,6 +41,11 @@ void	init_shell(t_mshell *shell)
 	shell->tok_lst = NULL;
 	shell->envp = NULL;
 	shell->export = NULL;
+	shell->handler.dlist = NULL;
+	shell->handler.fd_str = NULL;
+	shell->handler.has_fd = 0;
+	shell->handler.tok = NULL;
+	shell->handler.temp_fd = 0;
 }
 
 int	main(int argc, char **argv, char **envp)

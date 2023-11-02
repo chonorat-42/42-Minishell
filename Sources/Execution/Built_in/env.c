@@ -27,9 +27,14 @@ void	env_case(t_mshell *shell, char **cmd, int fd)
 	{
 		if (temp->var.readable == 1)
 		{
-			ft_putstr_fd(temp->var.name, fd);
-			ft_putchar_fd('=', fd);
-			ft_putendl_fd(temp->var.content, fd);
+			if (ft_putstr_fd(temp->var.name, fd) == -1)
+				return (free_struct(shell), exit(1));
+			if (ft_putchar_fd('=', fd) == -1)
+				return (free_struct(shell), exit(1));
+			if (ft_putstr_fd(temp->var.content, fd) == -1)
+				return (free_struct(shell), exit(1));
+			if (ft_putchar_fd('\n', fd) == -1)
+				return (free_struct(shell), exit(1));
 		}
 		temp = temp->next;
 	}

@@ -3,14 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   fd_out_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:54:58 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/10/27 15:46:51 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/02 14:27:28 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	handler_end_loop(t_fdhandler *handler, int type)
+{
+	if (handler->tok)
+	{
+		if (type == 0)
+		{
+			handler->tok->fd_in = handler->temp_fd;
+			if (handler->fd_str)
+				handler->tok->fd_in_str = ft_strdup(handler->fd_str);
+			free(handler->fd_str);
+			handler->fd_str = NULL;
+			handler->tok = handler->tok->next;
+		}
+		else
+		{
+			handler->tok->fd_out = handler->temp_fd;
+			if (handler->fd_str)
+				handler->tok->fd_out_str = ft_strdup(handler->fd_str);
+			free(handler->fd_str);
+			handler->fd_str = NULL;
+			handler->tok = handler->tok->next;
+		}
+	}
+}
 
 static int	out_case(t_fdhandler *handler, int token)
 {
@@ -42,8 +67,11 @@ static int	out_case(t_fdhandler *handler, int token)
 
 int	handle_simple_out(t_fdhandler *handler)
 {
+	if (handler->fd_str)
+		free(handler->fd_str);
 	handler->fd_str = remove_quotes(handler->dlist->next->content);
-	handler->tok->fd_out_str = handler->fd_str;
+	if (!handler->fd_str)
+		return (free_struct(handler->shell), exit(1), 0);
 	if (!out_case(handler, RCHEVRON))
 	{
 		bad_fd(handler);
@@ -54,6 +82,7 @@ int	handle_simple_out(t_fdhandler *handler)
 		handler->tok->has_bad_fd++;
 		if (!cmd_has_pipes(handler->shell->tok_lst))
 			return (print_errors(handler->shell->tok_lst),
+				handler->tok->fd_out_str = NULL,
 				free_tokens(&handler->shell->tok_lst),
 				free_arr(handler->shell->paths), handler->shell->paths = NULL,
 				free(handler->shell->input), get_input_loop(handler->shell), 0);
@@ -63,7 +92,11 @@ int	handle_simple_out(t_fdhandler *handler)
 
 int	handle_append(t_fdhandler *handler)
 {
+	if (handler->fd_str)
+		free(handler->fd_str);
 	handler->fd_str = remove_quotes(handler->dlist->next->content);
+	if (!handler->fd_str)
+		return (free_struct(handler->shell), exit(1), 0);
 	if (!out_case(handler, APPEND))
 	{
 		bad_fd(handler);
@@ -74,6 +107,7 @@ int	handle_append(t_fdhandler *handler)
 		handler->tok->has_bad_fd++;
 		if (!cmd_has_pipes(handler->shell->tok_lst))
 			return (print_errors(handler->shell->tok_lst),
+				handler->tok->fd_out_str = NULL,
 				free_tokens(&handler->shell->tok_lst),
 				free_arr(handler->shell->paths), handler->shell->paths = NULL,
 				free(handler->shell->input), get_input_loop(handler->shell), 0);

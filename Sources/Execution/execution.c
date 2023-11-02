@@ -54,8 +54,18 @@ void	exec_forwarding(t_tokens *temp, t_mshell *shell)
 		builtin_forwarding(temp, shell);
 	else
 	{
-		ignore_sig(shell);
-		executable(temp, shell);
+		if (temp->cmd_arr)
+		{
+			ignore_sig(shell);
+			executable(temp, shell);
+		}
+		else
+		{
+			if (temp->fd_in != 0)
+				close(temp->fd_in);
+			if (temp->fd_out != 1)
+				close(temp->fd_out);
+		}
 	}
 }
 

@@ -18,15 +18,18 @@ void	heredoc_into_infile(t_dlist **lst)
 {
 	t_dlist	*temp;
 
-	temp = *lst;
-	while (ft_strcmp(temp->content, "<<"))
-		temp = temp->next;
-	free(temp->content);
-	temp->content = ft_strdup("<");
-	temp = temp->next;
-	if (temp->content)
+	if (*lst)
+	{
+		temp = *lst;
+		while (ft_strcmp(temp->content, "<<"))
+			temp = temp->next;
 		free(temp->content);
-	temp->content = ft_strdup("/tmp/temp.heredoc2");
+		temp->content = ft_strdup("<");
+		temp = temp->next;
+		if (temp->content)
+			free(temp->content);
+		temp->content = ft_strdup("/tmp/temp.heredoc2");
+	}
 }
 
 void	delimiter_found(t_mshell *shell, t_dlist *lst, int fd_in, int del_quote)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd_in_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:58:04 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/10/27 15:59:41 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/02 14:28:06 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ static int	simple_in_case(t_fdhandler *handler)
 		close(handler->temp_fd);
 	if (is_char_in_set(handler->dlist->next->content[0], "\'\""))
 	{
-		trim = ft_strtrim(handler->dlist->next->content, "\'\"");
+		trim = remove_quotes(handler->dlist->next->content);
+		if (!trim)
+			return (free_struct(handler->shell), exit(1), 1);
 		free(handler->dlist->next->content);
 		handler->dlist->next->content = trim;
 	}
@@ -37,19 +39,26 @@ static int	simple_in_case(t_fdhandler *handler)
 
 void	heredoc_case(t_fdhandler *handler)
 {
-	if (handler->has_fd && handler->temp_fd != -1)
+	if (handler->has_fd)
+	{
 		close(handler->temp_fd);
+		free(handler->fd_str);
+		handler->fd_str = NULL;
+	}
 	handler->temp_fd = open("/tmp/temp.heredoc2",
 			O_RDWR | O_CREAT | O_TRUNC, 0666);
 	heredoc(handler->shell, handler->dlist->next->content,
 		handler->temp_fd);
-	heredoc_into_infile(&handler->dlist);
+	if (handler->tok && handler->tok->dlst)
+		heredoc_into_infile(&handler->tok->dlst);
 	close(handler->temp_fd);
 	get_fd_in(handler->shell, &handler->tok);
 }
 
 int	handle_simple_in(t_fdhandler *handler)
 {
+	if (handler->fd_str)
+		free(handler->fd_str);
 	handler->fd_str = remove_quotes(handler->dlist->next->content);
 	if (!simple_in_case(handler))
 	{

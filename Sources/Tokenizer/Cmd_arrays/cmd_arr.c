@@ -14,7 +14,7 @@
 
 extern long long	g_status;
 
-void	get_commands_lst(t_dlist *base, t_dlist **new)
+void	get_commands_lst(t_mshell *shell, t_dlist *base, t_dlist **new)
 {
 	t_dlist	*temp;
 
@@ -25,7 +25,9 @@ void	get_commands_lst(t_dlist *base, t_dlist **new)
 			temp = temp->next->next;
 		else
 		{
-			split_into_dlst(new, temp->content, ft_strlen(temp->content), 0);
+			if (split_into_dlst(new, temp->content,
+					ft_strlen(temp->content), 0))
+				return (free_struct(shell), exit(1));
 			temp = temp->next;
 		}
 	}
@@ -58,16 +60,13 @@ void	create_cmd_arr(t_tokens **tk_lst, t_mshell *shell)
 	t_tokens	*temp;
 	t_dlist		*new;
 
+	(void)shell;
 	temp = *tk_lst;
 	while (temp)
 	{
 		new = NULL;
-		get_commands_lst(temp->dlst, &new);
-		if (!new)
-			return (free_arr(shell->paths), shell->paths = NULL,
-				free(shell->input), close_fd(shell), free_tokens(tk_lst),
-				get_input_loop(shell));
-		temp->cmd_arr = list_into_arr(new);
+		get_commands_lst(shell, temp->dlst, &new);
+		temp->cmd_arr = list_into_arr(shell, new);
 		free_dlist(&new);
 		temp = temp->next;
 	}

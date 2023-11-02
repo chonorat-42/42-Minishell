@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   is_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:22:33 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/27 12:23:08 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/31 18:48:09 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,17 @@ extern long long	g_status;
 
 int	is_builtin(t_tokens *temp)
 {
-	if (!ft_strcmp(temp->cmd_arr[0], "echo")
-		|| !ft_strcmp(temp->cmd_arr[0], "cd")
-		|| !ft_strcmp(temp->cmd_arr[0], "exit")
-		|| !ft_strcmp(temp->cmd_arr[0], "env")
-		|| !ft_strcmp(temp->cmd_arr[0], "unset")
-		|| !ft_strcmp(temp->cmd_arr[0], "pwd")
-		|| !ft_strcmp(temp->cmd_arr[0], "export"))
-		return (g_status = 0, 1);
+	if (temp->cmd_arr)
+	{
+		if (!ft_strcmp(temp->cmd_arr[0], "echo")
+			|| !ft_strcmp(temp->cmd_arr[0], "cd")
+			|| !ft_strcmp(temp->cmd_arr[0], "exit")
+			|| !ft_strcmp(temp->cmd_arr[0], "env")
+			|| !ft_strcmp(temp->cmd_arr[0], "unset")
+			|| !ft_strcmp(temp->cmd_arr[0], "pwd")
+			|| !ft_strcmp(temp->cmd_arr[0], "export"))
+			return (g_status = 0, 1);
+	}
 	return (0);
 }
 

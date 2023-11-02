@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_sig.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 14:48:46 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/22 13:47:51 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/31 18:58:47 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static void	hd_sig(int signum)
 		ft_putstr_fd("\n", 0);
 		free_struct(shell_keeper(NULL));
 		free_dlist(dlist_keeper(NULL));
+		free(adress_keeper(NULL));
 		close(*fd_keeper(NULL));
 		exit(g_status);
 	}

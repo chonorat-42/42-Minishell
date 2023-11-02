@@ -16,57 +16,55 @@ extern long long	g_status;
 
 void	get_fd_in(t_mshell *shell, t_tokens **tok)
 {
-	t_fdhandler	handler;
-
-	init_fdhandler(&handler, shell, *tok);
-	while (handler.tok)
+	init_fdhandler(&shell->handler, shell, *tok);
+	while (shell->handler.tok)
 	{
-		init_handler_loop(&handler, 0);
-		while (handler.dlist)
+		init_handler_loop(&shell->handler, 0);
+		while (shell->handler.dlist)
 		{
-			if (!ft_strcmp(handler.dlist->content, "<"))
+			if (!ft_strcmp(shell->handler.dlist->content, "<")
+				&& !handle_simple_in(&shell->handler))
+				break ;
+			else if (!ft_strcmp(shell->handler.dlist->content, "<<"))
+				handle_heredoc(&shell->handler);
+			else if (shell->handler.dlist->content[0] == '<'
+				&& ft_strlen(shell->handler.dlist->content) > 2)
 			{
-				if (!handle_simple_in(&handler))
-					break ;
+				show_error("<<", SYNTAX, 0);
+				break ;
 			}
-			else if (!ft_strcmp(handler.dlist->content, "<<"))
-				handle_heredoc(&handler);
-			handler.dlist = handler.dlist->next;
+			if (shell->handler.dlist)
+				shell->handler.dlist = shell->handler.dlist->next;
 		}
-		handler.tok->fd_in = handler.temp_fd;
-		if (handler.fd_str)
-			handler.tok->fd_in_str = ft_strdup(handler.fd_str);
-		free(handler.fd_str);
-		handler.fd_str = NULL;
-		handler.tok = handler.tok->next;
+		handler_end_loop(&shell->handler, 0);
 	}
+	if (shell->handler.fd_str)
+		free(shell->handler.fd_str);
 }
 
 void	get_fd_out(t_mshell *shell, t_tokens **tok)
 {
-	t_fdhandler	handler;
-
-	init_fdhandler(&handler, shell, *tok);
-	while (handler.tok)
+	init_fdhandler(&shell->handler, shell, *tok);
+	while (shell->handler.tok)
 	{
-		init_handler_loop(&handler, 1);
-		while (handler.dlist)
+		init_handler_loop(&shell->handler, 1);
+		while (shell->handler.dlist)
 		{
-			if (!ft_strcmp(handler.dlist->content, ">"))
+			if (!ft_strcmp(shell->handler.dlist->content, ">")
+				&& !handle_simple_out(&shell->handler))
+				break ;
+			else if (!ft_strcmp(shell->handler.dlist->content, ">>")
+				&& !handle_append(&shell->handler))
+				break ;
+			else if (shell->handler.dlist->content[0] == '>'
+				&& ft_strlen(shell->handler.dlist->content) > 2)
 			{
-				if (!handle_simple_out(&handler))
-					break ;
+				show_error(">>", SYNTAX, 0);
+				break ;
 			}
-			else if (!ft_strcmp(handler.dlist->content, ">>"))
-			{
-				if (!handle_append(&handler))
-					break ;
-			}
-			handler.dlist = handler.dlist->next;
+			shell->handler.dlist = shell->handler.dlist->next;
 		}
-		handler.tok->fd_out = handler.temp_fd;
-		handler.tok->fd_out_str = handler.fd_str;
-		handler.tok = handler.tok->next;
+		handler_end_loop(&shell->handler, 1);
 	}
 }
 

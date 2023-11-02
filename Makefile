@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/10/30 14:50:52 by chonorat         ###   ########.fr        #
+#    Updated: 2023/11/02 14:14:38 by pgouasmi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,6 @@ FILES = minishell\
 		Tokenizer/prints\
 		Tokenizer/Redirections/tokens_dlist\
 		Tokenizer/Redirections/tokens_fd\
-		Tokenizer/Redirections/remove_redirections\
 		Tokenizer/Cmd_arrays/cmd_arr\
 		Get_input/get_input\
 		Execution/execution\
@@ -71,6 +70,7 @@ FILES = minishell\
 		Signals/default_sig\
 		Signals/heredoc_sig\
 		Signals/ignore_sig\
+		Signals/pipe_sig\
 		Errors/builtin_error\
 		Errors/show_error\
 		Errors/token_error\
@@ -135,6 +135,11 @@ fclean:
 
 re: fclean all
 
+norminette:
+	$(PRINT) "\n${_BOLD}Waiting for norminette...${_END}"
+	$(NORM)
+	$(PRINT) "${_BOLD}Norminette done.${_END}"
+
 force:
 
-.PHONY: all clean fclean re force
+.PHONY: all clean fclean re norminette force

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 13:17:36 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/20 14:54:25 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/10/31 11:59:28 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	builtin_error(char *cmd, char *arg, int error)
 		return (g_status = 1,
 			(void)ft_dprintf(2, "`%s': not a valid identifier\033[0m\n", arg));
 	else if (ft_strcmp(cmd, "exit") == 0)
-		return (exit_error(arg, error));
+		exit_error(arg, error);
 	else if (ft_strcmp(cmd, "cd") == 0)
 		return (cd_error(arg, error));
 	else if (ft_strcmp(cmd, "unset") == 0)

@@ -70,6 +70,7 @@ void	close_fd_final(t_tokens *lst)
 void	free_struct(t_mshell *shell)
 {
 	close_fd_final(shell->tok_lst);
+	free_handler(&shell->handler);
 	free_strings_shell(shell);
 	free_arrays_shell(shell);
 	if (shell->tok_lst)

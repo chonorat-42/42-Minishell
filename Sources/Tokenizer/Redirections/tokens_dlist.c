@@ -56,10 +56,13 @@ void	split_redir(t_mshell *shell, t_dlist **lst, char *str, size_t *index)
 	index[1] = index[0];
 }
 
-void	ws_found(t_dlist **lst, char *str, size_t *index)
+void	ws_found(t_mshell *shell, t_dlist **lst, char *str, size_t *index)
 {
 	if (index[1] != index[0])
-		split_into_dlst(lst, str, index[0], index[1]);
+	{
+		if (split_into_dlst(lst, str, index[0], index[1]))
+			return (free_struct(shell), exit(1));
+	}
 	while (str[index[0]] && ft_isws(str[index[0]]))
 		index[1] = ++index[0];
 }
@@ -82,7 +85,7 @@ void	split_words_and_redir(t_dlist **lst, char *str, t_mshell *shell)
 		else if (is_char_in_set(str[index[0]], "<>"))
 			split_redir(shell, lst, str, index);
 		else if (ft_isws(str[index[0]]))
-			ws_found(lst, str, index);
+			ws_found(shell, lst, str, index);
 		else
 		{
 			if (str[index[0]])

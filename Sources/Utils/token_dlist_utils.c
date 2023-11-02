@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_dlist_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:28:31 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/26 17:39:50 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/02 14:06:25 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,18 @@ void	last_quote_redir(char *str, t_dlist **lst, size_t *i, size_t *j)
 	}
 }
 
-void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
+int	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 {
 	t_dlist	*new;
 	t_dlist	*temp;
 
 	new = malloc(sizeof(t_dlist));
+	if (!new)
+		return (1);
 	new->next = NULL;
 	new->content = ft_substr(str, j, i - j);
+	if (!new->content)
+		return (free(new), 1);
 	if (!*lst)
 	{
 		*lst = new;
@@ -52,6 +56,7 @@ void	split_into_dlst(t_dlist **lst, char *str, size_t i, size_t j)
 		temp->next = new;
 		new->prev = temp;
 	}
+	return (0);
 }
 
 void	get_chevrons(char *str, size_t *i, char c, t_dlist **lst)

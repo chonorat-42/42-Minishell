@@ -6,11 +6,20 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 14:02:20 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/27 16:38:26 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/02 12:11:34 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_handler(t_fdhandler *handler)
+{
+	if (handler->fd_str)
+		free(handler->fd_str);
+	if (handler->temp_fd != -1 && handler->temp_fd != 1
+		&& handler->temp_fd != 0)
+		close(handler->temp_fd);
+}
 
 void	rm_hdoc_child(t_mshell *shell)
 {
@@ -19,7 +28,7 @@ void	rm_hdoc_child(t_mshell *shell)
 	size_t	j;
 
 	j = 0;
-	cmd = ft_split("rm -rf /tmp/temp.heredoc2", ' ');
+	cmd = ft_split("rm /tmp/temp.heredoc2", ' ');
 	if (!cmd)
 		return (free_struct(shell), exit(1));
 	while (shell->paths[j])
