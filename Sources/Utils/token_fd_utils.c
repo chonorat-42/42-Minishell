@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_fd_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:35:54 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/10/26 16:01:47 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/03 14:03:01 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	init_fdhandler(t_fdhandler *handler, t_mshell *shell,
 {
 	handler->tok = tokens;
 	handler->shell = shell;
+	if (handler->fd_str)
+		free(handler->fd_str);
 	handler->fd_str = NULL;
 }
 

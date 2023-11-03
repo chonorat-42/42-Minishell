@@ -66,6 +66,8 @@ void	get_fd_out(t_mshell *shell, t_tokens **tok)
 		}
 		handler_end_loop(&shell->handler, 1);
 	}
+	if (shell->handler.fd_str)
+		free(shell->handler.fd_str);
 }
 
 int	has_redirect(t_tokens *lst, char c)
