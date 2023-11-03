@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd_in_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:58:04 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/11/02 14:28:06 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/02 16:04:37 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ void	heredoc_case(t_fdhandler *handler)
 	heredoc(handler->shell, handler->dlist->next->content,
 		handler->temp_fd);
 	if (handler->tok && handler->tok->dlst)
-		heredoc_into_infile(&handler->tok->dlst);
+	{
+		if (!heredoc_into_infile(&handler->tok->dlst))
+			return (close(handler->temp_fd), free_struct(handler->shell));
+	}
 	close(handler->temp_fd);
 	get_fd_in(handler->shell, &handler->tok);
 }

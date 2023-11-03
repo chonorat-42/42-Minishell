@@ -44,14 +44,6 @@
 # define MAX_LL "9223372036854775807"
 # define MIN_LL "9223372036854775808"
 
-//TEMP
-# define TEST 1
-
-# ifndef DEBUG
-#  define DEBUG 0
-# endif
-//
-
 # include <limits.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -128,7 +120,7 @@ typedef struct s_fdhandler
 	char			*fd_str;
 	int				has_fd;
 	int				temp_fd;
-}			t_fdhandler;
+}					t_fdhandler;
 
 typedef struct s_mshell
 {
@@ -243,7 +235,7 @@ void		bad_fd(t_fdhandler *handler);
 
 //HEREDOC
 void		heredoc(t_mshell *shell, char *delimiter, int fd_in);
-void		heredoc_into_infile(t_dlist **lst);
+int			heredoc_into_infile(t_dlist **lst);
 
 //EXECUTION
 void		execution(t_mshell *shell);
@@ -307,12 +299,5 @@ void		remove_hdoc(t_mshell *shell);
 //UTILS
 long int	find_char_index(char *str, int c);
 void		get_fork_status(void);
-
-//!!DEBUG!!//
-void		print_arr(char **arr);
-void		print_lst(t_list *lst);
-void		print_single_token(t_tokens *tkn);
-void		print_tkns_down(t_tokens *lst);
-void		print_dlist(t_dlist	*lst);
 
 #endif

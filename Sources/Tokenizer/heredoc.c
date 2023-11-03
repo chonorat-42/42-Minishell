@@ -14,7 +14,7 @@
 
 extern long long	g_status;
 
-void	heredoc_into_infile(t_dlist **lst)
+int	heredoc_into_infile(t_dlist **lst)
 {
 	t_dlist	*temp;
 
@@ -25,11 +25,16 @@ void	heredoc_into_infile(t_dlist **lst)
 			temp = temp->next;
 		free(temp->content);
 		temp->content = ft_strdup("<");
+		if (!temp->content)
+			return (0);
 		temp = temp->next;
 		if (temp->content)
 			free(temp->content);
 		temp->content = ft_strdup("/tmp/temp.heredoc2");
+		if (!temp->content)
+			return (0);
 	}
+	return (1);
 }
 
 void	delimiter_found(t_mshell *shell, t_dlist *lst, int fd_in, int del_quote)

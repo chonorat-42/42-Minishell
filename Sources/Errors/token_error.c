@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:13:46 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/27 14:12:38 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/02 15:50:07 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ void	error_addback(t_tokens *tok, char *file, int type)
 	t_error	*temp;
 
 	new = malloc(sizeof(*new));
+	if (!new)
+		return ;
 	if (!tok->errors)
 		tok->errors = new;
 	else
@@ -77,6 +79,8 @@ void	error_addback(t_tokens *tok, char *file, int type)
 	}
 	new->type = type;
 	new->content = ft_strdup(file);
+	if (!new->content)
+		return (free(new));
 	new->next = NULL;
 }
 
