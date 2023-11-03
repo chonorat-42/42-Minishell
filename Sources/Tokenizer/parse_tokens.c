@@ -23,6 +23,8 @@ void	hdoc_add_cmd(t_mshell *shell)
 		return ((void)ft_putstr_fd("\n", 1), free(shell->input),
 			free_arr(shell->paths), shell->paths = NULL, get_input_loop(shell));
 	trim = ft_strtrim(to_add, "\n");
+	if (!trim)
+		return (free(to_add), free_struct(shell), exit(1));
 	free(to_add);
 	to_add = trim;
 	split_on_pipes(shell, to_add);

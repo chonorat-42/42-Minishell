@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+         #
+#    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/11/02 14:14:38 by pgouasmi         ###   ########.fr        #
+#    Updated: 2023/11/02 16:10:08 by chonorat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,6 @@ FILES = minishell\
 		Tokenizer/tokenizer\
 		Tokenizer/heredoc\
 		Tokenizer/parse_tokens\
-		Tokenizer/prints\
 		Tokenizer/Redirections/tokens_dlist\
 		Tokenizer/Redirections/tokens_fd\
 		Tokenizer/Cmd_arrays/cmd_arr\

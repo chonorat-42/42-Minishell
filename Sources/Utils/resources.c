@@ -65,15 +65,3 @@ void	move_to_next_quote(char *str, size_t *i, char c)
 	while (str[(*i)] && str[(*i)] != c)
 		(*i)++;
 }
-
-void	print_arr(char **arr)
-{
-	int	j;
-
-	if (DEBUG)
-	{
-		j = -1;
-		while (arr[++j])
-			printf("%s\n", arr[j]);
-	}
-}

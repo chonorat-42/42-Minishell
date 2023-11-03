@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_envp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 16:31:44 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/11 17:38:48 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/02 15:45:57 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,18 @@ static char	*join_varinfo(t_envp *cell)
 	char	*join;
 
 	var = ft_strdup(cell->var.name);
+	if (!var)
+		return (NULL);
 	join = ft_strjoin(var, "=");
+	if (!join)
+		return (free(var), NULL);
 	free(var);
 	var = join;
 	if (cell->var.content)
 	{
 		join = ft_strjoin(var, cell->var.content);
+		if (!join)
+			return (free(var), NULL);
 		free(var);
 		var = join;
 	}
@@ -64,7 +70,11 @@ void	update_envp(t_mshell *shell)
 	while (temp && index < (int)shell->envp_size)
 	{
 		if (temp->var.readable)
-			shell->menvp[index++] = join_varinfo(temp);
+		{
+			shell->menvp[index] = join_varinfo(temp);
+			if (!shell->menvp[index++])
+				return (free_struct(shell), exit(1));
+		}
 		temp = temp->next;
 	}
 }
