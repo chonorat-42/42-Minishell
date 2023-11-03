@@ -96,7 +96,7 @@ OBJ_FILES = $(addsuffix .o, $(addprefix ../Objects/Libft/, $(FILES)))
 $(NAME): $(OBJ_FILES)
 	$(PRINT) "\nMaking ${_BOLD}libft.a${_END}..."
 	$(AR) $(NAME) $(OBJ_FILES)
-	$(PRINT) "${_BOLD}${_GREEN}libft.a done.${_END}"
+	$(PRINT) "${_BOLD}${_GREEN}libft.a done.\a${_END}"
 
 ../Objects/Libft/%.o: %.c Makefile $(HEADER)
 	$(DIR) ../Objects
@@ -114,10 +114,14 @@ clean:
 	$(RM) $(OBJ_FILES)
 	$(PRINT) "${_GREEN}libft cleaned.${_END}"
 
-fclean: clean
-	$(PRINT) "${_BOLD}Deleting Libft objects directory...${_END}"
+fclean:
+	$(PRINT) "${_RED}Cleaning libft...${_END}"
+	$(PRINT) "${_RED}Deleting libft objects directory...${_END}"
+	$(PRINT) "${_RED}Deleting $(NAME)...${_END}"
+	$(RM) $(OBJ_FILES)
 	$(RM) ../Objects/Libft
 	$(RM) $(NAME)
+	$(PRINT) "${_GREEN}Libft cleaned.${_END}"
 	$(PRINT) "${_GREEN}Libft Objects directory deleted.${_END}"
 	$(PRINT) "${_GREEN}libft.a deleted.${_END}"
 

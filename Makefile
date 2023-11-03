@@ -6,7 +6,7 @@
 #    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/11/02 16:10:08 by chonorat         ###   ########.fr        #
+#    Updated: 2023/11/03 12:45:15 by chonorat         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ _BOLD = \033[1m
 OS = $(shell uname)
 
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror -IIncludes -ggdb3
+CFLAGS = -Wall -Wextra -Werror -IIncludes
 RM = @rm -rf
 CC = @cc
 DIR = @mkdir -p
@@ -89,26 +89,33 @@ FILES = minishell\
 		Utils/token_dlist_utils\
 		Utils/pipe_utils\
 		Utils/resources
-SRCS = $(addsuffix .c, $(addprefix Sources/, $(FILES)))
 OBJS = $(addsuffix .o, $(addprefix Objects/, $(FILES)))
 
 $(NAME): $(OBJS) $(LIBFT)
+ifeq ($(OS),Linux)
 	$(PRINT) "\n${_BOLD}Waiting for norminette...${_END}"
 	$(NORM)
 	$(PRINT) "${_BOLD}Norminette done.${_END}"
 	$(PRINT) "\n${_YELLOW}Making $(NAME)...${_END}"
 	$(CC) $(OBJS) -lreadline -o $(NAME) $(LIBFT)
 	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.\a${_END}"
+else
+	$(PRINT) "This $(NAME) was made for Linux only.\a\n"
+endif
 
 $(LIBFT): force
 	$(PRINT) "\n${_YELLOW}Checking Libft...${_END}"
 	$(MAKE_LIBFT)
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
+ifeq ($(OS),Linux)
 	$(DIR) Objects
 	$(DIR) Objects/Utils Objects/Environment Objects/Get_input Objects/Parsing Objects/Parsing/Expand Objects/Parsing/Quotes Objects/Tokenizer Objects/Tokenizer/Redirections Objects/Tokenizer/Cmd_arrays Objects/Execution Objects/Execution/Built_in Objects/Execution/Built_in/Export Objects/Execution/Built_in/Exit Objects/Signals Objects/Errors Objects/Free
 	$(PRINT) "Compiling ${_BOLD}$<$(_END)..."
 	$(CC) -c $(CFLAGS) $< -o $@
+else
+	$(PRINT) "This $(NAME) was made for Linux only.\a"
+endif
 
 all: $(NAME)
 
@@ -121,12 +128,12 @@ clean:
 
 fclean:
 	$(FCLEAN_LIBFT)
-	$(PRINT) "\n${_BOLD}Cleaning Objects...${_END}"
+	$(PRINT) "\n${_RED}Cleaning Objects...${_END}"
 	$(RM) $(OBJS)
-	$(PRINT) "${_RED}Deleting $(NAME)...${_END}"
-	$(RM) $(NAME)
 	$(PRINT) "${_RED}Deleting Objects directory...${_END}"
 	$(RM) Objects
+	$(PRINT) "${_RED}Deleting $(NAME)...${_END}"
+	$(RM) $(NAME)
 	$(RM) .OS
 	$(PRINT) "${_GREEN}Objects cleaned.${_END}"
 	$(PRINT) "${_GREEN}Objects directory deleted.${_END}"
