@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_dlst.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:50:15 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/23 15:50:52 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/06 11:37:05 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,29 @@ void	expand_dlist(t_mshell *shell, t_envp *envp, t_dlist **lst)
 	}
 }
 
+void	has_expansion(t_mshell *shell, t_dlist **lst, t_dlist *temp,
+	t_envp *envp)
+{
+	char	*name;
+	char	*content;
+
+	name = ft_substr(temp->content, 1, ft_strlen(temp->content));
+	if (!name)
+		return (free_struct(shell), free_dlist(lst), exit(1));
+	content = get_envvar_content(shell, envp, name);
+	multifree(name, temp->content, 0, 0);
+	if (content)
+	{
+		temp->content = ft_strdup(content);
+		free(content);
+	}
+	else
+		temp->content = ft_strdup("");
+}
+
 void	expand_dlst(t_mshell *shell, t_dlist **lst, t_envp *envp)
 {
 	t_dlist	*temp;
-	char	*name;
-	char	*content;
 
 	temp = *lst;
 	while (temp)
@@ -42,18 +60,9 @@ void	expand_dlst(t_mshell *shell, t_dlist **lst, t_envp *envp)
 		if (temp->content[0] == '$')
 		{
 			if (temp->content[1])
-			{
-				name = ft_substr(temp->content, 1, ft_strlen(temp->content));
-				content = get_envvar_content(shell, envp, name);
-				multifree(name, temp->content, 0, 0);
-				if (content)
-				{
-					temp->content = ft_strdup(content);
-					free(content);
-				}
-				else
-					temp->content = ft_strdup("");
-			}
+				has_expansion(shell, lst, temp, envp);
+			else
+				temp->content = ft_strdup("");
 		}
 		temp = temp->next;
 	}
