@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 void	get_fork_status(void)
 {
 	if (WIFEXITED(g_status))

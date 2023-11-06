@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 void	get_commands_lst(t_mshell *shell, t_dlist *base, t_dlist **new)
 {
 	t_dlist	*temp;

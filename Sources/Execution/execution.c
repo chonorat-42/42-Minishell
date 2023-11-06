@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 void	executable(t_tokens *temp, t_mshell *shell)
 {
 	pid_t	child;

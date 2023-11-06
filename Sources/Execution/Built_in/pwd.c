@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 int	check_option(t_mshell *shell, char **cmd)
 {
 	char	*option;

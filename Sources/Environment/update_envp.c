@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 16:31:44 by chonorat          #+#    #+#             */
-/*   Updated: 2023/11/02 15:45:57 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/06 12:59:56 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	update_envp(t_mshell *shell)
 	shell->envp_size = get_envp_size(shell->envp);
 	shell->menvp = malloc((shell->envp_size + 1) * sizeof(char *));
 	if (!shell->menvp)
-		return (free_struct(shell));
+		return (free_struct(shell), exit(1));
 	shell->menvp[shell->envp_size] = NULL;
 	index = 0;
 	temp = shell->envp;

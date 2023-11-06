@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 void	get_fd_in(t_mshell *shell, t_tokens **tok)
 {
 	init_fdhandler(&shell->handler, shell, *tok);

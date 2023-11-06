@@ -6,13 +6,11 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 17:26:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/11 16:00:24 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/06 12:08:21 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern long long	g_status;
 
 int	is_var(char *arg)
 {

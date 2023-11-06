@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 void	exec_sig(t_mshell *shell)
 {
 	if (signal(SIGINT, SIG_DFL) == SIG_ERR
