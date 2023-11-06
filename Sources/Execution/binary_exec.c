@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 void	binary_with_path(t_mshell *shell, char **cmd_arr)
 {
 	char	*exec;

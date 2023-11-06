@@ -6,13 +6,11 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 14:01:43 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/27 15:39:45 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/06 12:09:08 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern long long	g_status;
 
 int	check_access(char *path)
 {

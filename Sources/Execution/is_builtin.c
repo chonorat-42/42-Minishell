@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   is_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:22:33 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/31 18:48:09 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/06 12:07:45 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern long long	g_status;
 
 int	is_builtin(t_tokens *temp)
 {

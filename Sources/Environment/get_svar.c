@@ -6,13 +6,11 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 16:14:40 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/20 13:46:05 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/06 12:00:06 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern long long	g_status;
 
 void	get_svar(t_mshell *shell)
 {

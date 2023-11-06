@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 void	parent_management(t_tokens *temp, pid_t child, size_t i, t_pipe *data)
 {
 	data->lpids[i] = child;

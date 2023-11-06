@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_sig.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 14:48:46 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/31 18:58:47 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/06 12:08:42 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern long long	g_status;
 
 static void	hd_sig(int signum)
 {

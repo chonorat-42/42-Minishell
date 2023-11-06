@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 int	heredoc_into_infile(t_dlist **lst)
 {
 	t_dlist	*temp;

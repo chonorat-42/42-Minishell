@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 static int	replace_content(t_envp **envp, char *name, char *new_content)
 {
 	t_envp	*temp;

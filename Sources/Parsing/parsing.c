@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 int	are_all_quotes_closed(char *str)
 {
 	size_t	i;

@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 static int	add_to_export(t_envp **temp, t_envp *env_cell)
 {
 	t_envp	*var_cell;
