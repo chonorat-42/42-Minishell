@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:50:15 by chonorat          #+#    #+#             */
-/*   Updated: 2023/11/06 13:29:34 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/06 13:42:56 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ void	expand_dlst(t_mshell *shell, t_dlist **lst, t_envp *envp)
 				if (temp->content[1] != '$')
 					has_expansion(shell, lst, temp, envp);
 			}
-			else
-				temp->content = ft_strdup("");
+			// else
+			// 	temp->content = ft_strdup("");
 		}
 		temp = temp->next;
 	}
