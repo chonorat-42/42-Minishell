@@ -31,25 +31,19 @@ void	parent_management(t_tokens *temp, pid_t child, size_t i, t_pipe *data)
 
 static void	child_fd(t_mshell *shell, t_tokens *temp, t_pipe *data)
 {
+	(void)shell;
 	if (temp->prev != NULL)
 	{
 		dup2(data->fd[1][0], 0);
 		close(data->fd[1][0]);
 		close(data->fd[1][1]);
+		g_status = 0;
 	}
 	if (temp->next)
 	{
 		close(data->fd[0][0]);
 		dup2(data->fd[0][1], 1);
 		close(data->fd[0][1]);
-	}
-	if (has_bad_fd(temp))
-		return (close_std_fds(), free_struct(shell),
-			free(data->lpids), exit(1));
-	if (temp->next && temp->next->fd_in != 0)
-	{
-		free(data->lpids);
-		exit(g_status);
 	}
 	adress_keeper(data->lpids);
 	manage_fd(temp->fd_in, temp->fd_out);

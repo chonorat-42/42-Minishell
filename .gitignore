@@ -23,3 +23,6 @@ minishell
 
 # valgrind
 valgrind_ignore_leaks.txt
+
+# tester
+minishell_tester

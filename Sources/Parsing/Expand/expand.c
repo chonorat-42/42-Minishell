@@ -21,6 +21,8 @@ int	is_between_simple(char *str)
 	s_quote_count = 0;
 	while (str[i])
 	{
+		if (str[i] == '\"')
+			move_to_last_quote(str, &i, str[i]);
 		if (str[i] == '\'')
 			s_quote_count++;
 		if ((str[i]) == '$')
@@ -37,6 +39,9 @@ void	split_envvar(char *str, t_dlist **lst)
 
 	i = 0;
 	j = 0;
+
+	printf("in split envvar, str=%s\n", str);
+
 	while (str[i])
 	{
 		if (str[i] == '$' && !is_between_simple(str))
@@ -101,7 +106,9 @@ int	expand(t_mshell *shell, char *cmd)
 {
 	char	*temp;
 
+	printf("got in expand, cmd =%s\n", cmd);
 	temp = NULL;
+	printf("char index = %ld\n", ft_char_index(cmd, '$'));
 	if (ft_char_index(cmd, '$') >= 0)
 	{
 		temp = expand_envvar(shell, cmd, shell->envp);

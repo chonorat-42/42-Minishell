@@ -17,28 +17,24 @@ extern long long	g_status;
 void	binary_with_path(t_mshell *shell, char **cmd_arr)
 {
 	char	*exec;
-	char	**exec_split;
 	char	*temp;
 	char	*path;
 
 	exec = get_exec(cmd_arr[0]);
 	if (!exec)
 		return (free_struct(shell), exit(EXIT_FAILURE));
-	exec_split = ft_split(exec, ' ');
-	if (!exec_split)
-		return (free(exec), free_struct(shell), exit(EXIT_FAILURE));
 	path = get_path(cmd_arr[0]);
 	if (!path)
-		return (free(exec), free_arr(exec_split), free_struct(shell), exit(1));
+		return (free(exec), free_struct(shell), exit(1));
 	temp = ft_strjoin(path, exec);
 	if (!temp)
-		return (free(exec), free_arr(exec_split), free_struct(shell),
+		return (free(exec), free_struct(shell),
 			free(path), exit(EXIT_FAILURE));
 	free(path);
 	if (!check_access(temp))
-		return (free(exec), free(temp), free_arr(exec_split));
-	if (execve(temp, exec_split, shell->menvp) == -1)
-		return (free(exec), free_arr(exec_split), free(temp));
+		return (free(exec), free(temp));
+	if (execve(temp, cmd_arr, shell->menvp) == -1)
+		return (free(exec), free(temp));
 }
 
 void	browse_paths(t_mshell *shell, char **cmd_arr)
