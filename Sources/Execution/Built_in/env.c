@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-extern long long	g_status;
-
 void	env_case(t_mshell *shell, char **cmd, int fd)
 {
 	t_envp	*temp;

@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   show_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/27 14:10:17 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/06 12:07:24 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern long long	g_status;
 
 static void	exec_error(char *cmd, int error)
 {
