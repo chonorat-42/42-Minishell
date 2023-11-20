@@ -52,7 +52,7 @@ static void	check_operator(t_mshell *shell, char *str, size_t *i, size_t *j)
 		move_to_next_quote(str, i, str[*i]);
 	else if (is_char_in_set(str[*i], "|"))
 	{
-		if (!str[*i + 1])
+		if (!str[*i + 1] || str_isws(&str[*i + 1]))
 			return (show_error("|", SYNTAX, 1),
 				free_tokens(&shell->tok_lst), free(shell->input),
 				free_arr(shell->paths), shell->paths = NULL,
@@ -81,9 +81,13 @@ void	split_on_pipes(t_mshell *shell, char *str)
 			free_tokens(&shell->tok_lst), free(shell->input),
 			free_arr(shell->paths), shell->paths = NULL,
 			get_input_loop(shell));
-	i = -1;
-	while (str[++i])
+	i = 0;
+	while (str[i])
+	{
 		check_operator(shell, str, &i, &j);
+		if (str[i])
+			i++;
+	}
 	if (i != j)
 		create_token(shell, i, j, str);
 }
@@ -110,7 +114,8 @@ int	tokenizer(t_mshell *shell)
 	split_tokens_into_dlst(&shell->tok_lst, shell);
 	get_fds(shell, &shell->tok_lst);
 	create_cmd_arr(&shell->tok_lst, shell);
-	manage_quotes_arr(&shell->tok_lst);
+	if (!manage_quotes_arr(&shell->tok_lst))
+		return (free_struct(shell), exit(1), 0);
 	give_type(&shell->tok_lst);
 	if (cmd_has_pipes(shell->tok_lst))
 		add_pipes_flag(shell->tok_lst);

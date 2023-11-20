@@ -6,7 +6,7 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 17:26:44 by chonorat          #+#    #+#             */
-/*   Updated: 2023/10/23 15:00:40 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/10 15:21:54 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	pipe_found(t_mshell *shell, char *str, size_t *i, size_t *j)
 	(*i)++;
 	create_token(shell, *i, *j, str);
 	*j = *i;
+	if (is_char_in_set(str[*i], "\'\""))
+		move_to_next_quote(str, i, str[*i]);
 }
 
 void	tokens_addback(t_tokens **lst, t_tokens *new)

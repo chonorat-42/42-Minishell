@@ -12,13 +12,34 @@
 
 #include "minishell.h"
 
-void	manage_quotes_arr(t_tokens	**lst)
+static int	get_temp2(t_tokens *temp2, char **temp, t_tokens **lst, int i)
+{
+	*temp = remove_quotes(temp2->cmd_arr[i]);
+	free(temp2->cmd_arr[i]);
+	if (*temp)
+	{
+		temp2->cmd_arr[i] = ft_strdup(*temp);
+		if (!temp2->cmd_arr[i])
+			return (free_arr(temp2->cmd_arr), free_tokens(lst), 0);
+	}
+	else
+	{
+		temp2->cmd_arr[i] = ft_strdup("");
+		if (!temp2->cmd_arr[i])
+			return (free_arr(temp2->cmd_arr), free_tokens(lst), 0);
+	}
+	return (1);
+}
+
+int	manage_quotes_arr(t_tokens **lst)
 {
 	size_t		i;
 	t_tokens	*temp2;
 	char		*temp;
 
 	temp2 = *lst;
+	temp = NULL;
+	i = 0;
 	while (temp2)
 	{
 		i = 0;
@@ -26,18 +47,15 @@ void	manage_quotes_arr(t_tokens	**lst)
 		{
 			while (temp2->cmd_arr[i])
 			{
-				temp = remove_quotes(temp2->cmd_arr[i]);
-				free(temp2->cmd_arr[i]);
-				if (temp)
-					temp2->cmd_arr[i] = ft_strdup(temp);
-				else
-					temp2->cmd_arr[i] = ft_strdup("");
+				if (!get_temp2(temp2, &temp, lst, i))
+					return (free(temp), 0);
 				free(temp);
 				i++;
 			}
 		}
 		temp2 = temp2->next;
 	}
+	return (1);
 }
 
 void	quote_found(t_dlist **temp, char *str, size_t *i, size_t *j)

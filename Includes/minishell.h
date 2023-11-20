@@ -27,6 +27,7 @@
 # define HEREDEL 11
 # define NO_FILE 12
 # define PERMISSIONS 13
+# define ARGV 14
 
 //ERRORS
 # define EXEC 1
@@ -77,6 +78,7 @@ typedef struct s_envp
 typedef struct s_dlist
 {
 	char			*content;
+	int				exp;
 	struct s_dlist	*prev;
 	struct s_dlist	*next;
 }					t_dlist;
@@ -181,6 +183,8 @@ char		*get_other(char *str, size_t *i);
 
 int			expand(t_mshell *shell, char *cmd);
 char		*expand_envvar(t_mshell *shell, char *str, t_envp *envp);
+void		envvar_flag(size_t index[2], size_t qcount[2], t_dlist **lst,
+				char *str);
 int			check_after_dollar(char *str);
 size_t		last_envvar_char(char *str);
 int			is_char_in_set(char c, char *set);
@@ -192,7 +196,7 @@ void		expand_dlst(t_mshell *shell, t_dlist **lst, t_envp *envp);
 int			tokenizer(t_mshell *shell);
 void		parse_tkn(t_tokens **tok, t_mshell *shell);
 void		split_tokens_into_dlst(t_tokens **lst, t_mshell *shell);
-void		manage_quotes_arr(t_tokens	**lst);
+int			manage_quotes_arr(t_tokens **lst);
 void		create_cmd_arr(t_tokens **tk_lst, t_mshell *shell);
 void		split_on_pipes(t_mshell *shell, char *str);
 void		tokens_addback(t_tokens **lst, t_tokens *new);
@@ -234,8 +238,10 @@ int			fdout_access(char *path);
 void		bad_fd(t_fdhandler *handler);
 
 //HEREDOC
-void		heredoc(t_mshell *shell, char *delimiter, int fd_in);
+void		heredoc(t_mshell *shell, char **delimiter, int fd_in);
 int			heredoc_into_infile(t_dlist **lst);
+void		hd_delim_quotes(t_mshell *shell, char **new_del, char **delim,
+				int *del_quotes);
 
 //EXECUTION
 void		execution(t_mshell *shell);
@@ -299,5 +305,8 @@ void		remove_hdoc(t_mshell *shell);
 //UTILS
 long int	find_char_index(char *str, int c);
 void		get_fork_status(void);
+int			is_between_simple(char *str);
+void		add_flag_expand(t_dlist *lst, int to_expand);
+int			str_isws(char *str);
 
 #endif

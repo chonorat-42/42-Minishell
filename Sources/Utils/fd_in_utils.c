@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd_in_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:58:04 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/11/02 16:04:37 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/10 16:08:14 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	heredoc_case(t_fdhandler *handler)
 	}
 	handler->temp_fd = open("/tmp/temp.heredoc2",
 			O_RDWR | O_CREAT | O_TRUNC, 0666);
-	heredoc(handler->shell, handler->dlist->next->content,
+	heredoc(handler->shell, &handler->dlist->next->content,
 		handler->temp_fd);
 	if (handler->tok && handler->tok->dlst)
 	{

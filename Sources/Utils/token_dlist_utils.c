@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_dlist_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:28:31 by chonorat          #+#    #+#             */
-/*   Updated: 2023/11/02 14:06:25 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/09 08:57:28 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,7 @@ void	move_to_last_quote(char *str, size_t *i, char c)
 	{
 		if (str[(*i)] == c)
 			q_count++;
-		if ((!str[*i + 1]
-				|| (ft_isws(str[*i + 1])
-					|| is_char_in_set(str[(*i + 1)], "<>")))
-			&& !(q_count % 2))
+		if (!(q_count % 2))
 			return ;
 		(*i)++;
 	}

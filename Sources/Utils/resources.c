@@ -12,6 +12,20 @@
 
 #include "minishell.h"
 
+int	str_isws(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isws(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 void	get_fork_status(void)
 {
 	if (WIFEXITED(g_status))

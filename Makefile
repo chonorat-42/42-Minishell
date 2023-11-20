@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/16 13:10:41 by chonorat          #+#    #+#              #
-#    Updated: 2023/11/03 13:04:17 by chonorat         ###   ########.fr        #
+#    Updated: 2023/11/10 16:18:56 by pgouasmi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -100,12 +100,16 @@ ifeq ($(OS),Linux)
 	$(CC) $(OBJS) -lreadline -o $(NAME) $(LIBFT)
 	$(PRINT) "${_BOLD}${_GREEN}$(NAME) done.\a${_END}"
 else
-	$(PRINT) "This $(NAME) was made for Linux only.\a\n"
+	$(PRINT) "$(OS)" > .OS
 endif
 
 $(LIBFT): force
+ifeq ($(OS),Linux)
 	$(PRINT) "\n${_YELLOW}Checking Libft...${_END}"
 	$(MAKE_LIBFT)
+else
+	$(PRINT) "\nThis $(NAME) was made for Linux only.\a\n"
+endif
 
 Objects/%.o: Sources/%.c Makefile $(HEADER)
 ifeq ($(OS),Linux)
@@ -116,7 +120,7 @@ ifeq ($(OS),Linux)
 	$(PRINT) "Compiling ${_BOLD}$<$(_END)..."
 	$(CC) -c $(CFLAGS) $< -o $@
 else
-	$(PRINT) "This $(NAME) was made for Linux only.\a"
+	$(PRINT) "$(OS)" > .OS
 endif
 
 all: $(NAME)

@@ -52,14 +52,16 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_mshell	shell;
 
-	if (argc != 1)
-		return (ft_printf("minishell: %s: No such file or directory\n",
-				argv[1]), 1);
-	init_shell(&shell);
-	shell_keeper(&shell);
-	get_envp(&shell, envp, argv);
-	update_shlvl(&shell);
-	shell.exit = get_exit(&shell);
-	get_input_loop(&shell);
-	return (shell.exit_status);
+	if (argc == 1)
+	{
+		init_shell(&shell);
+		shell_keeper(&shell);
+		get_envp(&shell, envp, argv);
+		update_shlvl(&shell);
+		shell.exit = get_exit(&shell);
+		get_input_loop(&shell);
+		return (shell.exit_status);
+	}
+	else
+		return (show_error(argv[1], ARGV, 0), 1);
 }

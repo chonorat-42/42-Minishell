@@ -6,11 +6,26 @@
 /*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 15:54:58 by pgouasmi          #+#    #+#             */
-/*   Updated: 2023/11/02 14:27:28 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/10 14:23:43 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	get_fd_out(t_fdhandler *handler)
+{
+	handler->tok->fd_out = handler->temp_fd;
+	if (handler->fd_str)
+	{
+		handler->tok->fd_out_str = ft_strdup(handler->fd_str);
+		if (!handler->tok->fd_out_str)
+			return (0);
+	}
+	free(handler->fd_str);
+	handler->fd_str = NULL;
+	handler->tok = handler->tok->next;
+	return (1);
+}
 
 void	handler_end_loop(t_fdhandler *handler, int type)
 {
@@ -20,19 +35,21 @@ void	handler_end_loop(t_fdhandler *handler, int type)
 		{
 			handler->tok->fd_in = handler->temp_fd;
 			if (handler->fd_str)
+			{
 				handler->tok->fd_in_str = ft_strdup(handler->fd_str);
+				if (!handler->tok->fd_in_str)
+					return (free(handler->fd_str), free_struct(handler->shell),
+						exit(1));
+			}
 			free(handler->fd_str);
 			handler->fd_str = NULL;
 			handler->tok = handler->tok->next;
 		}
 		else
 		{
-			handler->tok->fd_out = handler->temp_fd;
-			if (handler->fd_str)
-				handler->tok->fd_out_str = ft_strdup(handler->fd_str);
-			free(handler->fd_str);
-			handler->fd_str = NULL;
-			handler->tok = handler->tok->next;
+			if (!get_fd_out(handler))
+				return (free(handler->fd_str), free_struct(handler->shell),
+					exit(1));
 		}
 	}
 }

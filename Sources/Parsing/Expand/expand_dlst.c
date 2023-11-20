@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_dlst.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pgouasmi <pgouasmi@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pgouasmi <pgouasmi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:50:15 by chonorat          #+#    #+#             */
-/*   Updated: 2023/11/06 13:42:56 by pgouasmi         ###   ########.fr       */
+/*   Updated: 2023/11/10 14:28:50 by pgouasmi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,18 @@ void	has_expansion(t_mshell *shell, t_dlist **lst, t_dlist *temp,
 	if (content)
 	{
 		temp->content = ft_strdup(content);
+		if (!temp->content)
+			return (free_struct(shell), free_dlist(&temp),
+				free(content), exit(1));
 		free(content);
 	}
 	else
+	{
 		temp->content = ft_strdup("");
+		if (!temp->content)
+			return (free(name), free_dlist(&temp),
+				free_struct(shell), exit(1));
+	}
 }
 
 void	expand_dlst(t_mshell *shell, t_dlist **lst, t_envp *envp)
@@ -61,11 +69,9 @@ void	expand_dlst(t_mshell *shell, t_dlist **lst, t_envp *envp)
 		{
 			if (temp->content[1])
 			{
-				if (temp->content[1] != '$')
+				if (temp->content[1] != '$' && (temp->exp % 2))
 					has_expansion(shell, lst, temp, envp);
 			}
-			// else
-			// 	temp->content = ft_strdup("");
 		}
 		temp = temp->next;
 	}

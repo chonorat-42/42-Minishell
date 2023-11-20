@@ -22,6 +22,7 @@ int	heredoc_into_infile(t_dlist **lst)
 		while (ft_strcmp(temp->content, "<<"))
 			temp = temp->next;
 		free(temp->content);
+		temp->content = NULL;
 		temp->content = ft_strdup("<");
 		if (!temp->content)
 			return (0);
@@ -89,7 +90,7 @@ static void	heredoc_loop(t_mshell *shell, char *delim, int fd_in, int del)
 	}
 }
 
-void	heredoc(t_mshell *shell, char *delim, int fd_in)
+void	heredoc(t_mshell *shell, char **delim, int fd_in)
 {
 	int		del_quote;
 	char	*new_del;
@@ -98,18 +99,13 @@ void	heredoc(t_mshell *shell, char *delim, int fd_in)
 	del_quote = 0;
 	if (g_status)
 		return ;
-	if (is_char_in_set(delim[0], "\'\""))
-	{
-		del_quote = 1;
-		new_del = remove_quotes(delim);
-		free(delim);
-		delim = new_del;
-	}
+	if (is_char_in_set(*delim[0], "\'\""))
+		hd_delim_quotes(shell, &new_del, delim, &del_quote);
 	ignore_sig(shell);
 	fd_keeper(&fd_in);
 	child = fork();
 	if (!child)
-		heredoc_loop(shell, delim, fd_in, del_quote);
+		heredoc_loop(shell, *delim, fd_in, del_quote);
 	else
 	{
 		if (waitpid(child, (int *)&g_status, 0) == -1)

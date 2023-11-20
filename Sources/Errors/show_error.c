@@ -6,7 +6,7 @@
 /*   By: chonorat <chonorat@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 12:23:29 by chonorat          #+#    #+#             */
-/*   Updated: 2023/11/06 12:07:24 by chonorat         ###   ########.fr       */
+/*   Updated: 2023/11/10 00:51:34 by chonorat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ static void	operator_error(char *operator, int error)
 void	show_error(char *cmd, int type, int error)
 {
 	ft_putstr_fd("\033[0;37m\033[1mminishell: ", 2);
+	if (type == ARGV)
+		ft_dprintf(2, "%s: can't take arguments\n\033[0m", cmd);
 	if (type == EXEC)
 		exec_error(cmd, error);
 	else if (type == QUOTES)
